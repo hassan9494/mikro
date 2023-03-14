@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next dev",
-    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && next build",
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && next start"
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && next build",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && next start"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
