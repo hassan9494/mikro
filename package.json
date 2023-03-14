@@ -3,7 +3,7 @@
   "version": "5.0.2",
   "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next dev",
     "build": "next build",
     "start": "next --openssl-legacy-provider start"
   },
