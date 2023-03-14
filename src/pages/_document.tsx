@@ -45,6 +45,7 @@ export default class CustomDocument extends Document {
     }
 }
 
+// @ts-ignore
 CustomDocument.getInitialProps = async (ctx) => {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
