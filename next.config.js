@@ -7,6 +7,7 @@ const nextConfig = {
         domains: [
             's3.eu-central-1.amazonaws.com',
             '127.0.0.1',
+            'api.mikroelektron.com'
         ],
     },
 };
