@@ -21,10 +21,10 @@ type LayoutProps = {
 };
 
 const Layout: React.FunctionComponent<LayoutProps> = ({
-  className,
-  children,
-  token,
-}) => {
+                                                          className,
+                                                          children,
+                                                          token,
+                                                      }) => {
     const { pathname, query } = useRouter();
     const isSticky =
         useAppState('isSticky') ||
@@ -35,7 +35,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
 
     return (
         <LayoutWrapper className={`layoutWrapper ${className}`}>
-         x
+            x
             <Sticky enabled={isSticky} innerZ={1001}>
                 {/*<MobileHeader*/}
                 {/*  className={`${isSticky ? 'sticky' : 'unSticky'} ${*/}
