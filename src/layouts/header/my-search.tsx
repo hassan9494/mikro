@@ -121,7 +121,7 @@ export default function MySearch ()
                 placeholder={
                     intl.formatMessage({
                         id: 'searchPlaceholder',
-                        defaultMessage: 'Search your products from here',
+                        defaultMessage: 'Search your product from here',
                     })
                 }
             />
