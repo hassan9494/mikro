@@ -152,6 +152,9 @@ interface Props {
 export const ProductCard = ({ data }: Props) => {
     const { title, image, price, sale_price, slug, discountInPercent, availableQty } = data;
 
+    console.log(`/product/${slug}`)
+    console.log("/product/[slug]")
+
     const stockColor = availableQty > 10 ? 'green' : (availableQty < 1 ? 'red' : 'orange');
 
     // const myLoader = ({ src, width, quality }) => {
@@ -166,12 +169,14 @@ export const ProductCard = ({ data }: Props) => {
                             <RadioButtonChecked style={{width: 16, color: stockColor }} />
                         </Stock>
                         <ImageWrapper>
+                            {/*<img src={image} alt={title} width={200} height={200}/>*/}
                             <Image
                                 // loader={myLoader}
                                 src={image}
                                 alt={title}
                                 width={200}
                                 height={200}
+                                unoptimized={true}
                             />
                         </ImageWrapper>
                         {sale_price ? (

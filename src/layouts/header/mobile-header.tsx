@@ -126,14 +126,14 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
                     <Logo imageUrl={LogoImage} alt="shop logo"/>
                 </LogoWrapper>
 
-                {
-                    !isAuthenticated &&
-                    <AuthMenuWrapper>
-                        <Button variant="contained" disableElevation color="primary" onClick={handleJoin}>
-                            <FormattedMessage id="joinButton" defaultMessage="join"/>
-                        </Button>
-                    </AuthMenuWrapper>
-                }
+                {/*{*/}
+                {/*    !isAuthenticated &&*/}
+                {/*    <AuthMenuWrapper>*/}
+                {/*        <Button variant="contained" disableElevation color="primary" onClick={handleJoin}>*/}
+                {/*            <FormattedMessage id="joinButton" defaultMessage="join"/>*/}
+                {/*        </Button>*/}
+                {/*    </AuthMenuWrapper>*/}
+                {/*}*/}
 
                 {isHomePage ? (
                     <SearchWrapper

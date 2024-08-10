@@ -34,7 +34,7 @@ const CategoryWalker: React.FunctionComponent<WalkerProps> = ({
             </CategoryWrapper>
 
             <Button variant="text" onClick={() => setOpen(true)}>
-                Filter
+                Categories
             </Button>
             <SpringModal isOpen={isOpen} onRequestClose={() => setOpen(false)}>
                 {children}
