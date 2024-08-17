@@ -4,10 +4,30 @@ import { useSpring, animated } from 'react-spring';
 import { Frame, Title, Content, Header, IconWrapper } from './tree-menu.style';
 import { Button } from 'components/button/button';
 import { ArrowNext } from 'assets/icons/ArrowNext';
-
+import css from '@styled-system/css';
 import * as icons from 'assets/icons/category-icons';
 import { DoubleArrow, RadioButtonUncheckedOutlined } from "@material-ui/icons";
+import Image from "next/image";
+import styled from "styled-components";
 
+const ImageWrapper = styled.div(
+    css({
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        height: ['30px', '30px'],
+        marginRight: '5px',
+
+        img: {
+            display: 'block',
+            maxHeight: '100%',
+            maxWidth: '100%',
+            width: '50px',
+        },
+    })
+);
 const Tree = React.memo(
     ({
          children,
@@ -18,6 +38,7 @@ const Tree = React.memo(
          dropdown,
          onToggleBtnClick,
          depth,
+         image,
          defaultOpen = false,
      }: any) => {
         const [isOpen, setOpen] = useState(defaultOpen);
@@ -34,6 +55,7 @@ const Tree = React.memo(
                 transform: `translate3d(${isOpen ? 0 : 20}px,0,0)`,
             },
         });
+        console.log(name)
         // const Icon = icon ? Icons[icon] : depth === 'child' ? Icons['Minus'] : null;
         // const Icon = icon ? Icons[icon] : null;
         // const Icon = ({ iconName, style }: { iconName: any; style?: any }) => {
@@ -59,6 +81,18 @@ const Tree = React.memo(
                     }
                     </IconWrapper>
                     {/*)}*/}
+                    {image && (
+                    <ImageWrapper>
+                        <Image
+                            src={image}
+                            alt={name}
+                            width={50}
+                            height={30}
+                            unoptimized={true}
+                        />
+                    </ImageWrapper>
+                    )}
+
                     <Title onClick={onClick}>{name}</Title>
 
                     {dropdown === true && (
@@ -104,6 +138,7 @@ export const TreeMenu: React.FC<Props> = ({
                         key={subOption.title}
                         name={subOption.title}
                         icon={subOption.icon}
+                        image={subOption.image}
                         depth="child"
                         onClick={() => onClick(subOption.slug)}
                         defaultOpen={active === subOption.slug}
@@ -114,6 +149,7 @@ export const TreeMenu: React.FC<Props> = ({
                 <Tree
                     key={subOption.title}
                     name={subOption.title}
+                    image={subOption.image}
                     dropdown={!subOption.children.length ? false : true}
                     depth="parent"
                     onClick={() => onClick(subOption.slug)}

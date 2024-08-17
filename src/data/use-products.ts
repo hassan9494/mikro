@@ -37,16 +37,18 @@ interface Props {
     limit?: number;
     old?: any;
     page?: any;
+    sort?: any;
 }
 
 
 export default function useProducts(variables: Props) {
-
-    const { text, category, offset = 0, limit = 40, old = [], page } = variables ?? {};
+    const { text, category, offset = 0, limit = 40, old = [], page, sort } = variables ?? {};
 
     const search = text ? `&search=${text}` : '';
+    const sortParam = sort ? `&sort=${sort}` : '';
+    const limitParam = limit ? `&limit=${limit}` : '';
 
-    const { data, mutate, error } = useSWR(`product?category=${category || ''}&page=${page || 1}${search}`, productFetcher, {
+    const { data, mutate, error } = useSWR(`product?category=${category || ''}&page=${page || 1}${search}${sortParam}${limitParam}`, productFetcher, {
         revalidateOnFocus: false,
     });
 
