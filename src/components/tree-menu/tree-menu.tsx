@@ -17,7 +17,7 @@ const ImageWrapper = styled.div(
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        height: ['30px', '30px'],
+        height: ['50px', '50px'],
         marginRight: '5px',
 
         img: {
@@ -55,7 +55,6 @@ const Tree = React.memo(
                 transform: `translate3d(${isOpen ? 0 : 20}px,0,0)`,
             },
         });
-        console.log(name)
         // const Icon = icon ? Icons[icon] : depth === 'child' ? Icons['Minus'] : null;
         // const Icon = icon ? Icons[icon] : null;
         // const Icon = ({ iconName, style }: { iconName: any; style?: any }) => {
@@ -87,7 +86,7 @@ const Tree = React.memo(
                             src={image}
                             alt={name}
                             width={50}
-                            height={30}
+                            height={50}
                             unoptimized={true}
                         />
                     </ImageWrapper>

@@ -38,17 +38,22 @@ interface Props {
     old?: any;
     page?: any;
     sort?: any;
+    filter?: any;
+    inStock?: any;
 }
 
 
 export default function useProducts(variables: Props) {
-    const { text, category, offset = 0, limit = 40, old = [], page, sort } = variables ?? {};
+    const { text, category, offset = 0, limit = 40, old = [], page, sort,filter,inStock } = variables ?? {};
 
     const search = text ? `&search=${text}` : '';
     const sortParam = sort ? `&sort=${sort}` : '';
     const limitParam = limit ? `&limit=${limit}` : '';
+    const filterParam = limit ? `&filter=${filter}` : '';
+    const inStockParam = limit ? `&inStock=${inStock}` : '';
 
-    const { data, mutate, error } = useSWR(`product?category=${category || ''}&page=${page || 1}${search}${sortParam}${limitParam}`, productFetcher, {
+
+    const { data, mutate, error } = useSWR(`product?category=${category || ''}&page=${page || 1}${search}${sortParam}${limitParam}${filterParam}${inStockParam}`, productFetcher, {
         revalidateOnFocus: false,
     });
 

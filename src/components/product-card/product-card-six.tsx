@@ -152,8 +152,7 @@ interface Props {
 export const ProductCard = ({ data }: Props) => {
     const { title, image, price, sale_price, slug, discountInPercent, availableQty } = data;
 
-    console.log(`/product/${slug}`)
-    console.log("/product/[slug]")
+
 
     const stockColor = availableQty > 10 ? 'green' : (availableQty < 1 ? 'red' : 'orange');
 

@@ -27,6 +27,8 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
             textShadow: '1px 1px 1px rgba(0, 0, 0, 0.004)',
+            overflow: 'scroll !important',
+            paddingRight: '0 !important',
         },
         h1: {
             fontFamily: 'heading',

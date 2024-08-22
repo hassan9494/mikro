@@ -103,6 +103,7 @@ export const CATEGORY_MENU_ITEMS = [
     },
 ];
 
+
 export const MOBILE_DRAWER_MENU = [
     HOME_MENU_ITEM,
     ...AUTHORIZED_MENU_ITEMS,
