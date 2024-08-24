@@ -75,6 +75,7 @@ export const Title = styled.span({
     whiteSpace: 'nowrap',
     verticalAlign: 'middle',
     overflow: 'hidden',
+    width:'60%'
 });
 
 export const Content = styled(animated.div)({
