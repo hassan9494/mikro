@@ -26,17 +26,42 @@ import {
 import UserImage from 'assets/images/user.jpg';
 import {
     MOBILE_DRAWER_MENU,
-    PROFILE_PAGE,
+    PROFILE_PAGE, REQUEST_MEDICINE_MENU_ITEM,
 } from 'site-settings/site-navigation';
 import { useAppState, useAppDispatch } from 'contexts/app/app.provider';
 import useUser from "../../data/use-user";
 import {Person} from "@material-ui/icons";
 import {Avatar} from "@material-ui/core";
+import Link from "next/link";
+import {RequestMedicine} from "../sidebar/sidebar.style";
+import {TreeMenu} from "../../components/tree-menu/tree-menu";
+import CategoryWalker from "../../components/category-walker/category-walker";
+import useCategory from "../../data/use-category";
+import {router} from "next/client";
+import styled from "styled-components";
+import css from '@styled-system/css';
+
+const TreeWrapper = styled.div(
+    css({
+        marginLeft: '40px',
+        marginRight :'10px'
+    })
+);
+
+const CategoryTitle = styled.div(
+    css({
+        fontSize : '18px',
+        marginLeft: '40px',
+        marginRight :'10px',
+        marginBottom :'10px',
+        color: '#fe5e00',
+    })
+);
 
 const MobileDrawer: React.FunctionComponent = () => {
     const isDrawerOpen = useAppState('isDrawerOpen');
     const dispatch = useAppDispatch();
-
+    const { data, error } = useCategory();
     const { user, loading } = useUser();
 
     const {
@@ -81,6 +106,16 @@ const MobileDrawer: React.FunctionComponent = () => {
                 width: 458,
                 height: 'auto',
             },
+        });
+    };
+
+    const { pathname, query } = router;
+    const selectedQueries = query.category;
+
+    const onCategoryClick = (category: string) => {
+        router.push({
+            pathname: '/category/[category]',
+            query: { category },
         });
     };
 
@@ -140,7 +175,22 @@ const MobileDrawer: React.FunctionComponent = () => {
                                     />
                                 </DrawerMenuItem>
                             ))}
+                            <CategoryTitle>
+                                Categories :
+                            </CategoryTitle>
+                            <TreeWrapper>
+
+                                <TreeMenu
+                                    data={data}
+                                    onClick={onCategoryClick}
+                                    active={selectedQueries}
+                                />
+                            </TreeWrapper>
                         </DrawerMenu>
+
+
+
+
 
                         {isAuthenticated && (
                             <UserOptionMenu>
@@ -156,6 +206,7 @@ const MobileDrawer: React.FunctionComponent = () => {
                                 </DrawerMenuItem>
                             </UserOptionMenu>
                         )}
+
                     </DrawerContentWrapper>
                 </Scrollbar>
             </DrawerBody>
