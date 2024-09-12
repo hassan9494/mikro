@@ -144,26 +144,36 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                         <ProductTitle>{product.title}</ProductTitle>
                     </ProductTitlePriceWrapper>
 
-                    <ProductPriceWrapper>
-                        <ProductPrice>
-                            <MoneyFormat value={product.sale_price ? product.sale_price : product.price} />
-                            {
-                                product.sale_price ? (
-                                <SalePrice>
-                                    <MoneyFormat value={product.price} />
-                                </SalePrice>
-                                ) : null
-                            }
-                        </ProductPrice>
-                    </ProductPriceWrapper>
 
-                    <ProductCartWrapper>
-                        {
-                            data.availableQty ?
-                                <AddToCart data={data} />:
-                                <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
-                        }
-                    </ProductCartWrapper>
+                    {
+                        data.is_available ?
+                            <div>
+                                <ProductPriceWrapper>
+                                    <ProductPrice>
+                                        <MoneyFormat value={product.sale_price ? product.sale_price : product.price} />
+                                        {
+                                            product.sale_price ? (
+                                                <SalePrice>
+                                                    <MoneyFormat value={product.price} />
+                                                </SalePrice>
+                                            ) : null
+                                        }
+                                    </ProductPrice>
+                                </ProductPriceWrapper>
+                                <ProductCartWrapper>
+                                    {
+                                        data.availableQty ?
+                                            <AddToCart data={data} />:
+                                            <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                    }
+                                </ProductCartWrapper>
+                            </div>
+                              :
+                            <FormattedMessage id='available' defaultMessage="This product is't available now" />
+
+                    }
+
+
 
                     <ProductWeight>{product.unit}</ProductWeight>
                     <ProductDescription>
@@ -185,6 +195,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                         <Tab label="Details" {...tabProps(0)} />
                         <Tab label="Features" {...tabProps(1)} />
                         <Tab label="Documents" {...tabProps(2)} />
+                        <Tab label="Product Include" {...tabProps(3)} />
                     </Tabs>
                     <Box p={1}>
                         <TabPanel value={value} index={0}>
@@ -200,6 +211,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                         <TabPanel value={value} index={2}>
                             <p>
                                 <div dangerouslySetInnerHTML={{ __html: product.documents }} />
+                            </p>
+                        </TabPanel>
+                        <TabPanel value={value} index={3}>
+                            <p>
+                                <div dangerouslySetInnerHTML={{ __html: product.packageInclude }} />
                             </p>
                         </TabPanel>
                     </Box>

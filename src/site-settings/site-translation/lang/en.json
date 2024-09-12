@@ -77,7 +77,7 @@
   "savedCardsId": "Saved Cards",
   "savedContactId": "Save Contact",
   "savedAddressId": "Save Address",
-  "siteFooter": "2021 © Mikroelectron. ALL Rights Reserved.",
+  "siteFooter": "2024 © Mikroelectron. ALL Rights Reserved.",
   "subTotal": "Sub Total",
   "itemsText": "items",
   "shippingFeeText": "Shipping Fee",
@@ -181,5 +181,6 @@
   "cityPlaceholder": "City",
   "countryPlaceholder": "Country",
   "countryJordan": "الأردن",
-  "msgResetPasswordEmailSent": "Reset password instruction has been sent to the given email address"
+  "msgResetPasswordEmailSent": "Reset password instruction has been sent to the given email address",
+  "available" : "This product is't available now"
 }

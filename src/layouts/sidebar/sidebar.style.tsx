@@ -89,8 +89,8 @@ export const CategoryWrapper = styled.div`
 `;
 
 export const TreeWrapper = styled.div`
-  padding-left: 50px;
-  padding-right: 20px;
+  padding-left: 35px;
+  padding-right: 10px;
 `;
 
 export const PopoverHandler = styled.div`

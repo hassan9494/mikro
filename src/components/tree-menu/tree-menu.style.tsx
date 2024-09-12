@@ -88,7 +88,7 @@ export const Frame = styled.div<any>(
     (props) =>
         css({
             marginBottom: props.depth === 'parent' ? 10 : 0,
-            paddingLeft: props.depth === 'child' ? 16 : 0,
+            paddingLeft: props.depth === 'child' ? 10 : 0,
         }),
     {
         position: 'relative',

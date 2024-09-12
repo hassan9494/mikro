@@ -150,7 +150,7 @@ interface Props {
 }
 
 export const ProductCard = ({ data }: Props) => {
-    const { title, image, price, sale_price, slug, discountInPercent, availableQty } = data;
+    const { title, image, price, sale_price, slug, discountInPercent, availableQty,is_available } = data;
 
 
 
@@ -189,34 +189,38 @@ export const ProductCard = ({ data }: Props) => {
                 <Title>
                     {title.substring(0,32) + (title.length > 32 ? '...' : '')}
                 </Title>
+                {
+                    is_available ?
+                        <PriceWrapper>
+                            {
+                                sale_price ? (
+                                    <>
+                                        <SalePrice>
+                                            <MoneyFormat value={sale_price} />
+                                        </SalePrice>
+                                        <OldPrice>
+                                            <MoneyFormat value={price} />
+                                        </OldPrice>
+                                    </>
 
-                <PriceWrapper>
-                    {
-                        sale_price ? (
-                            <>
-                                <SalePrice>
-                                    <MoneyFormat value={sale_price} />
-                                </SalePrice>
-                                <OldPrice>
-                                    <MoneyFormat value={price} />
-                                </OldPrice>
-                            </>
+                                ) : (
+                                    <Price>
+                                        <MoneyFormat value={price} />
+                                    </Price>
+                                )
+                            }
+                            <CounterWrapper>
+                                {
+                                    availableQty ?
+                                        <AddItemToCart data={data} variant={'lightHorizontal'}/>:
+                                        <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                }
+                            </CounterWrapper>
 
-                        ) : (
-                            <Price>
-                                <MoneyFormat value={price} />
-                            </Price>
-                        )
-                    }
-                    <CounterWrapper>
-                        {
-                            availableQty ?
-                                <AddItemToCart data={data} variant={'lightHorizontal'}/>:
-                                <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
-                        }
-                    </CounterWrapper>
+                        </PriceWrapper>  :
+                        <FormattedMessage id='available' defaultMessage="This product is't available now" />
+                }
 
-                </PriceWrapper>
 
             </Box>
 

@@ -70,15 +70,15 @@ const Tree = React.memo(
                 <Header open={isOpen} depth={depth} className={depth}>
                     {/*{icon && (*/}
 
-                    <IconWrapper depth={depth}>
-                    {
-                        depth === 'parent' ?
-                        <DoubleArrow
-                            style={{color: 'grey'}}
-                        />:
-                        <RadioButtonUncheckedOutlined style={{height: 16}} />
-                    }
-                    </IconWrapper>
+                    {/*<IconWrapper depth={depth}>*/}
+                    {/*{*/}
+                    {/*    depth === 'parent' ?*/}
+                    {/*    <DoubleArrow*/}
+                    {/*        style={{color: 'grey'}}*/}
+                    {/*    />:*/}
+                    {/*    <RadioButtonUncheckedOutlined style={{height: 16}} />*/}
+                    {/*}*/}
+                    {/*</IconWrapper>*/}
                     {/*)}*/}
                     {image && (
                     <ImageWrapper>

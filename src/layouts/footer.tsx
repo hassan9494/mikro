@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import css from '@styled-system/css';
 import { FormattedMessage } from 'react-intl';
 import {IconButton} from "@material-ui/core";
-import {Facebook, Instagram, Mail, Room, Telegram, WhatsApp, YouTube} from "@material-ui/icons";
+import {Facebook, Instagram, Mail, Phone, Room, Telegram, WhatsApp, YouTube} from "@material-ui/icons";
+import NavLink from "../components/nav-link/nav-link";
+import React from "react";
 
 const Box = styled.div(
     css({
@@ -44,18 +46,26 @@ const Copyright = styled.div(
 );
 
 const Footer = () => {
+    const currentYear = new Date().getFullYear();
+
     return (
         <Box>
             <Copyright>
                 <FormattedMessage
-                    id='siteFooter'
-                    defaultMessage='PickBazar is a product of'
+                    id='test'
+                    defaultMessage={`${currentYear} © Mikroelectron. ALL Rights Reserved.`}
                 />
                 <p>
                     AMMAN, Jordan. University Street, Khalifa Building 3rd floor
                 </p>
             </Copyright>
             <p>
+
+                <a href='tel:+96265344772' title={'Call +96265344772'}>
+                    <IconButton>
+                        <Phone  style={{color: '#55795d'}}/>
+                    </IconButton>
+                </a>
                 <a href='https://www.google.com/maps/place/32.015643,35.867292' target='_blank'>
                     <IconButton>
                             <Room style={{color: '#e74c3c'}}/>
