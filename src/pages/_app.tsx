@@ -1,7 +1,8 @@
-import {Backdrop, CircularProgress, CssBaseline, ThemeProvider as MuiThemeProvider} from '@material-ui/core';
+import { useEffect } from 'react';
+import { Backdrop, CircularProgress, CssBaseline, ThemeProvider as MuiThemeProvider } from '@material-ui/core';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from 'site-settings/site-theme/default';
-import {AppProvider, useAppState} from 'contexts/app/app.provider';
+import { AppProvider, useAppState } from 'contexts/app/app.provider';
 import { AuthProvider } from 'contexts/auth/auth.provider';
 import { LanguageProvider } from 'contexts/language/language.provider';
 import { CartProvider } from 'contexts/cart/use-cart';
@@ -10,8 +11,6 @@ import AppLayout from 'layouts/app-layout';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 import theme from 'theme';
-
-// External CSS import here
 import 'swiper/swiper-bundle.min.css';
 import 'rc-drawer/assets/index.css';
 import 'rc-table/assets/index.css';
@@ -22,19 +21,43 @@ import 'react-spring-modal/dist/index.css';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import 'components/scrollbar/scrollbar.css';
 import '@redq/reuse-modal/lib/index.css';
-
 import { GlobalStyle } from 'assets/styles/global.style';
-
-// Language translation messages
 import { messages } from 'site-settings/site-translation/messages';
 import 'typeface-lato';
 import 'typeface-poppins';
 import React from 'react';
 import { OrderProvider } from "../contexts/order/order.provider";
-// need to provide types
-export default function ExtendedApp({ Component, pageProps }) {
 
-    React.useEffect(() => {
+export default function ExtendedApp({ Component, pageProps }) {
+    useEffect(() => {
+        // Inject head scripts
+        const headScripts = document.documentElement.getAttribute('data-head-scripts');
+        if (headScripts) {
+            const head = document.head;
+            const scriptElement = document.createElement('div');
+            scriptElement.innerHTML = headScripts;
+            Array.from(scriptElement.children).forEach((child) => {
+                const script = document.createElement('script');
+                script.innerHTML = child.innerHTML;
+                head.appendChild(script);
+            });
+        }
+
+        // Inject body scripts
+        const bodyScripts = document.documentElement.getAttribute('data-body-scripts');
+        if (bodyScripts) {
+            const body = document.body;
+            const scriptElement = document.createElement('div');
+            scriptElement.innerHTML = bodyScripts;
+            Array.from(scriptElement.children).forEach((child) => {
+                const script = document.createElement('script');
+                script.innerHTML = child.innerHTML;
+                body.appendChild(script);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector('#jss-server-side');
         if (jssStyles) {
@@ -42,13 +65,12 @@ export default function ExtendedApp({ Component, pageProps }) {
         }
     }, []);
 
-
     const mobile = useMedia('(max-width: 580px)');
     const tablet = useMedia('(max-width: 991px)');
     const desktop = useMedia('(min-width: 992px)');
+
     return (
         <MuiThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             <ThemeProvider theme={defaultTheme}>
                 <LanguageProvider messages={messages}>
@@ -57,13 +79,10 @@ export default function ExtendedApp({ Component, pageProps }) {
                             <AuthProvider>
                                 <AppLayout>
                                     <Loading />
-                                    <Component
-                                        {...pageProps}
-                                        deviceType={{ mobile, tablet, desktop }}
-                                    />
-                                    <ToastContainer/>
+                                    <Component {...pageProps} deviceType={{ mobile, tablet, desktop }} />
+                                    <ToastContainer />
                                 </AppLayout>
-                                <GlobalStyle/>
+                                <GlobalStyle />
                             </AuthProvider>
                         </AppProvider>
                     </CartProvider>
@@ -76,7 +95,7 @@ export default function ExtendedApp({ Component, pageProps }) {
 function Loading() {
     const isLoading = useAppState('isLoading');
     return (
-        <Backdrop open={isLoading} style={{zIndex: 99999}} >
+        <Backdrop open={isLoading} style={{ zIndex: 99999 }}>
             <CircularProgress />
         </Backdrop>
     );

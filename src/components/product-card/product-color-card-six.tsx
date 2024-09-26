@@ -149,7 +149,7 @@ interface Props {
     data: any;
 }
 
-export const ProductCard = ({ data }: Props) => {
+export const ProductColorCard = ({ data }: Props) => {
     const { title, image, price, sale_price, slug, discountInPercent, availableQty,is_available,is_retired  } = data;
 
 

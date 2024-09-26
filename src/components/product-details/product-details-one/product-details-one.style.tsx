@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { themeGet } from '@styled-system/theme-get';
+import {themeGet} from '@styled-system/theme-get';
 
 export const ProductDetailsWrapper = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
@@ -223,6 +223,31 @@ export const ProductDescription = styled.p`
   color: ${themeGet('colors.text.medium', '#424561')};
   line-height: 2;
   margin-top: 30px;
+`;
+
+export const ColorsContainer = styled.div`
+  font-family: ${themeGet('fonts.body', 'sans-serif')};
+  font-size: ${themeGet('fontSizes.base', '15')}px;
+  font-weight: ${themeGet('fontWeights.regular', '400')};
+  color: ${themeGet('colors.text.medium', '#424561')};
+  line-height: 2;
+  margin-top: 30px;
+  display:flex;
+  justify-content: flex-start;
+`;
+
+export const ColorBadge = styled.div`
+   z-index: 1;
+   top: 10px;
+   right: 10px;
+   background-color: rgba(19,53,149);
+   color: #fff;
+   overflow: hidden;
+   padding: 0.25rem 1rem;
+   font-size: 14px;
+   border-radius: 6px;
+   pointer-events: none;
+   margin:10px;
 `;
 
 export const ProductCartWrapper = styled.div`
