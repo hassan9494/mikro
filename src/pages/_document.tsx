@@ -4,20 +4,25 @@ import Document, {
     Main,
     NextScript,
     DocumentContext,
+    DocumentInitialProps,
 } from 'next/document';
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 import theme from 'theme';
 
+interface CustomDocumentInitialProps extends DocumentInitialProps {
+    headScripts: string;
+    bodyScripts: string;
+}
 
-export default // @ts-ignore
-class CustomDocument extends Document {
-    static async getInitialProps(ctx: DocumentContext) {
+export default class CustomDocument extends Document<CustomDocumentInitialProps> {
+    static async getInitialProps(ctx: DocumentContext): Promise<CustomDocumentInitialProps> {
         const sheet = new ServerStyleSheet();
         const originalRenderPage = ctx.renderPage;
 
+        const url = process.env.NEXT_PUBLIC_REST_API_ENDPOINT;
         // Fetch the scripts from the API
-        const res = await fetch('http://127.0.0.1:8000/api/tag');
+        const res = await fetch(`${url}/tag`);
         const data = await res.json();
 
         const headScripts = data.data.filter((item: any) => item.type === 'HEAD').map((item: any) => item.script).join('');
@@ -33,12 +38,10 @@ class CustomDocument extends Document {
             const initialProps = await Document.getInitialProps(ctx);
             return {
                 ...initialProps,
-                styles: (
-                    <>
-                        {initialProps.styles}
-                        {sheet.getStyleElement()}
-                    </>
-                ),
+                styles: [
+                    ...React.Children.toArray(initialProps.styles),
+                    ...React.Children.toArray(sheet.getStyleElement())
+                ],
                 headScripts,
                 bodyScripts,
             };
