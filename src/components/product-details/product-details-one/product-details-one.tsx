@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import {
@@ -16,19 +16,20 @@ import {
     ProductPrice,
     SalePrice,
     MetaSingle,
-    RelatedItems,
+    RelatedItems, ReplacementWrapper,
 } from './product-details-one.style';
 import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
-import { FormattedMessage } from 'react-intl';
-import { useLocale } from 'contexts/language/language.provider';
+import {FormattedMessage} from 'react-intl';
+import {useLocale} from 'contexts/language/language.provider';
 import RelatedProducts from "../../product-grid/related-list/related-list";
-import { Box, Button, Chip, Tab, Tabs, Typography } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
+import {Box, Button, Chip, Tab, Tabs, Typography} from "@material-ui/core";
+import {ArrowBack} from "@material-ui/icons";
 import MoneyFormat from "../../money-format/money-format";
 import {AddToCart} from "./add-to-cart";
 import {ProductCardWrapper, ProductsCol, ProductsRow} from "../../product-grid/related-list/related-list.style";
 import Fade from "react-reveal/Fade";
 import {ProductCard} from "../../product-card/product-card-six";
+import {ReplacementProductCard} from "../../product-card/replacement_product_card";
 
 type ProductDetailsProps = {
     product: any;
@@ -47,7 +48,7 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div
@@ -73,12 +74,12 @@ function tabProps(index: any) {
     };
 }
 
-function ProductCategories ({ categories = []}) {
+function ProductCategories({categories = []}) {
     return (
         <ProductMeta>
             <MetaSingle>
                 {categories.map((item: any) => (
-                    <Box m={0.3}>
+                    <Box m={0.3} key={item.id}>
                         <Link
                             href={`/?category=${item.slug}`}
                             key={`link-${item.id}`}
@@ -86,7 +87,8 @@ function ProductCategories ({ categories = []}) {
                             <a>
                                 <Chip
                                     label={item.title}
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                    }}
                                     variant="outlined"
                                     color={"secondary"}
                                 />
@@ -101,9 +103,9 @@ function ProductCategories ({ categories = []}) {
 
 
 const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
-  product,
-  deviceType,
-}) => {
+                                                                          product,
+                                                                          deviceType,
+                                                                      }) => {
 
     const [value, setValue] = React.useState(0);
 
@@ -111,7 +113,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         setValue(newValue);
     };
 
-    const { isRtl } = useLocale();
+    const {isRtl} = useLocale();
     const data = product;
 
     useEffect(() => {
@@ -124,175 +126,186 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         <ProductCard data={props} key={props.id}/>
     );
 
+    const renderReplacementCard = (props) => (
+        <ReplacementProductCard data={props} key={props.id}/>
+    );
+
+    const [colorIndex, setColorIndex] = useState([0])
+
     return (
         <>
             {
-                !data.is_retired ?
-                    <ProductDetailsWrapper className="product-card" dir="ltr">
-                        <ProductPreview>
-                            <BackButton>
-                                <Button
-                                    variant="contained"
-                                    onClick={Router.back}
-                                    disableElevation
-                                    startIcon={<ArrowBack />}
-                                >
-                                    <FormattedMessage id="backBtn" defaultMessage="Back"/>
-                                </Button>
-                            </BackButton>
-
-                            <CarouselWithCustomDots
-                                items={product.gallery}
-                                deviceType={deviceType}
-                            />
-                        </ProductPreview>
-
-                        <ProductInfo >
-
-                            <ProductTitlePriceWrapper>
-                                <ProductTitle>{product.title}</ProductTitle>
-                            </ProductTitlePriceWrapper>
-
-
-                            {
-                                data.is_available ?
-                                    <div>
-                                        <ProductPriceWrapper>
-                                            <ProductPrice>
-                                                <MoneyFormat value={product.sale_price ? product.sale_price : product.price} />
-                                                {
-                                                    product.sale_price ? (
-                                                        <SalePrice>
-                                                            <MoneyFormat value={product.price} />
-                                                        </SalePrice>
-                                                    ) : null
-                                                }
-                                            </ProductPrice>
-                                        </ProductPriceWrapper>
-                                        <ProductCartWrapper>
-                                            {
-                                                data.availableQty ?
-                                                    <AddToCart data={data} />:
-                                                    <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
-                                            }
-                                        </ProductCartWrapper>
-                                    </div>
-                                    :
-                                    <FormattedMessage id='available' defaultMessage="This product is't available now" />
-
-                            }
-
-
-
-                            <ProductWeight>{product.unit}</ProductWeight>
-
-                            <ProductDescription>
-                                {
-                                    product.short_description ?
-                                        product.short_description :
-                                        <p>
-                                            <div dangerouslySetInnerHTML={{ __html: product.description }} />
-                                        </p>
-                                }
-                            </ProductDescription>
-
-                            <ProductCategories categories={product?.categories} />
-
-                        </ProductInfo>
-
-                        <div style={{flexGrow: 1}}>
-                            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                                <Tab label="Details" {...tabProps(0)} />
-                                <Tab label="Features" {...tabProps(1)} />
-                                <Tab label="Documents" {...tabProps(2)} />
-                                <Tab label="Product Include" {...tabProps(3)} />
-                            </Tabs>
-                            <Box p={1}>
-                                <TabPanel value={value} index={0}>
-                                    <p>
-                                        <div dangerouslySetInnerHTML={{ __html: product.description }} />
-                                    </p>
-                                </TabPanel>
-                                <TabPanel value={value} index={1}>
-                                    <p>
-                                        <div dangerouslySetInnerHTML={{ __html: product.features }} />
-                                    </p>
-                                </TabPanel>
-                                <TabPanel value={value} index={2}>
-                                    <p>
-                                        <div dangerouslySetInnerHTML={{ __html: product.documents }} />
-                                    </p>
-                                </TabPanel>
-                                <TabPanel value={value} index={3}>
-                                    <p>
-                                        <div dangerouslySetInnerHTML={{ __html: product.packageInclude }} />
-                                    </p>
-                                </TabPanel>
-                            </Box>
-                        </div>
-                        {isRtl && (
+                data.is_available ?
+                    <div>
+                        <ProductDetailsWrapper className="product-card" dir="ltr">
                             <ProductPreview>
                                 <BackButton>
                                     <Button
-                                        variant="outlined"
+                                        variant="contained"
                                         onClick={Router.back}
-                                        startIcon={<ArrowBack />}
+                                        disableElevation
+                                        startIcon={<ArrowBack/>}
                                     >
                                         <FormattedMessage id="backBtn" defaultMessage="Back"/>
                                     </Button>
                                 </BackButton>
-
                                 <CarouselWithCustomDots
                                     items={product.gallery}
                                     deviceType={deviceType}
                                 />
-                            </ProductPreview>
-                        )}
 
-                    </ProductDetailsWrapper>  :
+                            </ProductPreview>
+
+                            <ProductInfo>
+
+                                <ProductTitlePriceWrapper>
+                                    <ProductTitle>{product.title}</ProductTitle>
+                                </ProductTitlePriceWrapper>
+
+
+                                {
+                                    !data.is_retired ?
+                                        <div>
+                                            <ProductPriceWrapper>
+
+                                                <ProductPrice>
+                                                    <MoneyFormat
+                                                        value={product.sale_price ? product.sale_price : product.price}/>
+                                                    {
+                                                        product.sale_price ? (
+                                                            <SalePrice>
+                                                                <MoneyFormat value={product.price}/>
+                                                            </SalePrice>
+                                                        ) : null
+                                                    }
+                                                </ProductPrice>
+
+
+                                            </ProductPriceWrapper>
+
+                                            <ProductCartWrapper>
+                                                {
+                                                    data.availableQty ?
+                                                        <AddToCart data={data}/> :
+                                                        <FormattedMessage id='outOfStock'
+                                                                          defaultMessage='Out Of Stock'/>
+                                                }
+                                            </ProductCartWrapper>
+
+
+                                        </div>
+                                        :
+                                        <ReplacementWrapper>
+                                            <FormattedMessage id='retired' defaultMessage="This product is retired now ,the replacement is :"/>
+                                            <ProductCardWrapper>
+                                                <Fade
+                                                    duration={800}
+                                                    delay={10}
+                                                    style={{ height: '100%' }}
+                                                >
+                                                    {renderReplacementCard(product.replacement_item)}
+                                                </Fade>
+                                            </ProductCardWrapper>
+                                        </ReplacementWrapper>
+
+
+                                }
+
+
+                                <ProductWeight>{product.unit}</ProductWeight>
+
+
+                                <ProductDescription>
+                                    {
+                                        product.short_description ?
+                                            product.short_description :
+                                            <p>
+                                                <div dangerouslySetInnerHTML={{__html: product.description}}/>
+                                            </p>
+                                    }
+                                </ProductDescription>
+
+
+                                <ProductCategories categories={product?.categories}/>
+
+                            </ProductInfo>
+
+                            <div style={{flexGrow: 1}}>
+                                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                                    <Tab label="Details" {...tabProps(0)} />
+                                    <Tab label="Features" {...tabProps(1)} />
+                                    <Tab label="Documents" {...tabProps(2)} />
+                                    <Tab label="Product Include" {...tabProps(3)} />
+                                </Tabs>
+                                <Box p={1}>
+                                    <TabPanel value={value} index={0}>
+                                        <p>
+                                            <div dangerouslySetInnerHTML={{__html: product.description}}/>
+                                        </p>
+                                    </TabPanel>
+                                    <TabPanel value={value} index={1}>
+                                        <p>
+                                            <div dangerouslySetInnerHTML={{__html: product.features}}/>
+                                        </p>
+                                    </TabPanel>
+                                    <TabPanel value={value} index={2}>
+                                        <p>
+                                            <div dangerouslySetInnerHTML={{__html: product.documents}}/>
+                                        </p>
+                                    </TabPanel>
+                                    <TabPanel value={value} index={3}>
+                                        <p>
+                                            <div dangerouslySetInnerHTML={{__html: product.packageInclude}}/>
+                                        </p>
+                                    </TabPanel>
+                                </Box>
+                            </div>
+                            {isRtl && (
+                                <ProductPreview>
+                                    <BackButton>
+                                        <Button
+                                            variant="outlined"
+                                            onClick={Router.back}
+                                            startIcon={<ArrowBack/>}
+                                        >
+                                            <FormattedMessage id="backBtn" defaultMessage="Back"/>
+                                        </Button>
+                                    </BackButton>
+
+                                    <CarouselWithCustomDots
+                                        items={product.gallery}
+                                        deviceType={deviceType}
+                                    />
+                                </ProductPreview>
+                            )}
+
+                        </ProductDetailsWrapper>
+                        <ProductDetailsWrapper className="product-card" dir="ltr">
+
+                        </ProductDetailsWrapper>
+
+                        <RelatedItems>
+                            <RelatedProducts
+                                slug={data?.id}
+                                deviceType={deviceType}
+                            />
+                        </RelatedItems>
+                    </div>
+                    :
                     <ProductDetailsWrapper className="product-card" dir="ltr">
                         <ProductPreview>
-                            <ProductTitle>This product is retired now</ProductTitle>
+                            <ProductTitle>This product is not available</ProductTitle>
                         </ProductPreview>
-                        <ProductInfo >
 
-                            <ProductTitle>This is replacement item</ProductTitle>
-                            <ProductCardWrapper>
-                                <Fade
-                                    duration={800}
-                                    delay={10}
-                                    style={{ height: '100%' }}
-                                >
-                                    {renderCard(product.replacement_item)}
-                                </Fade>
-                            </ProductCardWrapper>
-
-
-
-
-
-
-
-                        </ProductInfo>
                     </ProductDetailsWrapper>
 
 
             }
 
-            <ProductDetailsWrapper className="product-card" dir="ltr">
 
-            </ProductDetailsWrapper>
-
-            <RelatedItems>
-                <RelatedProducts
-                    slug={data?.id}
-                    deviceType={deviceType}
-                />
-            </RelatedItems>
         </>
     );
 };
-
 
 
 export default ProductDetails;

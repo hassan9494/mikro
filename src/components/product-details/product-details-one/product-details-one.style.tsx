@@ -303,6 +303,12 @@ export const MetaSingle = styled.div`
   /* align-items: center; */
 `;
 
+export const ReplacementWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  /* align-items: center; */
+`;
+
 export const MetaItem = styled.span`
   font-family: ${themeGet('fonts.body', 'sans-serif')};
   font-size: ${themeGet('fontSizes.sm', '13')}px;

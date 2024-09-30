@@ -150,7 +150,7 @@ interface Props {
 }
 
 export const ProductCard = ({ data }: Props) => {
-    const { title, image, price, sale_price, slug, discountInPercent, availableQty,is_available,is_retired  } = data;
+    const { title, image, price, sale_price, slug, discountInPercent, availableQty,is_available,is_retired,hasVariants,colors  } = data;
 
 
 
@@ -190,8 +190,10 @@ export const ProductCard = ({ data }: Props) => {
                     {title.substring(0,32) + (title.length > 32 ? '...' : '')}
                 </Title>
                 {
-                    !is_retired ?
+                    // hasVariants && colors.length > 0 ?
+                    //     <FormattedMessage id='retired' defaultMessage="You must choose one of the options" /> :
                     is_available ?
+                    !is_retired ?
                         <PriceWrapper>
                             {
                                 sale_price ? (
@@ -220,9 +222,9 @@ export const ProductCard = ({ data }: Props) => {
 
                         </PriceWrapper>  :
 
-                        <FormattedMessage id='available' defaultMessage="This product is't available now" />:
 
-                        <FormattedMessage id='retired' defaultMessage="This product is retired now" />
+                        <FormattedMessage id='retired' defaultMessage="This product is retired now" />:
+                        <FormattedMessage id='available' defaultMessage="This product is't available now" />
                 }
 
 
