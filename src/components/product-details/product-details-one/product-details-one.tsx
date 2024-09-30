@@ -203,7 +203,10 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                     delay={10}
                                                     style={{ height: '100%' }}
                                                 >
-                                                    {renderReplacementCard(product.replacement_item)}
+                                                    { product.replacement_item ?
+                                                        renderReplacementCard(product.replacement_item) :
+                                                        <FormattedMessage id='retired' defaultMessage="There is no replacement item"/>
+                                                    }
                                                 </Fade>
                                             </ProductCardWrapper>
                                         </ReplacementWrapper>
