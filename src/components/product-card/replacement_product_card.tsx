@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import css from '@styled-system/css';
+import Image from "next/image";
 
 const Card = styled.div({
     backgroundColor: '#fff',
@@ -35,12 +36,31 @@ const Title = styled.h2(
     })
 );
 
+const ImageWrapper = styled.div(
+    css({
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        height: ['100px', '100px'],
+
+        img: {
+            display: 'block',
+            maxHeight: '100%',
+            maxWidth: '100%',
+            width: 'auto',
+            height: 'auto',
+        },
+    })
+);
+
 interface Props {
     data: any;
 }
 
 export const ReplacementProductCard = ({ data }: Props) => {
-    const { title, slug } = data;
+    const { title, slug,image } = data;
 
 
 
@@ -48,6 +68,17 @@ export const ReplacementProductCard = ({ data }: Props) => {
         <Card>
             <Link href="/product/[slug]" as={`/product/${slug}`}>
                 <a>
+                    <ImageWrapper>
+                        {/*<img src={image} alt={title} width={200} height={200}/>*/}
+                        <Image
+                            // loader={myLoader}
+                            src={image}
+                            alt={title}
+                            width={100}
+                            height={100}
+                            unoptimized={true}
+                        />
+                    </ImageWrapper>
                 <Title>
                     {title.substring(0,32) + (title.length > 32 ? '...' : '')}
                 </Title>
