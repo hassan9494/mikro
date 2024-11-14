@@ -66,37 +66,37 @@ const Footer = () => {
                         <Phone  style={{color: '#55795d'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.google.com/maps/place/32.015643,35.867292' target='_blank'>
+                <a href='https://maps.app.goo.gl/PJGqCJnubZWaJqrSA' target='_blank' title={'Show Location'}>
                     <IconButton>
                             <Room style={{color: '#e74c3c'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.google.com/maps/place/32.015643,35.867292' target='_blank'>
+                <a href='mailto:info@mikroelectron.com' target='_blank' title={'Send Email'}>
                     <IconButton>
                         <Mail style={{color: '#e74c3c'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.facebook.com/Mikroelectron' target='_blank'>
+                <a href='https://www.facebook.com/Mikroelectron' target='_blank' title={'Facebook Page'}>
                     <IconButton>
                         <Facebook  style={{color: '#4867aa'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.facebook.com/Mikroelectron' target='_blank'>
+                <a href='https://www.instagram.com/mikroelectron' target='_blank' title={'Instagram Page'}>
                     <IconButton>
                         <Instagram  style={{color: '#8a3ab9'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.facebook.com/Mikroelectron' target='_blank'>
+                <a href='https://t.me/mikroelectron' target='_blank' title={'Telegram'}>
                     <IconButton>
                         <Telegram  style={{color: '#0088cc'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.youtube.com/channel/UCaDg6xg1a2Zbiee8qo8KvFw' target='_blank'>
+                <a href='https://www.youtube.com/@mikroelectron8608' target='_blank' title={'Youtube Channel'}>
                     <IconButton>
                         <YouTube  style={{color: '#FF0000'}}/>
                     </IconButton>
                 </a>
-                <a href='https://wa.me/962790062196' target='_blank'>
+                <a href='https://wa.me/962790062196' target='_blank' title={'Whatsapp'}>
                     <IconButton>
                         <WhatsApp  style={{color: '#1ad03f'}}/>
                     </IconButton>
