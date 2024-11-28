@@ -45,7 +45,7 @@ const Copyright = styled.div(
     }),
 );
 
-const Footer = () => {
+const Footer = ({social}) => {
     const currentYear = new Date().getFullYear();
 
     return (
@@ -61,42 +61,42 @@ const Footer = () => {
             </Copyright>
             <p>
 
-                <a href='tel:+96265344772' title={'Call +96265344772'}>
+                <a href={`tel:+${social?.call}`} title={'Call +96265344772'}>
                     <IconButton>
                         <Phone  style={{color: '#55795d'}}/>
                     </IconButton>
                 </a>
-                <a href='https://maps.app.goo.gl/PJGqCJnubZWaJqrSA' target='_blank' title={'Show Location'}>
+                <a href={`${social?.location}`} target='_blank' title={'Show Location'}>
                     <IconButton>
                             <Room style={{color: '#e74c3c'}}/>
                     </IconButton>
                 </a>
-                <a href='mailto:info@mikroelectron.com' target='_blank' title={'Send Email'}>
+                <a href={`mailto:${social?.email}`} target='_blank' title={'Send Email'}>
                     <IconButton>
                         <Mail style={{color: '#e74c3c'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.facebook.com/Mikroelectron' target='_blank' title={'Facebook Page'}>
+                <a href={`${social?.facebook}`} target='_blank' title={'Facebook Page'}>
                     <IconButton>
                         <Facebook  style={{color: '#4867aa'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.instagram.com/mikroelectron' target='_blank' title={'Instagram Page'}>
+                <a href={`${social?.instagram}`} target='_blank' title={'Instagram Page'}>
                     <IconButton>
                         <Instagram  style={{color: '#8a3ab9'}}/>
                     </IconButton>
                 </a>
-                <a href='https://t.me/mikroelectron' target='_blank' title={'Telegram'}>
+                <a href={`${social?.telegram}`} target='_blank' title={'Telegram'}>
                     <IconButton>
                         <Telegram  style={{color: '#0088cc'}}/>
                     </IconButton>
                 </a>
-                <a href='https://www.youtube.com/@mikroelectron8608' target='_blank' title={'Youtube Channel'}>
+                <a href={`${social?.youtube}`} target='_blank' title={'Youtube Channel'}>
                     <IconButton>
                         <YouTube  style={{color: '#FF0000'}}/>
                     </IconButton>
                 </a>
-                <a href='https://wa.me/962790062196' target='_blank' title={'Whatsapp'}>
+                <a href={`https://wa.me/${social?.whatsapp}`} target='_blank' title={'Whatsapp'}>
                     <IconButton>
                         <WhatsApp  style={{color: '#1ad03f'}}/>
                     </IconButton>

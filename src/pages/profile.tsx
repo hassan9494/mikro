@@ -14,6 +14,7 @@ import ErrorMessage from 'components/error-message/error-message';
 import useUser from 'data/use-user';
 import { useEffect } from "react";
 import Router from "next/router";
+import {useSocial} from "../data/use-website";
 
 type Props = {
     deviceType?: {
@@ -24,6 +25,7 @@ type Props = {
 };
 const ProfilePage: NextPage<Props> = ({ deviceType }) => {
 
+    const { data: social } = useSocial();
     const { error } = useUser();
 
     useEffect(() => {
@@ -43,7 +45,7 @@ const ProfilePage: NextPage<Props> = ({ deviceType }) => {
                             <SettingsContent deviceType={deviceType}/>
                         </ContentBox>
                     </PageWrapper>
-                    <Footer/>
+                    <Footer social={social}/>
                 </Modal>
             {/*</ProfileProvider>*/}
         </>

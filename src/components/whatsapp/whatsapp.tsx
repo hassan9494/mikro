@@ -19,10 +19,11 @@ type CartButtonProps = {
     pricePrefix?: string;
     className?: string;
     onClick?: (e: any) => void;
+    social?;
 };
 
-export const Whatsapp: React.FC<CartButtonProps> = ({}) => (
-    <CartPopupBoxButton href='https://wa.me/962790062196' target='_blank'>
+export const Whatsapp: React.FC<CartButtonProps> = ({social}) => (
+    <CartPopupBoxButton href={`https://wa.me/${social?.whatsapp}`} target='_blank'>
         <WhatsApp style={{color: 'white', width: 30, height: 30}} />
     </CartPopupBoxButton>
 );

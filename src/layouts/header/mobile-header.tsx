@@ -30,6 +30,7 @@ import { FormattedMessage } from "react-intl";
 type MobileHeaderProps = {
     className?: string;
     closeSearch?: any;
+    social?;
 };
 
 

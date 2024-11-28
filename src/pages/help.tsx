@@ -9,6 +9,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Container, Typography } 
 import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { FormattedMessage } from "react-intl";
+import {useSocial} from "../data/use-website";
 
 const accordionData = [
     {
@@ -97,7 +98,7 @@ export default function () {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
-
+    const { data: social } = useSocial();
     return (
         <Modal>
             <SEO {...sitePages.faq.seo} />
@@ -129,7 +130,7 @@ export default function () {
                         )
                     }
                 </Container>
-                <Footer/>
+                <Footer social={social}/>
             </HelpPageWrapper>
         </Modal>
     );

@@ -56,6 +56,7 @@ const TermsPage: NextPage<{}> = () => {
                                                 alt={e.title}
                                                 width={400}
                                                 height={200}
+                                                unoptimized={true}
                                             />
                                             <Typography variant="h6" component="h2">
                                                 {e.title}

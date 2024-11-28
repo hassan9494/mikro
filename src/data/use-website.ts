@@ -32,6 +32,20 @@ export function useSlides() {
     };
 
 }
+export function useSocial() {
+
+    const { data, mutate, error } = useSWR('website/links', fetcher, { revalidateOnFocus: false });
+
+    const loading = !data && !error;
+
+    return {
+        loading,
+        error,
+        data: data || [],
+        mutate,
+    };
+
+}
 
 export function useArticles(type) {
     const { data, mutate, error } = useSWR(`website/article?type=${type}`, fetcher, { revalidateOnFocus: false });

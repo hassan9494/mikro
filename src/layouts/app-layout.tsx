@@ -9,6 +9,7 @@ import { isCategoryPage } from './is-home-page';
 import {Box} from "@material-ui/core";
 import Footer from "./footer";
 import {  Whatsapp } from "components/whatsapp/whatsapp";
+import {useSocial} from "../data/use-website";
 
 const MobileHeader = dynamic(() => import('./header/mobile-header'), {
     ssr: false,
@@ -26,6 +27,8 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
                                                           token,
                                                       }) => {
     const { pathname, query } = useRouter();
+
+    const { data: social } = useSocial();
     const isSticky =
         useAppState('isSticky') ||
         pathname === '/furniture-two' ||
@@ -45,7 +48,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
 
 
                 <MobileHeader
-                    className={`sticky ${isHomePage ? 'home' : ''} desktop`}
+                    className={`sticky ${isHomePage ? 'home' : ''} desktop`} social={social}
                 />
 
                 {/*<Header*/}
@@ -54,10 +57,10 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
                 {/*  }`}*/}
                 {/*/>*/}
                 <Header
-                    className={`sticky ${isHomePage ? 'home' : ''}`}
+                    className={`sticky ${isHomePage ? 'home' : ''}`} social={social}
                 />
 
-                <Whatsapp />
+                <Whatsapp  social={social}/>
             </Sticky>
             {children}
         </LayoutWrapper>

@@ -16,6 +16,7 @@ import { SEO } from 'components/seo';
 import { useRefScroll } from 'utils/use-ref-scroll';
 import { ModalProvider } from 'contexts/modal/modal.provider';
 import Footer from "../../layouts/footer";
+import {useSocial} from "../../data/use-website";
 
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));
 const CartPopUp = dynamic(() => import('features/carts/cart-popup'), {
@@ -24,6 +25,7 @@ const CartPopUp = dynamic(() => import('features/carts/cart-popup'), {
 
 const CategoryPage: React.FC<any> = ({ deviceType }) => {
 
+    const { data: social } = useSocial();
     const { query } = useRouter();
     const { elRef: targetRef, scroll } = useRefScroll({
         percentOfElement: 0,
@@ -56,7 +58,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
                                         <Products type={PAGE_TYPE} deviceType={deviceType} />
                                     </div>
                                 </ProductsWrapper>
-                                <Footer />
+                                <Footer social={social}/>
                             </ContentSection>
                         </MainContentArea>
                         <CartPopUp deviceType={deviceType} />

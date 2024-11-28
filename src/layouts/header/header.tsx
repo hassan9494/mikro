@@ -12,11 +12,13 @@ import UserImage from 'assets/images/user.jpg';
 import { isCategoryPage } from '../is-home-page';
 import Search from 'features/search/search';
 import {Box} from "@material-ui/core";
+import dynamic from "next/dynamic";
 type Props = {
     className?: string;
+    social?;
 };
 
-const Header: React.FC<Props> = ({ className }) => {
+const Header: React.FC<Props> = ({ className,social }) => {
     const {
         authState: { isAuthenticated },
         authDispatch,
@@ -64,6 +66,7 @@ const Header: React.FC<Props> = ({ className }) => {
                 isAuthenticated={isAuthenticated}
                 onJoin={handleJoin}
                 onLogout={handleLogout}
+                social={social}
             />
         </HeaderWrapper>
     );

@@ -20,7 +20,7 @@ import {
 import { SEO } from 'components/seo';
 import { useRefScroll } from 'utils/use-ref-scroll';
 import { ModalProvider } from 'contexts/modal/modal.provider';
-import {useOffers, useSlides} from "../data/use-website";
+import {useOffers, useSlides,useSocial} from "../data/use-website";
 import Footer from "../layouts/footer";
 
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));
@@ -35,6 +35,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
 
     const { data: offers } = useOffers();
     const { data: slides } = useSlides();
+    const { data: social } = useSocial();
 
     const { query } = useRouter();
     const { elRef: targetRef, scroll } = useRefScroll({
@@ -83,7 +84,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
                                         <Products type={PAGE_TYPE} deviceType={deviceType} />
                                     </div>
                                 </ProductsWrapper>
-                                <Footer />
+                                <Footer social={social} />
                             </ContentSection>
 
                         </MainContentArea>

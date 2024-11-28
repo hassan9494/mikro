@@ -7,6 +7,7 @@ import { Modal } from '@redq/reuse-modal';
 import GiftCard from 'components/gift-card/gift-card';
 import Footer from 'layouts/footer';
 import useCoupon from 'data/use-coupon';
+import {useSocial} from "data/use-website";
 import {
     OfferPageWrapper,
     ProductsRow,
@@ -28,6 +29,7 @@ type GiftCardProps = {
 
 const GiftCardPage: NextPage<GiftCardProps> = ({ deviceType }) => {
     const { data, error } = useCoupon();
+    const { data: social } = useSocial();
     if (error) return <ErrorMessage message={error.message}/>;
     if (!data) return <p>Loading...</p>;
 
@@ -46,7 +48,7 @@ const GiftCardPage: NextPage<GiftCardProps> = ({ deviceType }) => {
                         </ProductsRow>
                     </div>
                 </MainContentArea>
-                <Footer/>
+                <Footer social={social}/>
             </OfferPageWrapper>
             <CartPopUp deviceType={deviceType}/>
         </Modal>
