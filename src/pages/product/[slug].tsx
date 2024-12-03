@@ -88,10 +88,14 @@ export async function getStaticProps({ params }) {
   };
 }
 export async function getStaticPaths() {
-  // const products = await getAllProducts();
-  return {
-    paths: [],
-    fallback: true,
-  };
+    const products = await getAllProducts();
+    const paths = products.map(product => ({
+        params: { slug: product.slug.toLowerCase() }, // Ensure all slugs are lowercase
+    }));
+
+    return {
+        paths,
+        fallback: true,
+    };
 }
 export default ProductPage;
