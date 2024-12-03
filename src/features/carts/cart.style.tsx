@@ -343,7 +343,7 @@ const CartSlidePopup = styled.div`
   height: 100vh;
   background-color: ${themeGet('colors.white', '#ffffff')};
   position: fixed;
-  bottom: 0;
+  bottom: 50px;
   right: -450px;
   z-index: 1010;
   box-shadow: ${themeGet('shadows.big', '0 21px 36px rgba(0, 0, 0, 0.16)')};

@@ -20,7 +20,7 @@ const CartPopupStyle = createGlobalStyle`
     @media (max-width: 767px) {
       max-width: none!important;
       width: 100% !important;
-      bottom: 0 !important;
+      bottom: 50px !important;
       left: 0!important;
       background: ${themeGet('colors.white', '#ffffff')};
       overflow: initial !important;
