@@ -60,16 +60,16 @@ export const PROFILE_MENU_ITEM = {
 export const AUTHORIZED_MENU_ITEMS = [
     PROFILE_MENU_ITEM,
     ORDER_MENU_ITEM,
-    {
-        id: 'nav.terms_and_services',
-        defaultMessage: 'Terms and Services',
-        href: TERMS_AND_SERVICES_PAGE,
-    },
-    {
-        id: 'nav.privacy_policy',
-        defaultMessage: 'Privacy Policy',
-        href: PRIVACY_POLICY_PAGE,
-    },
+    // {
+    //     id: 'nav.terms_and_services',
+    //     defaultMessage: 'Terms and Services',
+    //     href: TERMS_AND_SERVICES_PAGE,
+    // },
+    // {
+    //     id: 'nav.privacy_policy',
+    //     defaultMessage: 'Privacy Policy',
+    //     href: PRIVACY_POLICY_PAGE,
+    // },
 ];
 // category menu items for header navigation
 export const CATEGORY_MENU_ITEMS = [

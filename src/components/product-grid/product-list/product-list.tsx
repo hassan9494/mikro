@@ -82,11 +82,18 @@ export const Products: React.FC<ProductsProps> = ({
         const newProps = {};
         if (category) newProps['category'] = category
         if (text) newProps['text'] = text
-        router.push({
-            pathname: '/', query: { ...newProps, page: value, limit: countPerPage, filter: filter,inStock: inStock },
-        });
-    };
+        if (router.query.search !== null && router.query.search !== undefined){
+            router.push({
+                pathname: `/search/${router.query.search}`, query: { ...newProps, page: value ,limit: countPerPage, filter: filter,inStock: inStock },
+            });
+        }else{
+            router.push({
+                pathname: '/', query: { ...newProps, page: value ,limit: countPerPage, filter: filter,inStock: inStock },
+            });
+        }
 
+    };
+console.log(router.query.search)
     const handleCountChange = (event) => {
         setCountPerPage(event.target.value);
         router.push({
