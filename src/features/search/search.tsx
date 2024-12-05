@@ -49,7 +49,7 @@ const Search: React.FC<Props> = ({ onSubmit, ...props }) => {
         }
     };
     return (
-        <MySearch />
+        <MySearch onSubmit={onSubmit}/>
         // <SearchBox
         //     onEnter={onSearch}
         //     onChange={handleOnChange}

@@ -26,6 +26,7 @@ import { AuthContext } from "../../contexts/auth/auth.context";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
 import { FormattedMessage } from "react-intl";
+import MySearch from "./my-search";
 
 type MobileHeaderProps = {
     className?: string;
@@ -39,20 +40,13 @@ export const AuthMenuWrapper = styled.div`
   margin-right: 25px;
 `;
 
-const SearchModal: React.FC<{}> = () => {
-    const onSubmit = () => {
-        closeModal();
-    };
+const SearchModal: React.FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     return (
         <SearchModalWrapper>
-            <SearchModalClose type="submit" onClick={() => closeModal()}>
-                <LongArrowLeft/>
+            <SearchModalClose type="button" onClick={() => closeModal()}>
+                <LongArrowLeft />
             </SearchModalClose>
-            <Search
-                className="header-modal-search"
-                showButtonText={false}
-                onSubmit={onSubmit}
-            />
+            <MySearch onSubmit={onSubmit} /> {/* Pass down the onSubmit prop */}
         </SearchModalWrapper>
     );
 };
@@ -63,9 +57,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
         authState: { isAuthenticated },
         authDispatch,
     } = React.useContext<any>(AuthContext);
-
-    const [mobileHeaderRef, dimensions] = useDimensions();
-
+    const isHomePage = true;
     const handleSearchModal = () => {
         openModal({
             show: true,
@@ -77,71 +69,34 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
                 height: '100%',
             },
             closeOnClickOutside: false,
-            component: SearchModal,
-            closeComponent: () => <div/>,
+            component: (props) => (
+                <SearchModal {...props} onSubmit={handleClose} /> // Pass handleClose as onSubmit
+            ),
+            closeComponent: () => <div />,
         });
     };
 
-    const handleLogout = () => {
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem('access_token');
-            authDispatch({ type: 'SIGN_OUT' });
-            Router.push('/');
-            Router.reload();
-        }
-    };
-
-    // const isHomePage = isCategoryPage(type);
-    const isHomePage = true;
-
-
-    const handleJoin = () => {
-        authDispatch({
-            type: 'SIGNIN',
-        });
-
-        openModal({
-            show: true,
-            overlayClassName: 'quick-view-overlay',
-            closeOnClickOutside: true,
-            component: AuthenticationForm,
-            closeComponent: '',
-            config: {
-                enableResizing: false,
-                disableDragging: true,
-                className: 'quick-view-modal',
-                width: 458,
-                height: 'auto',
-            },
-        });
+    const handleClose = () => {
+        closeModal(); // This will be called when search is submitted
     };
 
     return (
         <MobileHeaderWrapper>
-            <MobileHeaderInnerWrapper className={className} ref={mobileHeaderRef}>
+            <MobileHeaderInnerWrapper className={className}>
                 <DrawerWrapper>
-                    <MobileDrawer/>
+                    <MobileDrawer />
                 </DrawerWrapper>
 
                 <LogoWrapper>
-                    <Logo imageUrl={LogoImage} alt="shop logo"/>
+                    <Logo imageUrl={LogoImage} alt="shop logo" />
                 </LogoWrapper>
-
-                {/*{*/}
-                {/*    !isAuthenticated &&*/}
-                {/*    <AuthMenuWrapper>*/}
-                {/*        <Button variant="contained" disableElevation color="primary" onClick={handleJoin}>*/}
-                {/*            <FormattedMessage id="joinButton" defaultMessage="join"/>*/}
-                {/*        </Button>*/}
-                {/*    </AuthMenuWrapper>*/}
-                {/*}*/}
 
                 {isHomePage ? (
                     <SearchWrapper
                         onClick={handleSearchModal}
                         className="searchIconWrapper"
                     >
-                        <SearchIcon/>
+                        <SearchIcon />
                     </SearchWrapper>
                 ) : null}
             </MobileHeaderInnerWrapper>
