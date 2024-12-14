@@ -30,6 +30,7 @@ import {ProductCardWrapper, ProductsCol, ProductsRow} from "../../product-grid/r
 import Fade from "react-reveal/Fade";
 import {ProductCard} from "../../product-card/product-card-six";
 import {ReplacementProductCard} from "../../product-card/replacement_product_card";
+import useUser from "data/use-user";
 
 type ProductDetailsProps = {
     product: any;
@@ -131,7 +132,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     );
 
     const [colorIndex, setColorIndex] = useState([0])
+    const { user } = useUser();
+    const allowedRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Cashier', 'Distributer', 'Admin cash'];
 
+    // Check if user has any of the allowed roles
+    const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     return (
         <>
             {
@@ -191,7 +196,16 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                                           defaultMessage='Out Of Stock'/>
                                                 }
                                             </ProductCartWrapper>
-
+                                            {hasAccess && (
+                                                <div className={'mt-1'} style={{marginTop:5}}>
+                                                    <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
+                                                        Quantity: {data.availableQty}
+                                                    </Typography>
+                                                    <Typography component="span" variant="body1" color="textPrimary">
+                                                        Location: {data.location}
+                                                    </Typography>
+                                                </div>
+                                            )}
 
                                         </div>
                                         :

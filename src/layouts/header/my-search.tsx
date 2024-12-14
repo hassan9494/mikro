@@ -11,8 +11,9 @@ import {
 } from "@material-ui/core";
 import { AddItemToCart } from "../../components/add-item-to-cart";
 import { useRouter } from "next/router";
+import useUser from "data/use-user";
 
-const formatOptionLabel = ({ item }, onClick) => {
+const formatOptionLabel = ({ item }, onClick,hasAccess) => {
     return (
         <ListItem alignItems="flex-start" style={{ padding: 0, margin: 0 }} onClick={() => onClick(item.slug)}>
             <ListItemAvatar>
@@ -21,13 +22,23 @@ const formatOptionLabel = ({ item }, onClick) => {
             <ListItemText
                 primary={
                     <Box display="flex">
-                        <Box flexGrow={1}>
+                        <Box flexGrow={3} className={'d-flex justify-content-between'}>
                             <Typography component="p" variant="body2" color="textPrimary">
                                 {item.title}
                             </Typography>
-                            <Typography component="span" variant="body2" color="textSecondary">
+                            <Typography component="span" variant="body2" color="textSecondary" style={{marginRight:50}}>
                                 <Chip label={'JD ' + (item.sale_price || item.price)} size="small" color='secondary' />
                             </Typography>
+                            {hasAccess && (
+                                <>
+                                    <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
+                                        Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
+                                    </Typography>
+                                    <Typography component="span" variant="body2" color="textSecondary">
+                                        Location: {item.location}
+                                    </Typography>
+                                </>
+                            )}
                         </Box>
                         <Box>
                             {
@@ -48,6 +59,11 @@ export default function MySearch({ onSubmit }) {
     const router = useRouter();
     const [search, setSearch] = useState('');
     const [defaultOptions, setDefaultOptions] = useState(null);
+    const { user } = useUser();
+    const allowedRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Cashier', 'Distributer', 'Admin cash'];
+
+    // Check if user has any of the allowed roles
+    const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
 
     const promiseOptions = text => autocomplete({ text }).then(res => {
         const data = res.data || [];
@@ -96,7 +112,7 @@ export default function MySearch({ onSubmit }) {
                 defaultOptions={defaultOptions || true}
                 value={null}
                 inputValue={search}
-                getOptionLabel={(data) => formatOptionLabel(data, onChange)}
+                getOptionLabel={(data) => formatOptionLabel(data, onChange,hasAccess)}
                 loadOptions={promiseOptions}
                 onInputChange={handleInputChange}
                 placeholder={
