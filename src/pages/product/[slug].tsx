@@ -1,15 +1,19 @@
 import React from 'react';
-import { NextPage } from 'next';
+import {NextPage} from 'next';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { SEO } from 'components/seo';
-import { Modal } from '@redq/reuse-modal';
+import {useRouter} from 'next/router';
+import {SEO} from 'components/seo';
+import {Modal} from '@redq/reuse-modal';
 import ProductSingleWrapper, {
     ProductSingleContainer,
 } from 'assets/styles/product-single.style';
-import { getAllProducts, getProductBySlug } from 'utils/api/product';
+import {getAllProducts, getProductBySlug} from 'utils/api/product';
 import {Backdrop, CircularProgress} from "@material-ui/core";
-import { useProduct } from "data/use-products";
+import {useProduct} from "data/use-products";
+import Footer from "../../layouts/footer";
+import {useSocial} from "../../data/use-website";
+import {ContentSection, MainContentArea, MainWrapper} from "../../assets/styles/pages.style";
+import {ModalProvider} from "../../contexts/modal/modal.provider";
 
 const ProductDetails = dynamic(() =>
     import('components/product-details/product-details-one/product-details-one')
@@ -26,24 +30,25 @@ type Props = {
     };
     data: any;
     [key: string]: any;
+    social: any;
 };
 
 
 function Loading() {
     return (
-        <Backdrop open={true} >
-            <CircularProgress />
+        <Backdrop open={true}>
+            <CircularProgress/>
         </Backdrop>
     );
 }
 
-const ProductPage: NextPage<Props> = ({ data, deviceType }) => {
-
+const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
+    // const {data: social} = useSocial();
     const router = useRouter();
 
-    if (router.isFallback || !data?.slug) return <Loading />;
+    if (router.isFallback || !data?.slug) return <Loading/>;
 
-    const { data: product } = useProduct(data?.slug);
+    const {data: product} = useProduct(data?.slug);
 
     return (
 
@@ -57,12 +62,13 @@ const ProductPage: NextPage<Props> = ({ data, deviceType }) => {
                     <Modal>
                         <ProductSingleWrapper>
                             <ProductSingleContainer>
-                                <ProductDetails product={product ||data} deviceType={deviceType}/>
+                                <ProductDetails product={product || data} deviceType={deviceType}/>
                                 <CartPopUp deviceType={deviceType}/>
                             </ProductSingleContainer>
                         </ProductSingleWrapper>
+                        <Footer social={social}/>
                     </Modal>
-                    : <Loading />
+                    : <Loading/>
             }
 
         </>
@@ -79,18 +85,19 @@ const ProductPage: NextPage<Props> = ({ data, deviceType }) => {
 //     };
 // }
 
-export async function getStaticProps({ params }) {
-  const data = await getProductBySlug(params.slug);
-  return {
-    props: {
-      data,
-    },
-  };
+export async function getStaticProps({params}) {
+    const data = await getProductBySlug(params.slug);
+    return {
+        props: {
+            data,
+        },
+    };
 }
+
 export async function getStaticPaths() {
     const products = await getAllProducts();
     const paths = products.map(product => ({
-        params: { slug: product.slug.toLowerCase() }, // Ensure all slugs are lowercase
+        params: {slug: product.slug.toLowerCase()}, // Ensure all slugs are lowercase
     }));
 
     return {
@@ -98,4 +105,5 @@ export async function getStaticPaths() {
         fallback: true,
     };
 }
+
 export default ProductPage;

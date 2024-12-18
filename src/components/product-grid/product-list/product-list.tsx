@@ -93,7 +93,6 @@ export const Products: React.FC<ProductsProps> = ({
         }
 
     };
-console.log(router.query.search)
     const handleCountChange = (event) => {
         setCountPerPage(event.target.value);
         router.push({

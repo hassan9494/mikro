@@ -27,6 +27,7 @@ import 'typeface-lato';
 import 'typeface-poppins';
 import React from 'react';
 import { OrderProvider } from "../contexts/order/order.provider";
+import {useSocial} from "../data/use-website";
 
 export default function ExtendedApp({ Component, pageProps }) {
     useEffect(() => {
@@ -64,7 +65,7 @@ export default function ExtendedApp({ Component, pageProps }) {
             jssStyles.parentElement.removeChild(jssStyles);
         }
     }, []);
-
+    const { data: social } = useSocial();
     const mobile = useMedia('(max-width: 580px)');
     const tablet = useMedia('(max-width: 991px)');
     const desktop = useMedia('(min-width: 992px)');
@@ -79,7 +80,7 @@ export default function ExtendedApp({ Component, pageProps }) {
                             <AuthProvider>
                                 <AppLayout>
                                     <Loading />
-                                    <Component {...pageProps} deviceType={{ mobile, tablet, desktop }} />
+                                    <Component {...pageProps} deviceType={{ mobile, tablet, desktop }} social={social}/>
                                     <ToastContainer />
                                 </AppLayout>
                                 <GlobalStyle />
