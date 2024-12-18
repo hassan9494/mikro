@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import useUser from "data/use-user";
 
 const formatOptionLabel = ({ item }, onClick,hasAccess) => {
+    console.log(item.location)
     return (
         <ListItem alignItems="flex-start" style={{ padding: 0, margin: 0 }} onClick={() => onClick(item.slug)}>
             <ListItemAvatar>
@@ -35,7 +36,7 @@ const formatOptionLabel = ({ item }, onClick,hasAccess) => {
                                         Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
                                     </Typography>
                                     <Typography component="span" variant="body2" color="textSecondary">
-                                        Location: {item.location}
+                                        Location: {item?.location}
                                     </Typography>
                                 </>
                             )}
