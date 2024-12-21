@@ -47,7 +47,7 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
     const router = useRouter();
 
     if (router.isFallback || !data?.slug) return <Loading/>;
-
+    console.log(data?.slug)
     const {data: product} = useProduct(data?.slug);
 
     return (
