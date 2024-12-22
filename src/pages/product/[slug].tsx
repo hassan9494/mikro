@@ -48,7 +48,8 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
 
     if (router.isFallback || !data?.slug) return <Loading/>;
     console.log(data?.slug)
-    const {data: product} = useProduct(data?.slug);
+    const { data: product } = useProduct(data?.slug || router.query.slug);
+
 
     return (
 
@@ -85,25 +86,28 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
 //     };
 // }
 
-export async function getStaticProps({params}) {
+export async function getStaticProps({ params }) {
     const data = await getProductBySlug(params.slug);
     return {
         props: {
             data,
         },
+        revalidate: 10, // Revalidate every 10 seconds
     };
 }
+
 
 export async function getStaticPaths() {
     const products = await getAllProducts();
     const paths = products.map(product => ({
-        params: {slug: product.slug.toLowerCase()}, // Ensure all slugs are lowercase
+        params: { slug: product.slug.toLowerCase() },
     }));
 
     return {
         paths,
-        fallback: true,
+        fallback: 'blocking', // Use blocking mode for SSR
     };
 }
+
 
 export default ProductPage;
