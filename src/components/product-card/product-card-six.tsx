@@ -175,7 +175,7 @@ export const ProductCard = ({ data }: Props) => {
                                 alt={title}
                                 width={200}
                                 height={200}
-                                unoptimized={true}
+                                // unoptimized={true}
                             />
                         </ImageWrapper>
                         {sale_price ? (
