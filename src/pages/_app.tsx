@@ -30,33 +30,7 @@ import { OrderProvider } from "../contexts/order/order.provider";
 import {useSocial} from "../data/use-website";
 
 export default function ExtendedApp({ Component, pageProps }) {
-    useEffect(() => {
-        // Inject head scripts
-        const headScripts = document.documentElement.getAttribute('data-head-scripts');
-        if (headScripts) {
-            const head = document.head;
-            const scriptElement = document.createElement('div');
-            scriptElement.innerHTML = headScripts;
-            Array.from(scriptElement.children).forEach((child) => {
-                const script = document.createElement('script');
-                script.innerHTML = child.innerHTML;
-                head.appendChild(script);
-            });
-        }
 
-        // Inject body scripts
-        const bodyScripts = document.documentElement.getAttribute('data-body-scripts');
-        if (bodyScripts) {
-            const body = document.body;
-            const scriptElement = document.createElement('div');
-            scriptElement.innerHTML = bodyScripts;
-            Array.from(scriptElement.children).forEach((child) => {
-                const script = document.createElement('script');
-                script.innerHTML = child.innerHTML;
-                body.appendChild(script);
-            });
-        }
-    }, []);
 
     useEffect(() => {
         // Remove the server-side injected CSS.
