@@ -16,6 +16,7 @@ import { CURRENCY } from 'utils/constant';
 import { FormattedMessage } from 'react-intl';
 import MoneyFormat from "../../../../components/money-format/money-format";
 import {ImageWrapper, ItemDetails, ItemName, ItemPrice, ItemWrapper} from "../order.style";
+import Link from "next/link";
 
 type OrderDetailsProps = {
     order?: any;
@@ -100,7 +101,9 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                                         </ImageWrapper>
 
                                         <ItemDetails>
+                                            <Link href="/product/[slug]" as={`/product/${record.slug}`}>
                                             <ItemName>{record.name}</ItemName>
+                                            </Link>
                                             {/*<ItemSize>{record.weight}</ItemSize>*/}
                                             <ItemPrice><MoneyFormat value={record.price} /></ItemPrice>
                                         </ItemDetails>

@@ -135,6 +135,7 @@ const ItemDetails = styled.span`
   flex-direction: column;
   margin-left: 15px;
   overflow: hidden;
+  cursor: pointer;
 `;
 
 const ItemName = styled.span`
