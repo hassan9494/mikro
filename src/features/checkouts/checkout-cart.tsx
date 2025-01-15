@@ -30,6 +30,7 @@ import useAddresses from "../../data/use-address";
 import {CheckoutQuantityControl} from "./checkout-quantity-control";
 import Coupon from "../coupon/coupon";
 import { verifyCoupon } from "../../data/use-coupon";
+import Link from "next/link";
 
 type CartItemProps = {
     product: any;
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
-    const { id, quantity, title, name, unit, price, sale_price, image } = product;
+    const { id, quantity, title, name, unit, price, sale_price, image,slug } = product;
     const displayPrice = sale_price ? sale_price : price;
     return (
         <Grid container alignItems="center" spacing={2}>
@@ -50,9 +51,11 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
                 <Avatar alt={name} src={image} style={{ width: 50, height: 50 }}/>
             </Grid>
             <Grid item md={7} xs={10}>
+                <Link href="/product/[slug]" as={`/product/${slug}`}>
                 <ListItemText
-                    primary={title}
+                    primary={title} style={{cursor:"pointer"}}
                 />
+                </Link>
             </Grid>
             <Grid item container md={4} xs={12}>
                 <Grid item  md={8} xs={8}>
