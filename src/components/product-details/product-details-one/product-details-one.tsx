@@ -31,6 +31,7 @@ import Fade from "react-reveal/Fade";
 import {ProductCard} from "../../product-card/product-card-six";
 import {ReplacementProductCard} from "../../product-card/replacement_product_card";
 import useUser from "data/use-user";
+import {Minus} from "../../../assets/icons/PlusMinus";
 
 type ProductDetailsProps = {
     product: any;
@@ -113,6 +114,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     };
+    const url = process.env.NEXT_PUBLIC_REST_ADMIN_ENDPOINT;
 
     const {isRtl} = useLocale();
     const data = product;
@@ -134,9 +136,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     const [colorIndex, setColorIndex] = useState([0])
     const { user } = useUser();
     const allowedRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Cashier', 'Distributer', 'Admin cash'];
+    const adminRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Admin cash'];
 
     // Check if user has any of the allowed roles
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
+    const hasAdminAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     return (
         <>
             {
@@ -244,6 +248,21 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
 
                                 <ProductCategories categories={product?.categories}/>
+                                {hasAdminAccess && (
+                                    <div>
+                                            <a href={`${url}/product/edit/${product?.id}`} target={'blank'}>
+                                            <Button
+                                                variant='contained'
+                                                color='secondary'
+                                                disableElevation
+                                                style={{borderRadius: 5,marginTop:5}}
+                                                onClick={null}
+                                            >
+                                                Edit
+                                            </Button>
+                                            </a>
+                                    </div>
+                                )}
 
                             </ProductInfo>
 
