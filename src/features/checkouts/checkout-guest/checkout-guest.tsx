@@ -80,6 +80,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
             shipping: {
                 address
             },
+            notes:notes,
             products: items.map(({ id, quantity }) => ({ id, quantity }))
         }
         try {
