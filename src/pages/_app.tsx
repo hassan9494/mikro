@@ -40,7 +40,7 @@ export default function ExtendedApp({ Component, pageProps }) {
             Array.from(scriptElement.children).forEach((child) => {
                 const script = document.createElement('script');
                 script.innerHTML = child.innerHTML;
-                // head.appendChild(script);
+                head.appendChild(script);
             });
         }
 
@@ -53,7 +53,7 @@ export default function ExtendedApp({ Component, pageProps }) {
             Array.from(scriptElement.children).forEach((child) => {
                 const script = document.createElement('script');
                 script.innerHTML = child.innerHTML;
-                // body.appendChild(script);
+                body.appendChild(script);
             });
         }
     }, []);
