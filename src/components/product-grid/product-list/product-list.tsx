@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import {
@@ -30,26 +30,34 @@ type ProductsProps = {
     fetchLimit?: number;
     type?: string;
 };
+
 export const Products: React.FC<ProductsProps> = ({
                                                       deviceType,
                                                       fetchLimit = 24,
                                                       type,
                                                   }) => {
-
     const router = useRouter();
     const [countPerPage, setCountPerPage] = useState(fetchLimit);
     const [filter, setFilter] = useState('');
-    const [inStock, setInStock] = React.useState(false);
+    const [inStock, setInStock] = useState(false);
 
+    // Sync state with query params on mount and when router.query changes
+    useEffect(() => {
+        if (router.isReady) {
+            if (router.query.limit) setCountPerPage(Number(router.query.limit));
+            if (router.query.filter) setFilter(router.query.filter as string);
+            if (router.query.inStock) setInStock(router.query.inStock === 'true');
+        }
+    }, [router.isReady, router.query]);
 
     const { data, error, totalPages, currentPage, loading } = useProducts({
-        text: router.query.search,
-        category: router.query.category,
-        page: router.query.page,
+        text: router.query.search as string,
+        category: router.query.category as string,
+        page: Number(router.query.page) || 1,
         offset: 0,
         limit: countPerPage,
         filter: filter,
-        inStock : inStock
+        inStock: inStock
     });
 
     if (error) return <ErrorMessage message={error.message}/>;
@@ -77,49 +85,43 @@ export const Products: React.FC<ProductsProps> = ({
         />
     );
 
-    const handlePaginate = async (event, value) => {
-        const { category, text } = router.query;
-        const newProps = {};
-        if (category) newProps['category'] = category
-        if (text) newProps['text'] = text
-        if (router.query.search !== null && router.query.search !== undefined){
-            router.push({
-                pathname: `/search/${router.query.search}`, query: { ...newProps, page: value ,limit: countPerPage, filter: filter,inStock: inStock },
-            });
-        }else{
-            router.push({
-                pathname: '/', query: { ...newProps, page: value ,limit: countPerPage, filter: filter,inStock: inStock },
-            });
-        }
-
+    const updateQueryParams = (newParams) => {
+        const updatedQuery = { ...router.query, ...newParams };
+        router.replace(
+            {
+                pathname: router.pathname,
+                query: updatedQuery,
+            },
+            undefined,
+            { shallow: true }
+        );
     };
+
+    const handlePaginate = (event, value) => {
+        updateQueryParams({ page: value });
+    };
+
     const handleCountChange = (event) => {
-        setCountPerPage(event.target.value);
-        router.push({
-            pathname: '/', query: { ...router.query, limit: event.target.value, page: 1 },
-        });
+        const newLimit = event.target.value;
+        setCountPerPage(newLimit);
+        updateQueryParams({ limit: newLimit, page: 1 });
     };
 
     const handleFilterChange = (event) => {
-        setFilter(event.target.value);
-        router.push({
-            pathname: '/', query: { ...router.query, filter: event.target.value, page: 1 },
-        });
+        const newFilter = event.target.value;
+        setFilter(newFilter);
+        updateQueryParams({ filter: newFilter, page: 1 });
     };
 
     const handleInStockChange = (event) => {
-        setInStock(event.target.checked);
-        router.push({
-            pathname: '/',
-            query: { ...router.query, inStock: event.target.checked, page: 1 },
-        });
+        const inStockValue = event.target.checked;
+        setInStock(inStockValue);
+        updateQueryParams({ inStock: inStockValue, page: 1 });
     };
-
 
     return (
         <>
             <Box display="flex" justifyContent="center" m={1} p={1}>
-
                 <FormControl variant="outlined" style={{ minWidth: 120, marginLeft: '1rem' }}>
                     <InputLabel>Count per page</InputLabel>
                     <Select
@@ -140,8 +142,6 @@ export const Products: React.FC<ProductsProps> = ({
                         onChange={handleFilterChange}
                         label="Filter"
                     >
-                        {/*<MenuItem value="">None</MenuItem>*/}
-                        {/*<MenuItem value="top-sale">Best Sales</MenuItem>*/}
                         <MenuItem value="sale">Sale</MenuItem>
                         <MenuItem value="new-item">Latest</MenuItem>
                         <MenuItem value="old-item">Oldest</MenuItem>
@@ -180,18 +180,18 @@ export const Products: React.FC<ProductsProps> = ({
                     </ProductsCol>
                 ))}
             </ProductsRow>
-            {
-                totalPages > 1 &&
-                    <div>
-
-                        <Box display="flex" justifyContent="center" m={1} p={1}>
-                            <Pagination count={totalPages} page={currentPage} color="primary" onChange={handlePaginate} />
-                        </Box>
-
-                    </div>
-
-            }
+            {totalPages > 1 && (
+                <Box display="flex" justifyContent="center" m={1} p={1}>
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        color="primary"
+                        onChange={handlePaginate}
+                    />
+                </Box>
+            )}
         </>
     );
 };
+
 export default Products;
