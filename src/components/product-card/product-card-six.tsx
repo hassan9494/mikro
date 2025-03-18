@@ -9,6 +9,8 @@ import MoneyFormat from "../money-format/money-format";
 import {FormattedMessage} from "react-intl";
 import Image from "next/image";
 
+import LogoImage from 'assets/images/default/default.png';
+
 const Card = styled.div({
     backgroundColor: '#fff',
     position: 'relative',
@@ -171,7 +173,7 @@ export const ProductCard = ({ data }: Props) => {
                             {/*<img src={image} alt={title} width={200} height={200}/>*/}
                             <Image
                                 // loader={myLoader}
-                                src={image}
+                                src={image == "" ? LogoImage : image}
                                 alt={title}
                                 width={200}
                                 height={200}

@@ -32,6 +32,7 @@ import {ProductCard} from "../../product-card/product-card-six";
 import {ReplacementProductCard} from "../../product-card/replacement_product_card";
 import useUser from "data/use-user";
 import {Minus} from "../../../assets/icons/PlusMinus";
+import LogoImage from 'assets/images/default/default.png';
 
 type ProductDetailsProps = {
     product: any;
@@ -141,6 +142,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     // Check if user has any of the allowed roles
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     const hasAdminAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
+    console.log(product.gallery.length > 0)
     return (
         <>
             {
@@ -159,7 +161,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     </Button>
                                 </BackButton>
                                 <CarouselWithCustomDots
-                                    items={product.gallery}
+                                    items={product.gallery.length > 0 ? product.gallery : [{'url': LogoImage,'id':1,'name':'default','size':56430}]}
                                     deviceType={deviceType}
                                 />
 
@@ -309,7 +311,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     </BackButton>
 
                                     <CarouselWithCustomDots
-                                        items={product.gallery}
+                                        items={product.gallery.length > 0 ? product.gallery : [{'url': LogoImage,'id':1,'name':'default','size':56430}]}
                                         deviceType={deviceType}
                                     />
                                 </ProductPreview>
