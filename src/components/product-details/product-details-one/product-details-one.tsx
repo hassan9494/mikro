@@ -135,204 +135,225 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     );
 
     const [colorIndex, setColorIndex] = useState([0])
-    const { user } = useUser();
+    const {user} = useUser();
     const allowedRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Cashier', 'Distributer', 'Admin cash'];
     const adminRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Admin cash'];
 
     // Check if user has any of the allowed roles
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     const hasAdminAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
-    console.log(product.gallery.length > 0)
+    // console.log(data.deleted_at == null)
     return (
         <>
             {
-                data.is_available ?
-                    <div>
-                        <ProductDetailsWrapper className="product-card" dir="ltr">
-                            <ProductPreview>
-                                <BackButton>
-                                    <Button
-                                        variant="contained"
-                                        onClick={Router.back}
-                                        disableElevation
-                                        startIcon={<ArrowBack/>}
-                                    >
-                                        <FormattedMessage id="backBtn" defaultMessage="Back"/>
-                                    </Button>
-                                </BackButton>
-                                <CarouselWithCustomDots
-                                    items={product.gallery.length > 0 ? product.gallery : [{'url': LogoImage,'id':1,'name':'default','size':56430}]}
-                                    deviceType={deviceType}
-                                />
-
-                            </ProductPreview>
-
-                            <ProductInfo>
-
-                                <ProductTitlePriceWrapper>
-                                    <ProductTitle>{product.title}</ProductTitle>
-                                </ProductTitlePriceWrapper>
-
-
-                                {
-                                    !data.is_retired ?
-                                        <div>
-                                            <ProductPriceWrapper>
-
-                                                <ProductPrice>
-                                                    <MoneyFormat
-                                                        value={product.sale_price ? product.sale_price : product.price}/>
-                                                    {
-                                                        product.sale_price ? (
-                                                            <SalePrice>
-                                                                <MoneyFormat value={product.price}/>
-                                                            </SalePrice>
-                                                        ) : null
-                                                    }
-                                                </ProductPrice>
-
-
-                                            </ProductPriceWrapper>
-
-                                            <ProductCartWrapper>
-                                                {
-                                                    data.availableQty ?
-                                                        <AddToCart data={data}/> :
-                                                        <FormattedMessage id='outOfStock'
-                                                                          defaultMessage='Out Of Stock'/>
-                                                }
-                                            </ProductCartWrapper>
-                                            {hasAccess && (
-                                                <div className={'mt-1'} style={{marginTop:5}}>
-                                                    <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
-                                                        Quantity: {data.availableQty}
-                                                    </Typography>
-                                                    <Typography component="span" variant="body1" color="textPrimary">
-                                                        Location: {data.location}
-                                                    </Typography>
-                                                </div>
-                                            )}
-
-                                        </div>
-                                        :
-                                        <ReplacementWrapper>
-                                            <FormattedMessage id='retired' defaultMessage="This product is retired now ,the replacement is :"/>
-                                            <ProductCardWrapper>
-                                                <Fade
-                                                    duration={800}
-                                                    delay={10}
-                                                    style={{ height: '100%' }}
-                                                >
-                                                    { product.replacement_item ?
-                                                        renderReplacementCard(product.replacement_item) :
-                                                        <FormattedMessage id='retired' defaultMessage="There is no replacement item"/>
-                                                    }
-                                                </Fade>
-                                            </ProductCardWrapper>
-                                        </ReplacementWrapper>
-
-
-                                }
-
-
-                                <ProductWeight>{product.unit}</ProductWeight>
-
-
-                                <ProductDescription>
-                                    {
-                                        product.short_description ?
-                                            product.short_description :
-                                            <p>
-                                                <div dangerouslySetInnerHTML={{__html: product.description}}/>
-                                            </p>
-                                    }
-                                </ProductDescription>
-
-
-                                <ProductCategories categories={product?.categories}/>
-                                {hasAdminAccess && (
-                                    <div>
-                                            <a href={`${url}/product/edit/${product?.id}`} target={'blank'}>
-                                            <Button
-                                                variant='contained'
-                                                color='secondary'
-                                                disableElevation
-                                                style={{borderRadius: 5,marginTop:5}}
-                                                onClick={null}
-                                            >
-                                                Edit
-                                            </Button>
-                                            </a>
-                                    </div>
-                                )}
-
-                            </ProductInfo>
-
-                            <div style={{flexGrow: 1}}>
-                                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                                    <Tab label="Details" {...tabProps(0)} />
-                                    <Tab label="Features" {...tabProps(1)} />
-                                    <Tab label="Documents" {...tabProps(2)} />
-                                    <Tab label="Product Include" {...tabProps(3)} />
-                                </Tabs>
-                                <Box p={1}>
-                                    <TabPanel value={value} index={0}>
-                                        <p>
-                                            <div dangerouslySetInnerHTML={{__html: product.description}}/>
-                                        </p>
-                                    </TabPanel>
-                                    <TabPanel value={value} index={1}>
-                                        <p>
-                                            <div dangerouslySetInnerHTML={{__html: product.features}}/>
-                                        </p>
-                                    </TabPanel>
-                                    <TabPanel value={value} index={2}>
-                                        <p>
-                                            <div dangerouslySetInnerHTML={{__html: product.documents}}/>
-                                        </p>
-                                    </TabPanel>
-                                    <TabPanel value={value} index={3}>
-                                        <p>
-                                            <div dangerouslySetInnerHTML={{__html: product.packageInclude}}/>
-                                        </p>
-                                    </TabPanel>
-                                </Box>
-                            </div>
-                            {isRtl && (
+                data.deleted_at == null ?
+                    data.is_available ?
+                        <div>
+                            <ProductDetailsWrapper className="product-card" dir="ltr">
                                 <ProductPreview>
                                     <BackButton>
                                         <Button
-                                            variant="outlined"
+                                            variant="contained"
                                             onClick={Router.back}
+                                            disableElevation
                                             startIcon={<ArrowBack/>}
                                         >
                                             <FormattedMessage id="backBtn" defaultMessage="Back"/>
                                         </Button>
                                     </BackButton>
-
                                     <CarouselWithCustomDots
-                                        items={product.gallery.length > 0 ? product.gallery : [{'url': LogoImage,'id':1,'name':'default','size':56430}]}
+                                        items={product.gallery.length > 0 ? product.gallery : [{
+                                            'url': LogoImage,
+                                            'id': 1,
+                                            'name': 'default',
+                                            'size': 56430
+                                        }]}
                                         deviceType={deviceType}
                                     />
+
                                 </ProductPreview>
-                            )}
 
-                        </ProductDetailsWrapper>
+                                <ProductInfo>
+
+                                    <ProductTitlePriceWrapper>
+                                        <ProductTitle>{product.title}</ProductTitle>
+                                    </ProductTitlePriceWrapper>
+
+
+                                    {
+                                        !data.is_retired ?
+                                            <div>
+                                                <ProductPriceWrapper>
+
+                                                    <ProductPrice>
+                                                        <MoneyFormat
+                                                            value={product.sale_price ? product.sale_price : product.price}/>
+                                                        {
+                                                            product.sale_price ? (
+                                                                <SalePrice>
+                                                                    <MoneyFormat value={product.price}/>
+                                                                </SalePrice>
+                                                            ) : null
+                                                        }
+                                                    </ProductPrice>
+
+
+                                                </ProductPriceWrapper>
+
+                                                <ProductCartWrapper>
+                                                    {
+                                                        data.availableQty ?
+                                                            <AddToCart data={data}/> :
+                                                            <FormattedMessage id='outOfStock'
+                                                                              defaultMessage='Out Of Stock'/>
+                                                    }
+                                                </ProductCartWrapper>
+                                                {hasAccess && (
+                                                    <div className={'mt-1'} style={{marginTop: 5}}>
+                                                        <Typography component="span" variant="body1" color="textPrimary"
+                                                                    style={{marginRight: 50}}>
+                                                            Quantity: {data.availableQty}
+                                                        </Typography>
+                                                        <Typography component="span" variant="body1"
+                                                                    color="textPrimary">
+                                                            Location: {data.location}
+                                                        </Typography>
+                                                    </div>
+                                                )}
+
+                                            </div>
+                                            :
+                                            <ReplacementWrapper>
+                                                <FormattedMessage id='retired'
+                                                                  defaultMessage="This product is retired now ,the replacement is :"/>
+                                                <ProductCardWrapper>
+                                                    <Fade
+                                                        duration={800}
+                                                        delay={10}
+                                                        style={{height: '100%'}}
+                                                    >
+                                                        {product.replacement_item ?
+                                                            renderReplacementCard(product.replacement_item) :
+                                                            <FormattedMessage id='retired'
+                                                                              defaultMessage="There is no replacement item"/>
+                                                        }
+                                                    </Fade>
+                                                </ProductCardWrapper>
+                                            </ReplacementWrapper>
+
+
+                                    }
+
+
+                                    <ProductWeight>{product.unit}</ProductWeight>
+
+
+                                    <ProductDescription>
+                                        {
+                                            product.short_description ?
+                                                product.short_description :
+                                                <p>
+                                                    <div dangerouslySetInnerHTML={{__html: product.description}}/>
+                                                </p>
+                                        }
+                                    </ProductDescription>
+
+
+                                    <ProductCategories categories={product?.categories}/>
+                                    {hasAdminAccess && (
+                                        <div>
+                                            <a href={`${url}/product/edit/${product?.id}`} target={'blank'}>
+                                                <Button
+                                                    variant='contained'
+                                                    color='secondary'
+                                                    disableElevation
+                                                    style={{borderRadius: 5, marginTop: 5}}
+                                                    onClick={null}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            </a>
+                                        </div>
+                                    )}
+
+                                </ProductInfo>
+
+                                <div style={{flexGrow: 1}}>
+                                    <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                                        <Tab label="Details" {...tabProps(0)} />
+                                        <Tab label="Features" {...tabProps(1)} />
+                                        <Tab label="Documents" {...tabProps(2)} />
+                                        <Tab label="Product Include" {...tabProps(3)} />
+                                    </Tabs>
+                                    <Box p={1}>
+                                        <TabPanel value={value} index={0}>
+                                            <p>
+                                                <div dangerouslySetInnerHTML={{__html: product.description}}/>
+                                            </p>
+                                        </TabPanel>
+                                        <TabPanel value={value} index={1}>
+                                            <p>
+                                                <div dangerouslySetInnerHTML={{__html: product.features}}/>
+                                            </p>
+                                        </TabPanel>
+                                        <TabPanel value={value} index={2}>
+                                            <p>
+                                                <div dangerouslySetInnerHTML={{__html: product.documents}}/>
+                                            </p>
+                                        </TabPanel>
+                                        <TabPanel value={value} index={3}>
+                                            <p>
+                                                <div dangerouslySetInnerHTML={{__html: product.packageInclude}}/>
+                                            </p>
+                                        </TabPanel>
+                                    </Box>
+                                </div>
+                                {isRtl && (
+                                    <ProductPreview>
+                                        <BackButton>
+                                            <Button
+                                                variant="outlined"
+                                                onClick={Router.back}
+                                                startIcon={<ArrowBack/>}
+                                            >
+                                                <FormattedMessage id="backBtn" defaultMessage="Back"/>
+                                            </Button>
+                                        </BackButton>
+
+                                        <CarouselWithCustomDots
+                                            items={product.gallery.length > 0 ? product.gallery : [{
+                                                'url': LogoImage,
+                                                'id': 1,
+                                                'name': 'default',
+                                                'size': 56430
+                                            }]}
+                                            deviceType={deviceType}
+                                        />
+                                    </ProductPreview>
+                                )}
+
+                            </ProductDetailsWrapper>
+                            <ProductDetailsWrapper className="product-card" dir="ltr">
+
+                            </ProductDetailsWrapper>
+
+                            <RelatedItems>
+                                <RelatedProducts
+                                    slug={data?.id}
+                                    deviceType={deviceType}
+                                />
+                            </RelatedItems>
+                        </div>
+                        :
                         <ProductDetailsWrapper className="product-card" dir="ltr">
+                            <ProductPreview>
+                                <ProductTitle>This product is not available</ProductTitle>
+                            </ProductPreview>
 
-                        </ProductDetailsWrapper>
-
-                        <RelatedItems>
-                            <RelatedProducts
-                                slug={data?.id}
-                                deviceType={deviceType}
-                            />
-                        </RelatedItems>
-                    </div>
-                    :
+                        </ProductDetailsWrapper> :
                     <ProductDetailsWrapper className="product-card" dir="ltr">
                         <ProductPreview>
-                            <ProductTitle>This product is not available</ProductTitle>
+                            <ProductTitle>This product is not available </ProductTitle>
                         </ProductPreview>
 
                     </ProductDetailsWrapper>
