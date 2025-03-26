@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
     ProductsRow,
@@ -18,6 +18,7 @@ const ErrorMessage = dynamic(() =>
     import('components/error-message/error-message')
 );
 import { ProductCard } from 'components/product-card/product-card-six';
+import {Button} from "../../button/button";
 
 type ProductsProps = {
     deviceType?: {
@@ -27,11 +28,12 @@ type ProductsProps = {
     };
     slug?: any;
 };
-export const RelatedProducts: React.FC<ProductsProps> = ({
-    deviceType,
-    slug
-}) => {
 
+export const RelatedProducts: React.FC<ProductsProps> = ({
+                                                             deviceType,
+                                                             slug
+                                                         }) => {
+    const [showAll, setShowAll] = useState(false);
     const { data, error } = useRelatedProducts({
         sku: slug
     });
@@ -61,6 +63,9 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
         return <></>;
     }
 
+    const displayCount = showAll ? data.length : Math.min(4, data.length);
+    const hasMore = data.length > 4;
+
     const renderCard = (props) => (
         <ProductCard data={props} key={props.id}/>
     );
@@ -74,7 +79,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                 />
             </h2>
             <ProductsRow>
-                {data.map((item: any, index: number) => (
+                {data.slice(0, displayCount).map((item: any, index: number) => (
                     <ProductsCol key={index}>
                         <ProductCardWrapper>
                             <Fade
@@ -87,8 +92,33 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                         </ProductCardWrapper>
                     </ProductsCol>
                 ))}
+
+                {!showAll && hasMore && (
+                    <ProductsCol key="show-more">
+                        <ProductCardWrapper>
+                            <Fade duration={800} delay={displayCount * 10} style={{ height: '100%' }}>
+                                <Button
+                                    onClick={() => setShowAll(true)}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '24px',
+                                        minHeight: '300px' // Match your product card height
+                                    }}
+                                    title="Show more related products"
+                                >
+                                    + {data.length - 4} More
+                                </Button>
+                            </Fade>
+                        </ProductCardWrapper>
+                    </ProductsCol>
+                )}
             </ProductsRow>
         </>
     );
 };
+
 export default RelatedProducts;

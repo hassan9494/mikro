@@ -13,10 +13,34 @@ import { AddItemToCart } from "../../components/add-item-to-cart";
 import { useRouter } from "next/router";
 import useUser from "data/use-user";
 
-const formatOptionLabel = ({ item }, onClick,hasAccess) => {
-    console.log(item.location)
+const formatOptionLabel = ({ item }, onClick, hasAccess) => {
+    const handleClick = (e, slug) => {
+        // Check for Ctrl/Cmd click
+        if (e.ctrlKey || e.metaKey) {
+            // Open in new tab
+            window.open(`/product/${slug}`, '_blank');
+        } else {
+            // Normal click behavior
+            onClick(slug);
+        }
+        e.preventDefault(); // Prevent default anchor behavior
+    };
+
     return (
-        <ListItem alignItems="flex-start" style={{ padding: 0, margin: 0 }} onClick={() => onClick(item.slug)}>
+        <ListItem
+            alignItems="flex-start"
+            style={{ padding: 0, margin: 0 }}
+            onClick={(e) => handleClick(e, item.slug)}
+            component="a" // Make it behave like a link
+            href={`/product/${item.slug}`} // Required for middle-click to work
+            onAuxClick={(e) => {
+                // Handle middle mouse button click (same as Ctrl+Click)
+                if (e.button === 1) {
+                    window.open(`/product/${item.slug}`, '_blank');
+                    e.preventDefault();
+                }
+            }}
+        >
             <ListItemAvatar>
                 <Avatar alt={item.title} src={item.image} />
             </ListItemAvatar>
@@ -113,7 +137,7 @@ export default function MySearch({ onSubmit }) {
                 defaultOptions={defaultOptions || true}
                 value={null}
                 inputValue={search}
-                getOptionLabel={(data) => formatOptionLabel(data, onChange,hasAccess)}
+                getOptionLabel={(data) => formatOptionLabel(data, onChange, hasAccess)}
                 loadOptions={promiseOptions}
                 onInputChange={handleInputChange}
                 placeholder={

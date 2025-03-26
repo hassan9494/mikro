@@ -3,12 +3,13 @@ import { reducer, cartItemsTotalPrice } from './cart.reducer';
 import { useStorage } from 'utils/use-storage';
 
 const CartContext = createContext({} as any);
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
     isOpen: false,
     items: [],
     isRestaurant: false,
     coupon: null,
 };
+
 
 const useCartActions = (initialCart = INITIAL_STATE) => {
     const [state, dispatch] = useReducer(reducer, initialCart);

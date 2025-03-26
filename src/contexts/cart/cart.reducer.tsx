@@ -1,4 +1,3 @@
-// export const cartItemsTotalPrice = (items, { discountInPercent = 0 } = {}) => {
 export const cartItemsTotalPrice = (items, coupon = null) => {
     if (items === null || items.length === 0) return 0;
     const itemCost = items.reduce((total, item) => {
@@ -7,19 +6,15 @@ export const cartItemsTotalPrice = (items, coupon = null) => {
         }
         return total + item.price * item.quantity;
     }, 0);
-    // const discountRate = 1 - discountInPercent;
     let discount = 0;
 
     if (coupon) {
         discount = coupon.is_percentage ? itemCost * Number(coupon.amount) / 100 : itemCost - coupon.amount;
     }
-    // itemCost * discountRate * TAX_RATE + shipping;
-    // return itemCost * discountRate;
     return itemCost - discount;
 };
-// cartItems, cartItemToAdd
-const addItemToCart = (state, action) => {
 
+const addItemToCart = (state, action) => {
     if (action.payload.availableQty == 0) {
         return [...state.items];
     }
@@ -41,7 +36,6 @@ const addItemToCart = (state, action) => {
     return [...state.items, action.payload];
 };
 
-// cartItems, cartItemToRemove
 const removeItemFromCart = (state, action) => {
     return state.items.reduce((acc, item) => {
         if (item.id === action.payload.id) {
