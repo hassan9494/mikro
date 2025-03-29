@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import AsyncSelect from 'react-select/async';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { autocomplete } from "../../data/use-products";
@@ -14,68 +14,78 @@ import { useRouter } from "next/router";
 import useUser from "data/use-user";
 
 const formatOptionLabel = ({ item }, onClick, hasAccess) => {
-    const handleClick = (e, slug) => {
-        // Check for Ctrl/Cmd click
-        if (e.ctrlKey || e.metaKey) {
-            // Open in new tab
-            window.open(`/product/${slug}`, '_blank');
-        } else {
-            // Normal click behavior
-            onClick(slug);
-        }
-        e.preventDefault(); // Prevent default anchor behavior
-    };
-
     return (
-        <ListItem
-            alignItems="flex-start"
-            style={{ padding: 0, margin: 0 }}
-            onClick={(e) => handleClick(e, item.slug)}
-            component="a" // Make it behave like a link
-            href={`/product/${item.slug}`} // Required for middle-click to work
-            onAuxClick={(e) => {
-                // Handle middle mouse button click (same as Ctrl+Click)
-                if (e.button === 1) {
-                    window.open(`/product/${item.slug}`, '_blank');
-                    e.preventDefault();
-                }
-            }}
-        >
-            <ListItemAvatar>
-                <Avatar alt={item.title} src={item.image} />
-            </ListItemAvatar>
-            <ListItemText
-                primary={
-                    <Box display="flex">
-                        <Box flexGrow={3} className={'d-flex justify-content-between'}>
-                            <Typography component="p" variant="body2" color="textPrimary">
-                                {item.title}
-                            </Typography>
-                            <Typography component="span" variant="body2" color="textSecondary" style={{marginRight:50}}>
-                                <Chip label={'JD ' + (item.sale_price || item.price)} size="small" color='secondary' />
-                            </Typography>
-                            {hasAccess && (
-                                <>
-                                    <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
-                                        Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
-                                    </Typography>
-                                    <Typography component="span" variant="body2" color="textSecondary">
-                                        Location: {item?.location}
-                                    </Typography>
-                                </>
-                            )}
-                        </Box>
-                        <Box>
-                            {
-                                item.availableQty ?
-                                    <AddItemToCart data={item} variant={'full'} /> :
-                                    <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
-                            }
-                        </Box>
-                    </Box>
-                }
+        <div style={{ position: 'relative' }}>
+            {/* Clickable product row */}
+            <div
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 1,
+                    cursor: 'pointer'
+                }}
+                onClick={(e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        window.open(`/product/${item.slug}`, '_blank');
+                        e.preventDefault();
+                    } else if (e.button === 0) { // Left click only
+                        onClick(item.slug);
+                    }
+                }}
             />
-        </ListItem>
+
+            {/* Visible content */}
+            <ListItem
+                alignItems="flex-start"
+                style={{ padding: 0, margin: 0, pointerEvents: 'none' }}
+                component="div"
+            >
+                <ListItemAvatar>
+                    <Avatar alt={item.title} src={item.image} />
+                </ListItemAvatar>
+                <ListItemText
+                    primary={
+                        <Box display="flex">
+                            <Box flexGrow={3} className={'d-flex justify-content-between'}>
+                                <Typography component="p" variant="body2" color="textPrimary">
+                                    {item.title}
+                                </Typography>
+                                <Typography component="span" variant="body2" color="textSecondary" style={{marginRight:50}}>
+                                    <Chip label={'JD ' + (item.sale_price || item.price)} size="small" color='secondary' />
+                                </Typography>
+                                {hasAccess && (
+                                    <>
+                                        <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
+                                            Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
+                                        </Typography>
+                                        <Typography component="span" variant="body2" color="textSecondary">
+                                            Location: {item?.location}
+                                        </Typography>
+                                    </>
+                                )}
+                            </Box>
+                            {/* Add to Cart - completely clickable */}
+                            <Box
+                                style={{
+                                    pointerEvents: 'auto',
+                                    position: 'relative',
+                                    zIndex: 2
+                                }}
+                            >
+                                {item.availableQty ? (
+                                    <AddItemToCart data={item} variant={'full'} />
+                                ) : (
+                                    <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                )}
+                            </Box>
+                        </Box>
+                    }
+                />
+            </ListItem>
+        </div>
     );
 };
 
