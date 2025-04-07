@@ -19,4 +19,5 @@ export const LogoImage = styled.img({
     display: 'block',
     backfaceVisibility: 'hidden',
     maxWidth: 200,
+    width:200
 });

@@ -3,6 +3,7 @@ import { themeGet } from '@styled-system/theme-get';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 
+// Styled Components
 const SingleItem = styled.li`
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   border-radius: ${themeGet('radii.base', '6px')};
@@ -26,7 +27,7 @@ const ZoomContainer = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 350px;
+  height: 450px;
 `;
 
 const ZoomableImage = styled.img`
@@ -51,9 +52,53 @@ const ZoomOverlay = styled.div<{ show: boolean; position: { x: number; y: number
   left: ${({ position }) => position.x}px;
   top: ${({ position }) => position.y}px;
   transform: translate(-50%, -50%);
-  background-size: 400% 400%; // 3x zoom
+  background-size: 400% 400%;
 `;
 
+const ImagePopup = styled.div<{ show: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: ${({ show }) => (show ? 'flex' : 'none')};
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  cursor: pointer;
+`;
+
+const PopupImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: default;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2001;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+`;
+
+// Carousel responsive settings
 const responsive = {
     desktop: {
         breakpoint: {
@@ -78,12 +123,14 @@ const responsive = {
     },
 };
 
+// Main Component
 const CarouselWithCustomDots = ({
                                     items = [],
                                     deviceType: { mobile, tablet, desktop },
                                     title,
                                     ...rest
                                 }: any) => {
+    // State for zoom functionality
     const [zoom, setZoom] = useState({
         active: false,
         img: '',
@@ -91,6 +138,13 @@ const CarouselWithCustomDots = ({
         backgroundPosition: '0% 0%'
     });
 
+    // State for popup functionality
+    const [popup, setPopup] = useState({
+        show: false,
+        img: ''
+    });
+
+    // Handle mouse movement for zoom effect
     const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>, imgUrl: string) => {
         if (!zoom.active) return;
 
@@ -98,7 +152,6 @@ const CarouselWithCustomDots = ({
         const x = e.clientX - left;
         const y = e.clientY - top;
 
-        // Calculate background position to center the cursor point
         const bgX = (x / width) * 100;
         const bgY = (y / height) * 100;
 
@@ -110,6 +163,23 @@ const CarouselWithCustomDots = ({
         }));
     };
 
+    // Handle opening popup
+    const handleThumbnailClick = (imgUrl: string) => {
+        setPopup({
+            show: true,
+            img: imgUrl
+        });
+    };
+
+    // Handle closing popup
+    const closePopup = () => {
+        setPopup({
+            show: false,
+            img: ''
+        });
+    };
+
+    // Main carousel slides
     const children = items.slice(0, 6).map((item: any, index: number) => (
         <ZoomContainer
             key={index}
@@ -120,19 +190,23 @@ const CarouselWithCustomDots = ({
                 src={item.url}
                 alt={title}
                 onMouseMove={(e) => handleMouseMove(e, item.url)}
+                onClick={() => handleThumbnailClick(item.url)}
             />
         </ZoomContainer>
     ));
 
+    // Thumbnail images for dots
     const images = items.map((item: any, index: number) => (
         <img
             src={item.url}
             key={index}
             alt={title}
-            style={{ width: '100%', height: '100%', position: 'relative' }}
+            style={{ width: '100%', height: '100%', position: 'relative', cursor: 'pointer' }}
+            // onClick={() => handleThumbnailClick(item.url)}
         />
     ));
 
+    // Custom dot component
     const CustomDot = ({
                            index,
                            onClick,
@@ -151,6 +225,7 @@ const CarouselWithCustomDots = ({
         );
     };
 
+    // Determine device type
     let deviceType = 'desktop';
     if (mobile) {
         deviceType = 'mobile';
@@ -177,6 +252,7 @@ const CarouselWithCustomDots = ({
                 {children}
             </Carousel>
 
+            {/* Zoom overlay */}
             <ZoomOverlay
                 show={zoom.active}
                 position={zoom.position}
@@ -185,6 +261,21 @@ const CarouselWithCustomDots = ({
                     backgroundPosition: zoom.backgroundPosition
                 }}
             />
+
+            {/* Image popup */}
+            <ImagePopup show={popup.show} onClick={closePopup}>
+                <CloseButton onClick={(e) => {
+                    e.stopPropagation();
+                    closePopup();
+                }}>
+                    ×
+                </CloseButton>
+                <PopupImage
+                    src={popup.img}
+                    alt={title}
+                    onClick={e => e.stopPropagation()}
+                />
+            </ImagePopup>
         </>
     );
 };

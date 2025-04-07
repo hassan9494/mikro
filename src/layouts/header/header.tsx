@@ -7,7 +7,7 @@ import { RightMenu } from './menu/right-menu/right-menu';
 import { LeftMenu } from './menu/left-menu/left-menu';
 import HeaderWrapper from './header.style';
 // import LogoImage from 'assets/images/logo.svg';
-import LogoImage from 'assets/images/logo.png';
+import LogoImage from 'assets/images/logo_mikro.svg';
 import UserImage from 'assets/images/user.jpg';
 import { isCategoryPage } from '../is-home-page';
 import Search from 'features/search/search';
