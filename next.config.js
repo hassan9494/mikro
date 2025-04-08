@@ -9,6 +9,7 @@ const nextConfig = {
             '127.0.0.1',
             'api.mikroelectron.com',
             'apitest.mikroelectron.com',
+            '134.209.88.205',
         ],
     },
 };
