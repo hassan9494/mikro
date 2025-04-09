@@ -172,13 +172,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
                                                 label={t('cityPlaceholder')}
                                                 variant="outlined"
                                                 {...params}
-                                                autoComplete={'off'}
                                                 inputProps={{
                                                     ...params.inputProps,
                                                     autocomplete: 'off',
-                                                    form: {
-                                                        autocomplete: 'off',
-                                                    },
                                                 }}
                                             />
                                         }
@@ -199,7 +195,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
                                     <TextField
                                         label={t('notesPlaceholder')}
                                         multiline
-                                        rows={4}
+                                        minRows={4} // Changed from rows to minRows
                                         variant="outlined"
                                         value={notes}
                                         onChange={e => setNotes(e.target.value)}
