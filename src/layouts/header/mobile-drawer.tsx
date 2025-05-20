@@ -24,6 +24,7 @@ import {
     UserOptionMenu,
 } from './header.style';
 import UserImage from 'assets/images/user.jpg';
+import {Button as BTN} from "@material-ui/core";
 import {
     MOBILE_DRAWER_MENU,
     PROFILE_PAGE, REQUEST_MEDICINE_MENU_ITEM,
@@ -178,6 +179,14 @@ const MobileDrawer: React.FunctionComponent = () => {
                             <CategoryTitle>
                                 Categories :
                             </CategoryTitle>
+                            <BTN
+                                variant="contained"
+                                disableElevation
+                                color="primary"
+                                onClick={()=>onCategoryClick('new_product')}
+                                style={{marginLeft:35,width:"auto",marginBottom:15}}>
+                                <FormattedMessage id="New Products" defaultMessage="New Products"/>
+                            </BTN>
                             <TreeWrapper>
 
                                 <TreeMenu
