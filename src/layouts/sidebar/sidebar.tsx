@@ -27,6 +27,8 @@ import { REQUEST_MEDICINE_MENU_ITEM } from 'site-settings/site-navigation';
 import useCategory from 'data/use-category';
 import ErrorMessage from 'components/error-message/error-message';
 import CategoryWalker from 'components/category-walker/category-walker';
+import {Button} from "@material-ui/core";
+import AuthenticationForm from "../../features/authentication-form";
 
 type SidebarCategoryProps = {
     deviceType: {
@@ -58,6 +60,13 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
     };
 
     const isSidebarSticky = useAppState('isSidebarSticky');
+    const handleNewProduct = () => {
+
+        router.push({
+            pathname: '/category/[category]',
+            query: 'new_product',
+        });
+    };
 
     if (!data) {
         if (mobile || tablet) {
@@ -102,6 +111,14 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                     )}
 
                     <Scrollbar className='sidebar-scrollbar'>
+                        <Button
+                            variant="contained"
+                            disableElevation
+                            color="primary"
+                            onClick={()=>onCategoryClick('new_product')}
+                            style={{marginLeft:35,width:"auto",marginBottom:15}}>
+                            <FormattedMessage id="New Products" defaultMessage="New Products"/>
+                        </Button>
                         <TreeWrapper>
                             <TreeMenu
                                 data={data}

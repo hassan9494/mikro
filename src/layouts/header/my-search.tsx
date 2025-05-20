@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import AsyncSelect from 'react-select/async';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { autocomplete } from "../../data/use-products";
+import { useRouter } from "next/router";
+import useUser from "data/use-user";
+import { AddItemToCart } from "../../components/add-item-to-cart";
 import {
     Avatar, Box, Chip,
     ListItem,
@@ -9,14 +10,11 @@ import {
     ListItemText,
     Typography
 } from "@material-ui/core";
-import { AddItemToCart } from "../../components/add-item-to-cart";
-import { useRouter } from "next/router";
-import useUser from "data/use-user";
+import { autocomplete } from "../../data/use-products"; // ADD THIS IMPORT
 
 const formatOptionLabel = ({ item }, onClick, hasAccess) => {
     return (
         <div style={{ position: 'relative' }}>
-            {/* Clickable product row */}
             <div
                 style={{
                     position: 'absolute',
@@ -31,13 +29,12 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                     if (e.ctrlKey || e.metaKey) {
                         window.open(`/product/${item.slug}`, '_blank');
                         e.preventDefault();
-                    } else if (e.button === 0) { // Left click only
+                    } else if (e.button === 0) {
                         onClick(item.slug);
                     }
                 }}
             />
 
-            {/* Visible content */}
             <ListItem
                 alignItems="flex-start"
                 style={{ padding: 0, margin: 0, pointerEvents: 'none' }}
@@ -67,7 +64,6 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                                     </>
                                 )}
                             </Box>
-                            {/* Add to Cart - completely clickable */}
                             <Box
                                 style={{
                                     pointerEvents: 'auto',
@@ -78,7 +74,7 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                                 {item.availableQty ? (
                                     <AddItemToCart data={item} variant={'full'} />
                                 ) : (
-                                    <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                    'Out Of Stock'
                                 )}
                             </Box>
                         </Box>
@@ -90,26 +86,39 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
 };
 
 export default function MySearch({ onSubmit }) {
-    const intl = useIntl();
     const router = useRouter();
     const [search, setSearch] = useState('');
     const [defaultOptions, setDefaultOptions] = useState(null);
     const { user } = useUser();
     const allowedRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Cashier', 'Distributer', 'Admin cash'];
-
-    // Check if user has any of the allowed roles
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
 
-    const promiseOptions = text => autocomplete({ text }).then(res => {
-        const data = res.data || [];
-        const items = data.map(e => ({
-            label: e.title,
-            value: e.slug,
-            item: e
-        }));
-        setDefaultOptions(items);
-        return items;
-    });
+    const normalizeSearchString = (str: string): string => {
+        return str
+            .toLowerCase()
+            .replace(/[-/\_()+=.,]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    };
+
+    const promiseOptions = text => {
+        const normalizedText = normalizeSearchString(text);
+
+        if (normalizedText.length < 2) {
+            return Promise.resolve([]);
+        }
+
+        return autocomplete({ text: normalizedText }).then(res => {
+            const data = res.data || [];
+            const items = data.map(e => ({
+                label: e.title,
+                value: e.slug,
+                item: e
+            }));
+            setDefaultOptions(items);
+            return items;
+        });
+    };
 
     const onChange = (slug) => {
         router.push({
@@ -117,19 +126,20 @@ export default function MySearch({ onSubmit }) {
             query: { slug },
         });
         if (onSubmit) {
-            onSubmit(); // Call onSubmit to close modal
+            onSubmit();
         }
     };
 
     const onKeydown = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && search.length >= 2) {
             e.preventDefault();
+            const normalizedSearch = normalizeSearchString(search);
             router.push({
                 pathname: '/search/[search]',
-                query: { search },
+                query: { search: normalizedSearch },
             });
             if (onSubmit) {
-                onSubmit(); // Call onSubmit to close modal
+                onSubmit();
             }
         }
     };
@@ -151,10 +161,9 @@ export default function MySearch({ onSubmit }) {
                 loadOptions={promiseOptions}
                 onInputChange={handleInputChange}
                 placeholder={
-                    intl.formatMessage({
-                        id: 'searchPlaceholder',
-                        defaultMessage: 'Search your product from here',
-                    })
+                    search.length === 1 ?
+                        'Type at least 2 characters...' :
+                        'Search your product from here'
                 }
             />
         </div>
