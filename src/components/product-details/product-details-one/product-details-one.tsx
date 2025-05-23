@@ -216,7 +216,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         </Typography>
                                                         <Typography component="span" variant="body1"
                                                                     color="textPrimary">
-                                                            Location: {data.location}
+                                                            Location: {data.location} / {data.stock_location ?? '----'}
                                                         </Typography>
                                                     </div>
                                                 )}
