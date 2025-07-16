@@ -248,14 +248,62 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     <ProductWeight>{product.unit}</ProductWeight>
 
 
+                                    {/*<ProductDescription>*/}
+                                    {/*    {*/}
+                                    {/*        product.short_description ?*/}
+                                    {/*            product.short_description :*/}
+                                    {/*            <p>*/}
+                                    {/*                <div dangerouslySetInnerHTML={{__html: product.description}}/>*/}
+                                    {/*            </p>*/}
+                                    {/*    }*/}
+                                    {/*</ProductDescription>*/}
                                     <ProductDescription>
-                                        {
-                                            product.short_description ?
-                                                product.short_description :
-                                                <p>
-                                                    <div dangerouslySetInnerHTML={{__html: product.description}}/>
-                                                </p>
-                                        }
+                                        {/* English Description - No Label */}
+                                        {product.short_description && (
+                                            <div
+                                                className="product-description-english"
+                                                dangerouslySetInnerHTML={{ __html: product.short_description }}
+                                                style={{
+                                                    marginBottom: product.short_description_ar ? '28px' : '0',
+                                                    lineHeight: '1.7',
+                                                    fontSize: '15px',
+                                                    color: '#444',
+                                                    fontFeatureSettings: '"liga", "kern"'
+                                                }}
+                                            />
+                                        )}
+
+                                        {/* Arabic Description - No Label */}
+                                        {product.short_description_ar && (
+                                            <div
+                                                className="product-description-arabic"
+                                                dangerouslySetInnerHTML={{ __html: product.short_description_ar }}
+                                                style={{
+                                                    direction: 'rtl',
+                                                    textAlign: 'right',
+                                                    fontFamily: "'Tajawal', 'Noto Sans Arabic', sans-serif",
+                                                    lineHeight: '1.9',
+                                                    fontSize: '16px',
+                                                    color: '#444',
+                                                    letterSpacing: '-0.2px',
+                                                    fontFeatureSettings: '"ss01", "salt"'
+                                                }}
+                                            />
+                                        )}
+
+                                        {/* Fallback Description - No Label */}
+                                        {!product.short_description && !product.short_description_ar && product.description && (
+                                            <div
+                                                className="product-description-fallback"
+                                                dangerouslySetInnerHTML={{ __html: product.description }}
+                                                style={{
+                                                    lineHeight: '1.7',
+                                                    fontSize: '15px',
+                                                    color: '#444',
+                                                    fontFeatureSettings: '"liga", "kern"'
+                                                }}
+                                            />
+                                        )}
                                     </ProductDescription>
 
 

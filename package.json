@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next",
     "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next build",
-    "start": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next start -p 3004",
+    "start": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next start -p 3003",
     "generate": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next generate",
     "postbuild": "next-sitemap && node remove-host-from-robots.js"
   },
@@ -47,6 +47,8 @@
     "react-intl": "^5.15.8",
     "react-multi-carousel": "^2.6.2",
     "react-reveal": "^1.2.2",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1",
     "react-scroll": "^1.8.2",
     "react-select": "^4.3.0",
     "react-spring": "8.0.27",

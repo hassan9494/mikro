@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react'
 import { createGlobalStyle } from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { openModal, closeModal } from '@redq/reuse-modal';
@@ -44,6 +44,26 @@ const CartPopUp: React.FC<CartProps> = ({
                                             deviceType: { mobile, tablet, desktop },
                                         }) => {
     const { isOpen, cartItemsCount, toggleCart, calculatePrice } = useCart();
+    const popupRef = useRef<HTMLDivElement>(null); // Add this ref
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (isOpen &&
+                popupRef.current &&
+                !popupRef.current.contains(event.target as Node)) {
+                toggleCart();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen, toggleCart]);
+
     const handleModal = () => {
         openModal({
             show: true,
@@ -89,8 +109,10 @@ const CartPopUp: React.FC<CartProps> = ({
                 </>
             ) : (
                 <>
-                    <CartSlidePopup className={cartSliderClass}>
-                        {isOpen && (
+                    <CartSlidePopup ref={popupRef}
+                                    className={cartSliderClass}>
+
+                    {isOpen && (
                             <Cart onCloseBtnClick={toggleCart} scrollbarHeight='100vh'/>
                         )}
                     </CartSlidePopup>
