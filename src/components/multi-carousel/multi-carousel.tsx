@@ -130,6 +130,7 @@ const CarouselWithCustomDots = ({
                                     title,
                                     ...rest
                                 }: any) => {
+
     // State for zoom functionality
     const [zoom, setZoom] = useState({
         active: false,

@@ -71,7 +71,7 @@ const ContentSection = styled.div`
   height: auto;
   min-height: 100vh;
   //padding: 30px 30px 50px;
-  // padding: 30px 0px 0px;
+  padding: 30px 0px 0px;
 
   // Send footer to bottom
   display: flex;
@@ -80,18 +80,18 @@ const ContentSection = styled.div`
 
   @media (max-width: 1199px) and (min-width: 991px) {
     //padding: 15px 30px 50px;
-    // padding: 15px 0px 0px;
+    padding: 15px 0px 0px;
   }
   
 
   @media (max-width: 1367px) and (min-width: 1200px) {
     //padding: 15px 30px 50px;
-    // padding: 15px 0px 0px;
+    padding: 15px 0px 0px;
   }
 
   @media (max-width: 990px) {
     width: 100%;
-    // padding: 0px 0px 100px;
+    padding: 0px 0px 100px;
   }
 
   @media (max-width: 768px) {

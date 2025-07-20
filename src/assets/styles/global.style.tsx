@@ -147,12 +147,12 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
         '.image-item': {
             padding: '0 15px',
         },
-
-        '@media (max-width: 999px)': {
-            '.JKzuk' :{
-                padding: '0 !important'
-            }
-        },
+        //
+        // '@media (max-width: 999px)': {
+        //     '.JKzuk' :{
+        //         padding: '0 !important'
+        //     }
+        // },
 
 
         '@media (max-width: 1199px) and (min-width: 991px)': {
