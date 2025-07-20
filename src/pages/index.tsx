@@ -55,7 +55,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
                 title="MikroElectron | Electronics store in Amman"
                 description="MikroElectron is an electronics store in Amman, Jordan. We sell Arduino boards, Raspberry Pi, sensors, microcontrollers, and smart IoT devices. Supporting students, engineers, and makers with components for embedded systems, robotics, and graduation projects."
                 canonical="https://mikroelectron.com/"
-                image="http://localhost:3000/logo_mikro.svg"
+                image="https://mikroelectron.com/logo_mikro.svg"
             />
             <ModalProvider>
                 <Modal>
