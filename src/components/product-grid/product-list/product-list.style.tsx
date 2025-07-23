@@ -195,17 +195,19 @@ export const MedicineCol = styled.div`
     padding-right: 7.5px;
     margin-bottom: 20px;
   }
-  
+    
 `;
-export const FilterContainer = styled.div`
+
+export const FilterContainer = styled.div<{ isHomePage?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  margin-top: ${({ isHomePage }) => (isHomePage ? '0' : '15px')}; // Conditional margin
   border-bottom: 1px solid #e0e0e0;
   gap: 15px;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
   @media (max-width: 1200px) {
     gap: 10px;
@@ -345,3 +347,5 @@ export const CheckboxLabel = styled.label<{ checked: boolean }>`
     }
   }
 `;
+
+

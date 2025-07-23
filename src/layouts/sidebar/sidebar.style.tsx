@@ -125,3 +125,113 @@ export const Loading = styled.div`
   font-size: calc(${themeGet('fontSizes.base', '15px')} - 1px);
   color: ${themeGet('colors.text.bold', '#0D1136')};
 `;
+import { Button, Grid } from "@material-ui/core";
+import { NewReleases, FlightLand } from '@material-ui/icons';
+// import styled from '@material-ui/styles/styled';
+export const NewProductButton = styled(Button)`
+  && {
+    background: linear-gradient(135deg, #fe5e00 0%, #fe5e00b2 100%);
+    color: white;
+    text-transform: none;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 5px rgba(255, 107, 107, 0.2);
+    position: relative;
+    overflow: hidden;
+    height: 43px;
+    min-height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 162px;
+    
+    &:hover {
+      background: linear-gradient(135deg, #fe5e00 0%, #fe5e00b2 100%);
+      box-shadow: 0 5px 10px rgba(255, 82, 82, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.78) 0%,
+        rgba(255,255,255,0) 50%
+      );
+      transform: rotate(30deg);
+      transition: all 0.5s ease;
+    }
+    
+    &:hover::before {
+      right: 100%;
+    }
+    
+    .MuiButton-label {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+`;
+
+export const BackinStockButton = styled(Button)`
+  && {
+    background: linear-gradient(135deg, #133595 0%, #133695b2 100%);
+    color: white;
+    text-transform: none;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 5px rgba(78, 205, 196, 0.2);
+    position: relative;
+    overflow: hidden;
+    height: 43px;
+    min-height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 162px;
+    
+    &:hover {
+      background: linear-gradient(135deg, #133595 0%, #133695b2 100%);
+      box-shadow: 0 5px 10px rgba(61, 187, 179, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.74) 0%,
+        rgba(255,255,255,0) 50%
+      );
+      transform: rotate(30deg);
+      transition: all 0.5s ease;
+    }
+    
+    &:hover::before {
+      right: 100%;
+    }
+    
+    .MuiButton-label {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+`;

@@ -20,6 +20,8 @@ import {
     PopoverWrapper,
     SidebarWrapper,
     RequestMedicine,
+    NewProductButton,
+    BackinStockButton,
 } from './sidebar.style';
 
 import { TreeMenu } from 'components/tree-menu/tree-menu';
@@ -27,8 +29,9 @@ import { REQUEST_MEDICINE_MENU_ITEM } from 'site-settings/site-navigation';
 import useCategory from 'data/use-category';
 import ErrorMessage from 'components/error-message/error-message';
 import CategoryWalker from 'components/category-walker/category-walker';
-import {Button} from "@material-ui/core";
-import AuthenticationForm from "../../features/authentication-form";
+import {Button, Grid} from "@material-ui/core";
+import { Whatshot, Update} from '@material-ui/icons';
+
 
 type SidebarCategoryProps = {
     deviceType: {
@@ -60,13 +63,6 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
     };
 
     const isSidebarSticky = useAppState('isSidebarSticky');
-    const handleNewProduct = () => {
-
-        router.push({
-            pathname: '/category/[category]',
-            query: 'new_product',
-        });
-    };
 
     if (!data) {
         if (mobile || tablet) {
@@ -74,6 +70,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
         }
         return <SidebarLoader/>;
     }
+
     return (
         <CategoryWrapper>
             <PopoverWrapper>
@@ -111,14 +108,101 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                     )}
 
                     <Scrollbar className='sidebar-scrollbar'>
-                        <Button
-                            variant="contained"
-                            disableElevation
-                            color="primary"
-                            onClick={()=>onCategoryClick('new_product')}
-                            style={{marginLeft:35,width:"auto",marginBottom:15}}>
-                            <FormattedMessage id="New Products" defaultMessage="New Products"/>
-                        </Button>
+                        <Grid container spacing={1} style={{ padding: '0px 25px 15px 35px' }}>
+                            <Grid item xs={12}>
+                                <NewProductButton
+                                    variant="contained"
+                                    disableElevation
+                                    onClick={() => onCategoryClick('new_product')}
+                                    fullWidth
+                                >
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: '8px 0'
+                                    }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            marginBottom: '4px',
+                                            whiteSpace: 'nowrap',
+                                            minWidth: 0,
+                                            justifyContent: 'center',
+                                            width: '100%'
+                                        }}>
+                                            <Whatshot style={{
+                                                fontSize: '1.8rem',
+                                                marginRight: '10px',
+                                                flexShrink: 0,
+                                                color: '#ffffffff' // Orange-red color for "hot" items
+                                            }} />
+                                            <span style={{
+                                                fontSize: '1.4rem',
+                                                fontWeight: 700,
+                                                lineHeight: '1.2',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                textAlign: 'center'
+                                            }}>
+                                                <FormattedMessage id="New Products" defaultMessage="New Products"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </NewProductButton>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <BackinStockButton
+                                    variant="contained"
+                                    disableElevation
+                                    onClick={() => onCategoryClick('back_in_stock')}
+                                    fullWidth
+                                >
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: '8px 0'
+                                    }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            marginBottom: '4px',
+                                            whiteSpace: 'nowrap',
+                                            minWidth: 0,
+                                            justifyContent: 'center',
+                                            width: '100%'
+                                        }}>
+                                            <Update style={{
+                                                fontSize: '1.8rem',
+                                                marginRight: '10px',
+                                                flexShrink: 0,
+                                                color: '#ffffffff' // Green color for restocked items
+                                            }} />
+                                            <span style={{
+                                                fontSize: '1.4rem',
+                                                fontWeight: 700,
+                                                lineHeight: '1.2',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                textAlign: 'center'
+                                            }}>
+                                                <FormattedMessage id="Back in Stock" defaultMessage="Back in Stock"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </BackinStockButton>
+                            </Grid>
+                        </Grid>
+
                         <TreeWrapper>
                             <TreeMenu
                                 data={data}

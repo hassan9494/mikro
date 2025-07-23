@@ -1,311 +1,537 @@
-import styled from 'styled-components';
-import css from '@styled-system/css';
-import { FormattedMessage } from 'react-intl';
-import {IconButton} from "@material-ui/core";
-import {Facebook, Instagram, Mail, Phone, Room, Telegram, WhatsApp, YouTube} from "@material-ui/icons";
-import NavLink from "../components/nav-link/nav-link";
-import React from "react";
+import React, { useEffect } from "react";
+import Link from 'next/link';
+import logofooter from './logofooter.png';
+import LocationImage from '../assets/location-image.png';
 
-const Box = styled.div(
-    css({
+interface SocialProps {
+    call?: string;
+    location?: string;
+    email?: string;
+    facebook?: string;
+    instagram?: string;
+    telegram?: string;
+    youtube?: string;
+    whatsapp?: string;
+}
 
-        fontFamily: 'body',
-        fontSize: 'sm',
-        fontWeight: 'regular',
-        color: 'text.regular',
-        padding: '30px',
-        minHeight: '70px',
-        a: {
-            color: 'primary.regular',
-        },
-        '@media (max-width: 800px)': {
-            flexDirection: 'column',
-            paddingBottom: '0px',
-            justifyContent: 'space-between',
+interface FooterProps {
+    social?: SocialProps;
+}
 
-        },
-    }),
-    {
-
-        background: '#fff',
-        borderTop: '1px solid #f2f2f2',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
-);
-
-const Copyright = styled.div(
-    css({
-        flexGrow: '1',
-        '@media (max-width: 800px)': {
-            marginY: '20px',
-        },
-    }),
-);
-
-const Footer = ({social}) => {
+export function Footer({ social }: FooterProps) {
     const currentYear = new Date().getFullYear();
+    const whatsappTsNumber = '962795909648';
+
+    const services = [
+        "Electronics Repair",
+        "Component Sales",
+        "Technical Consulting",
+        "Custom Solutions",
+        "Maintenance Services",
+        "Training Programs",
+    ];
+
+    const quickLinks = [
+        { name: "Home", path: "/" },
+        { name: "Tutorials", path: "/tutorials" },
+        { name: "Courses", path: "/courses" },
+        { name: "Services", path: "/services" },
+        { name: "About Us", path: "/about" },
+    ];
+    useEffect(() => {
+        // Create a style element with Bootstrap CSS
+        const style = document.createElement('style');
+        style.innerHTML = `
+      .footerBootstrapScope {
+        ${require('!raw-loader!bootstrap/dist/css/bootstrap.min.css').default}
+      }
+      .footerBootstrapScope body {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    `;
+        document.head.appendChild(style);
+
+        return () => {
+            // Clean up on unmount
+            document.head.removeChild(style);
+        };
+    }, []);
 
     return (
-        <Box>
-            <Copyright>
-                <FormattedMessage
-                    id='test'
-                    defaultMessage={`${currentYear} © Mikroelectron. ALL Rights Reserved.`}
-                />
-                <p>
-                    AMMAN, Jordan. University Street, Khalifa Building 3rd floor
-                </p>
-            </Copyright>
-            <p>
+        <div className="footerBootstrapScope">
+            <footer style={{ backgroundColor: "#0d1b2a", color: "#ffffff" }} className="pt-5 pb-0 mb-0">
+                <div className="container ">
+                    <div className="row g-4 pb-0 mb-0">
+                        {/* Company Info */}
+                        <div className="col-12 col-md-6 col-lg-3 pb-0 mb-0">
+                            <div className="mb-4">
+                                <img
+                                    src={logofooter}
+                                    alt="Mikroelectron Logo"
+                                    className="footer-logo"
+                                    style={{
+                                        filter: 'brightness(0) invert(1)',
+                                        maxWidth: '180px',
+                                        height: 'auto',
+                                        marginBottom: '1rem'
+                                    }}
+                                />
+                            </div>
+                            <p className="text-light mb-4" style={{ lineHeight: '1.6', opacity: 0.9 }}>
+                                Your trusted partner for electronics solutions in Jordan. We provide quality components, expert repairs, and innovative technical solutions.
+                            </p>
 
-                <a href={`tel:+${social?.call}`} title={'Call +96265344772'}>
-                    <IconButton>
-                        <Phone  style={{color: '#55795d'}}/>
-                    </IconButton>
-                </a>
-                <a href={`${social?.location}`} target='_blank' title={'Show Location'}>
-                    <IconButton>
-                        <Room style={{color: '#e74c3c'}}/>
-                    </IconButton>
-                </a>
-                <a href={`mailto:${social?.email}`} target='_blank' title={'Send Email'}>
-                    <IconButton>
-                        <Mail style={{color: '#e74c3c'}}/>
-                    </IconButton>
-                </a>
-                <a href={`${social?.facebook}`} target='_blank' title={'Facebook Page'}>
-                    <IconButton>
-                        <Facebook  style={{color: '#4867aa'}}/>
-                    </IconButton>
-                </a>
-                <a href={`${social?.instagram}`} target='_blank' title={'Instagram Page'}>
-                    <IconButton>
-                        <Instagram  style={{color: '#8a3ab9'}}/>
-                    </IconButton>
-                </a>
-                <a href={`${social?.telegram}`} target='_blank' title={'Telegram'}>
-                    <IconButton>
-                        <Telegram  style={{color: '#0088cc'}}/>
-                    </IconButton>
-                </a>
-                <a href={`${social?.youtube}`} target='_blank' title={'Youtube Channel'}>
-                    <IconButton>
-                        <YouTube  style={{color: '#FF0000'}}/>
-                    </IconButton>
-                </a>
-                <a href={`https://wa.me/${social?.whatsapp}`} target='_blank' title={'Whatsapp'}>
-                    <IconButton>
-                        <WhatsApp  style={{color: '#1ad03f'}}/>
-                    </IconButton>
-                </a>
-            </p>
-            {/*<p>Crafted By IKoujar</p>*/}
-        </Box>
+                            {/* Social Media Icons */}
+                            <div className="d-flex gap-3">
+                                {social?.facebook && (
+                                    <a
+                                        href={social.facebook}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="Facebook"
+                                        className="social-icon"
+                                        style={{ color: '#4267B2' }}
+                                        title="Facebook"
+                                    >
+                                        <i className="bi bi-facebook"></i>
+                                    </a>
+                                )}
+
+                                {social?.instagram && (
+                                    <a
+                                        href={social.instagram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="Instagram"
+                                        className="social-icon"
+                                        style={{ color: '#E1306C' }}
+                                        title="Instagram"
+                                    >
+                                        <i className="bi bi-instagram"></i>
+                                    </a>
+                                )}
+
+                                {social?.whatsapp && (
+                                    <a
+                                        href={`https://wa.me/${social.whatsapp}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="WhatsApp"
+                                        className="social-icon"
+                                        style={{ color: '#25D366' }}
+                                        title="Sales WhatsApp"
+                                    >
+                                        <i className="bi bi-whatsapp"></i>
+                                    </a>
+                                )}
+
+                                <a
+                                    href={`https://wa.me/${whatsappTsNumber}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Technical Support"
+                                    className="social-icon"
+                                    style={{ color: '#25D366' }}
+                                    title="Technical Support WhatsApp"
+                                >
+                                    <i className="bi bi-headset"></i>
+                                </a>
+
+                                {social?.youtube && (
+                                    <a
+                                        href={social.youtube}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="YouTube"
+                                        className="social-icon"
+                                        style={{ color: '#FF0000' }}
+                                        title="YouTube"
+                                    >
+                                        <i className="bi bi-youtube"></i>
+                                    </a>
+                                )}
+
+                                {social?.telegram && (
+                                    <a
+                                        href={social.telegram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label="Telegram"
+                                        className="social-icon"
+                                        style={{ color: '#0088CC' }}
+                                        title="Telegram"
+                                    >
+                                        <i className="bi bi-telegram"></i>
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Services */}
+                        <div className="col-6 col-md-3 col-lg-2">
+                            <h5 className="text-white mb-4 pb-2" style={{
+                                borderBottom: "2px solid #fe5e00",
+                                fontSize: '1.1rem',
+                                fontWeight: '600'
+                            }}>
+                                Our Services
+                            </h5>
+                            <ul className="list-unstyled">
+                                {services.map((service, idx) => (
+                                    <li key={idx} className="mb-3">
+                                        <div className="d-flex align-items-center">
+                                            <span className="service-bullet"></span>
+                                            <span className="service-text">{service}</span>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Quick Links */}
+                        <div className="col-6 col-md-3 col-lg-2">
+                            <h5 className="text-white mb-4 pb-2" style={{
+                                borderBottom: "2px solid #fe5e00",
+                                fontSize: '1.1rem',
+                                fontWeight: '600'
+                            }}>
+                                Quick Links
+                            </h5>
+                            <ul className="list-unstyled">
+                                {quickLinks.map(({ name, path }, idx) => (
+                                    <li key={idx} className="mb-3">
+                                        <Link href={path} passHref>
+                                            <a className="footer-link">
+                                                {name}
+                                            </a>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Contact Info */}
+                        <div className="col-12 col-md-6 col-lg-3">
+                            <h5 className="text-white mb-4 pb-2" style={{
+                                borderBottom: "2px solid #fe5e00",
+                                fontSize: '1.1rem',
+                                fontWeight: '600'
+                            }}>
+                                Contact Info
+                            </h5>
+                            <div className="mb-3">
+                                {social?.call && (
+                                    <div className="contact-item">
+                                        <i className="bi bi-telephone-fill contact-icon"  style={{ color: '#2E86DE' }} ></i>
+                                        <a href={`tel:+${social.call}`} className="contact-link">
+                                            +{social.call}
+                                        </a>
+                                    </div>
+                                )}
+
+                                {social?.whatsapp && (
+                                    <div className="contact-item">
+                                        <i className="bi bi-whatsapp whatsapp-icon"></i>
+                                        <a
+                                            href={`https://wa.me/${social.whatsapp}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="contact-link"
+                                        >
+                                            Sales: +{social.whatsapp}
+                                        </a>
+                                    </div>
+                                )}
+
+                                <div className="contact-item">
+                                    <i className="bi bi-whatsapp whatsapp-icon"></i>
+                                    <a
+                                        href={`https://wa.me/${whatsappTsNumber}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="contact-link"
+                                    >
+                                        Technical Support: +{whatsappTsNumber}
+                                    </a>
+                                </div>
+
+                                {social?.email && (
+                                    <div className="contact-item">
+                                        <i className="bi bi-envelope-fill contact-icon" style={{ color: '#d12b1cff' }}></i>
+                                        <a href={`mailto:${social.email}`} className="contact-link">
+                                            {social.email}
+                                        </a>
+                                    </div>
+                                )}
+
+                                <div className="contact-item">
+                                    <i className="bi bi-globe2 contact-icon" style={{ color: '#fe5e00' }}></i>
+                                    <a
+                                        href="https://www.mikroelectron.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="contact-link"
+                                    >
+                                        www.mikroelectron.com
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Location */}
+                        <div className="col-12 col-md-6 col-lg-2">
+                            <h5 className="text-white mb-4 pb-2" style={{
+                                borderBottom: "2px solid #fe5e00",
+                                fontSize: '1.1rem',
+                                fontWeight: '600'
+                            }}>
+                                Our Location
+                            </h5>
+                            <div className="location-image-container">
+                                <a href={social?.location} target="_blank" title="Show Location" rel="noopener noreferrer">
+                                    <img
+                                        src={LocationImage}
+                                        alt="Location"
+                                        className="location-image"
+                                    />
+                                    <div className="location-overlay">
+                                        View on Map
+                                    </div>
+                                </a>
+                            </div>
+                            <p className="location-address " >
+                                Queen Rania St, Khalifa Building, 3rd Floor, Amman, Jordan
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <hr className="footer-divider" />
+
+                    {/* Bottom Section */}
+                    <div className="footer-bottom">
+                        <div className="copyright">
+                            &copy; {currentYear} Mikroelectron. All rights reserved.
+                        </div>
+                        <div className="footer-links">
+                            {["Privacy Policy", "Terms of Service", "Cookie Policy", "Sitemap"].map((item, idx) => (
+                                <a key={idx} href="#" className="footer-link">
+                                    {item}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <style jsx>{`
+         /* Social Icons */
+  .social-icon {
+    padding-top: 0.5rem;  
+    font-size: 1.8rem;
+    opacity: 1;
+    transition: all 0.2s ease;
+    transform: translateY(-2px);
+  }
+  
+  .social-icon:hover {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+        
+        /* Services */
+        .service-bullet {
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          background-color: #fe5e00;
+          border-radius: 50%;
+          margin-right: 0.75rem;
+        }
+        
+        .service-text {
+          font-size: 0.9rem;
+          opacity: 0.9;
+        }
+        
+        /* Links */
+        .footer-link {
+          color: white;
+          text-decoration: none;
+          font-size: 0.9rem;
+          opacity: 0.9;
+          transition: opacity 0.2s ease;
+        }
+        
+        .footer-link:hover {
+          opacity: 1;
+          text-decoration: underline;
+        }
+        
+       .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .contact-icon {
+    color: #fe5e00;
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    opacity: 1;
+    transition: all 0.2s ease;
+  }
+  
+  .whatsapp-icon {
+    color: #25D366;
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    opacity: 1;
+    transition: all 0.2s ease;
+  }
+  
+  .contact-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+  
+  /* Hover Effects */
+  .contact-item:hover .contact-icon,
+  .contact-item:hover .whatsapp-icon {
+    opacity: 0.8;
+    transform: translateY(-2px);
+  }
+  
+  .contact-item:hover .contact-link {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+        
+        /* Location */
+        .location-image-container {
+          position: relative;
+          margin-bottom: 1rem;
+        }
+        
+        .location-image {
+          display: block;
+          max-height: 200px;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+        
+        .location-image-container:hover .location-image {
+          transform: scale(1.05);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .location-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(254, 94, 0, 0.7);
+          color: white;
+          font-size: 0.9rem;
+          font-weight: 500;
+          border-radius: 8px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+        }
+        
+        .location-image-container:hover .location-overlay {
+          opacity: 1;
+        }
+        
+        .location-address {
+          font-size: 0.85rem;
+          opacity: 0.9;
+          line-height: 1.5;
+        }
+        
+        /* Divider */
+        .footer-divider {
+          border-color: rgba(254, 94, 0, 0.3);
+          // margin: 3rem 0 1.5rem;
+        }
+        
+        /* Bottom Section */
+        .footer-bottom {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .contact-item i {
+    transition: all 0.2s ease;
+  }
+  .contact-item:hover i {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+  .contact-item:hover a {
+    opacity: 1;
+  }
+      @media (max-width: 1050px) and (min-width: 989px) {
+    .footer-logo {
+      max-width: 160px !important; /* Slightly smaller size */
+    }
+      .social-icon {
+        font-size: 1.5rem; 
+        }
+
+  }
+        @media (min-width: 768px) {
+          .footer-bottom {
+            flex-direction: row;
+            justify-content: space-between;
+          }
+        }
+        
+        .copyright {
+          font-size: 0.8rem;
+          opacity: 0.8;
+          margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+          .copyright {
+            margin-bottom: 0;
+          }
+        }
+        
+        .footer-links {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.75rem;
+        }
+        
+        .footer-links a {
+          color: white;
+          text-decoration: none;
+          font-size: 0.8rem;
+          opacity: 0.8;
+          transition: opacity 0.2s ease;
+        }
+        
+        .footer-links a:hover {
+          opacity: 1;
+          text-decoration: underline;
+        }
+      `}</style>
+            </footer>
+        </div>
     );
-};
+}
+
 export default Footer;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import styled from 'styled-components';
-// import css from '@styled-system/css';
-// import {FormattedMessage} from 'react-intl';
-// import {IconButton} from '@material-ui/core';
-// import {
-//     Facebook,
-//     Instagram,
-//     Mail,
-//     Phone,
-//     Room,
-//     Telegram,
-//     WhatsApp,
-//     YouTube,
-// } from '@material-ui/icons';
-// import React from 'react';
-// import LocationImage from '../assets/location-image.png';
-// import {margin, width} from 'styled-system';
-//
-//
-// const Box = styled.div(
-//     css({
-//         fontFamily: 'body',
-//         fontSize: 'sm',
-//         fontWeight: 'regular',
-//         color: 'text.regular',
-//         padding: '0 !important',
-//         width: '100%',
-//         background: '#fff',
-//         borderTop: '1px solid #f2f2f2',
-//         overflow: 'hidden',
-//         margin: '0 !important',
-//
-//         '@media (max-width: 980px)': {
-//             padding: 'o',
-//             margin: '0 !important',
-//
-//         }
-//     })
-// );
-//
-// const TopRow = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: flex-start;
-//   flex-wrap: wrap;
-//   width: 100%;
-//   gap: 20px;
-//   padding: 0 75px 0 20px !important;
-//
-//   @media (max-width: 800px) {
-//     flex-direction: column;
-//     align-items: flex-start;
-//   }
-// `;
-//
-// const SocialIcons = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 8px;
-// `;
-//
-// const Copyright = styled.div`
-//   flex-shrink: 0;
-//   font-size: 14px;
-//   text-align: right;
-//   align-self: center;
-//
-//   @media (max-width: 800px) {
-//     text-align: left;
-//   }
-// `;
-//
-// const LocationWrapper = styled.div`
-//   width: 80%;
-//   margin: 0 -30px; // Negative margin to counter the Box padding
-//   position: relative;
-//
-//   img {
-//     width: 80%;
-//     display: block;
-//     overflow: hidden;
-//     object-fit:fill;
-//   }
-//
-//
-// span {
-//     display: block;
-//     margin: 12px 30px 0; // Add back the padding for text
-//     font-size: 15px;
-//     color: #333;
-//     text-align: center;
-//     margin-buttom: 0;
-//     padding-buttom: 0;
-//   }
-//
-//
-//     @media (min-width: 990px) {
-//     img {
-//       height: 400px !important;
-//     }
-//   }
-// }`;
-//
-// const Footer = ({social}) => {
-//     const currentYear = new Date().getFullYear();
-//
-//     return (
-//         <Box>
-//             <TopRow>
-//                 <Copyright>
-//                     <FormattedMessage
-//                         id="test"
-//                         defaultMessage={`${currentYear} © Mikroelectron. ALL Rights Reserved.`}
-//                     />
-//                 </Copyright>
-//                 <SocialIcons>
-//                     <a href={`tel:+${social?.call}`} title="Call">
-//                         <IconButton>
-//                             <Phone style={{color: '#55795d'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`${social?.location}`} target="_blank" title="Location">
-//                         <IconButton>
-//                             <Room style={{color: '#e74c3c'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`mailto:${social?.email}`} target="_blank" title="Email">
-//                         <IconButton>
-//                             <Mail style={{color: '#e74c3c'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`${social?.facebook}`} target="_blank" title="Facebook">
-//                         <IconButton>
-//                             <Facebook style={{color: '#4867aa'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`${social?.instagram}`} target="_blank" title="Instagram">
-//                         <IconButton>
-//                             <Instagram style={{color: '#8a3ab9'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`${social?.telegram}`} target="_blank" title="Telegram">
-//                         <IconButton>
-//                             <Telegram style={{color: '#0088cc'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`${social?.youtube}`} target="_blank" title="YouTube">
-//                         <IconButton>
-//                             <YouTube style={{color: '#FF0000'}}/>
-//                         </IconButton>
-//                     </a>
-//                     <a href={`https://wa.me/${social?.whatsapp}`} target="_blank" title="WhatsApp">
-//                         <IconButton>
-//                             <WhatsApp style={{color: '#1ad03f'}}/>
-//                         </IconButton>
-//                     </a>
-//                 </SocialIcons>
-//
-//
-//             </TopRow>
-//
-//             <LocationWrapper style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
-//                 <a href={`${social?.location}`} target="_blank" title="Show Location">
-//                     <img
-//                         src={LocationImage}
-//                         alt="Location"
-//                         style={{
-//                             width: '100%',
-//                             maxWidth: '100vw',
-//                             display: 'block',
-//                             padding: '0 !important',
-//                             margin: '0 !important',
-//                         }}
-//                     />
-//                 </a>
-//                 <span>AMMAN, Jordan. University Street, Khalifa Building 3rd floor</span>
-//             </LocationWrapper>
-//         </Box>
-//     );
-// };
-//
-// export default Footer;
