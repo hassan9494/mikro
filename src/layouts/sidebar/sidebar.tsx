@@ -30,7 +30,7 @@ import useCategory from 'data/use-category';
 import ErrorMessage from 'components/error-message/error-message';
 import CategoryWalker from 'components/category-walker/category-walker';
 import {Button, Grid} from "@material-ui/core";
-import { Whatshot, Update} from '@material-ui/icons';
+import { Whatshot, Update} from '@material-ui/icons'; 
 
 
 type SidebarCategoryProps = {
@@ -43,9 +43,9 @@ type SidebarCategoryProps = {
 };
 
 const SidebarCategory: React.FC<SidebarCategoryProps> = ({
-                                                             deviceType: { mobile, tablet, desktop },
-                                                             type,
-                                                         }) => {
+    deviceType: { mobile, tablet, desktop },
+    type,
+}) => {
     const router = useRouter();
     const { data, error } = useCategory();
 
@@ -70,7 +70,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
         }
         return <SidebarLoader/>;
     }
-
+    
     return (
         <CategoryWrapper>
             <PopoverWrapper>
@@ -108,7 +108,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                     )}
 
                     <Scrollbar className='sidebar-scrollbar'>
-                        <Grid container spacing={1} style={{ padding: '0px 25px 15px 35px' }}>
+  <Grid container spacing={1} style={{ padding: '0px 25px 15px 35px' }}>
                             <Grid item xs={12}>
                                 <NewProductButton
                                     variant="contained"
@@ -116,7 +116,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                     onClick={() => onCategoryClick('new_product')}
                                     fullWidth
                                 >
-                                    <div style={{
+                                    <div style={{ 
                                         display: 'flex',
                                         flexDirection: 'column',
                                         width: '100%',
@@ -125,7 +125,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                         justifyContent: 'center',
                                         padding: '8px 0'
                                     }}>
-                                        <div style={{
+                                        <div style={{ 
                                             display: 'flex',
                                             alignItems: 'center',
                                             marginBottom: '4px',
@@ -134,14 +134,14 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                             justifyContent: 'center',
                                             width: '100%'
                                         }}>
-                                            <Whatshot style={{
+                                            <Whatshot style={{ 
                                                 fontSize: '1.8rem',
                                                 marginRight: '10px',
                                                 flexShrink: 0,
                                                 color: '#ffffffff' // Orange-red color for "hot" items
                                             }} />
-                                            <span style={{
-                                                fontSize: '1.4rem',
+                                            <span style={{ 
+                                                fontSize: '1.4rem', 
                                                 fontWeight: 700,
                                                 lineHeight: '1.2',
                                                 whiteSpace: 'nowrap',
@@ -162,7 +162,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                     onClick={() => onCategoryClick('back_in_stock')}
                                     fullWidth
                                 >
-                                    <div style={{
+                                    <div style={{ 
                                         display: 'flex',
                                         flexDirection: 'column',
                                         width: '100%',
@@ -171,7 +171,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                         justifyContent: 'center',
                                         padding: '8px 0'
                                     }}>
-                                        <div style={{
+                                        <div style={{ 
                                             display: 'flex',
                                             alignItems: 'center',
                                             marginBottom: '4px',
@@ -180,14 +180,14 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                             justifyContent: 'center',
                                             width: '100%'
                                         }}>
-                                            <Update style={{
+                                            <Update style={{ 
                                                 fontSize: '1.8rem',
                                                 marginRight: '10px',
                                                 flexShrink: 0,
                                                 color: '#ffffffff' // Green color for restocked items
                                             }} />
-                                            <span style={{
-                                                fontSize: '1.4rem',
+                                            <span style={{ 
+                                                fontSize: '1.4rem', 
                                                 fontWeight: 700,
                                                 lineHeight: '1.2',
                                                 whiteSpace: 'nowrap',
@@ -202,7 +202,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                                 </BackinStockButton>
                             </Grid>
                         </Grid>
-
+                        
                         <TreeWrapper>
                             <TreeMenu
                                 data={data}

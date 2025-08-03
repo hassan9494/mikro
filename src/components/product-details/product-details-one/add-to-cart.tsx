@@ -44,10 +44,28 @@ export const AddToCart: React.FC<Props> = ({data}) => {
         // removeItem(data);
     };
 
-    const addToCart = (e) => {
-        addItem(data,  value)
-        setValue(1)
-    }
+        // Generate unique ID based on product and color
+    const getItemId = (item) => {
+        return item.color ? `${item.id}-${item.color.id}` : item.id;
+    };
+  const addToCart = (e) => {
+    // Include the selected color in the item data
+      const itemToAdd = {
+            ...data,
+            // Include color information in the cart item
+            id: getItemId(data), // Use combined ID
+            originalId: data.id, // Keep original product ID
+            colorId: data.color?.id,
+            colorTitle: data.color?.title,
+            price: data.color?.price || data.price,
+            sale_price: data.color?.sale_price || data.sale_price,
+            availableQty: data.color?.availableQty || data.availableQty,
+            image: data.color?.image || data.image
+        };
+    
+    addItem(itemToAdd, value);
+    setValue(1);
+}
 
     const isMaxed = () => {
         const currentQty = getItem(data.id)?.quantity || 0;

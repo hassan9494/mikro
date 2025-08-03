@@ -41,28 +41,61 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
 }));
-
 const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
-    const { id, quantity, title, name, unit, price, sale_price, image,slug } = product;
+    const { id, quantity, title, name, unit, price, sale_price, image, slug, variants } = product;
     const displayPrice = sale_price ? sale_price : price;
+
     return (
-        <Grid container alignItems="center" spacing={2}>
-            <Grid item md={1} xs={2} spacing={10}>
-                <Avatar alt={name} src={image} style={{ width: 50, height: 50 }}/>
+        <Grid container alignItems="center" spacing={2} style={{ marginBottom: 16 }}>
+            <Grid item md={1} xs={2}>
+                <Avatar alt={name} src={image} style={{ width: 50, height: 50 }} />
             </Grid>
             <Grid item md={7} xs={10}>
                 <Link href="/product/[slug]" as={`/product/${slug}`}>
-                <ListItemText
-                    primary={title} style={{cursor:"pointer"}}
-                />
+                    <Box style={{ cursor: "pointer" }}>
+                        <ListItemText
+                            primary={
+                                <div>
+                                    <div style={{ fontWeight: 500 }}>{title}</div>
+                                    {variants && Object.keys(variants).length > 0 && (
+                                        <div style={{ marginTop: 4 }}>
+                                            {Object.entries(variants).map(([key, value]) => (
+                                                <Chip
+                                                    key={`${key}-${value}`}
+                                                    label={`${key}: ${value}`}
+                                                    size="small"
+                                                    style={{ 
+                                                        marginRight: 4,
+                                                        marginBottom: 4,
+                                                        fontSize: '0.7rem'
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            }
+                        />
+                    </Box>
                 </Link>
             </Grid>
             <Grid item container md={4} xs={12}>
-                <Grid item  md={8} xs={8}>
-                    <CheckoutQuantityControl data={product}/>
+                <Grid item md={8} xs={8}>
+                    <CheckoutQuantityControl data={product} />
                 </Grid>
-                <Grid item md={4} xs={4} style={{marginBottom: 'auto', marginTop: 'auto'}}>
-                    <Chip label={<strong><MoneyFormat value={(displayPrice * quantity)} currencyPosition='end'/></strong>} variant="outlined" color={"primary"}/>
+                <Grid item md={4} xs={4} style={{ marginBottom: 'auto', marginTop: 'auto' }}>
+                    <Chip 
+                        label={
+                            <strong>
+                                <MoneyFormat 
+                                    value={(displayPrice * quantity)} 
+                                    currencyPosition='end'
+                                />
+                            </strong>
+                        } 
+                        variant="outlined" 
+                        color="primary"
+                    />
                 </Grid>
             </Grid>
         </Grid>

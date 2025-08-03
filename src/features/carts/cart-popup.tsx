@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'; // Add these imports
 import { createGlobalStyle } from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { openModal, closeModal } from '@redq/reuse-modal';
@@ -47,22 +47,22 @@ const CartPopUp: React.FC<CartProps> = ({
     const popupRef = useRef<HTMLDivElement>(null); // Add this ref
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (isOpen &&
-                popupRef.current &&
-                !popupRef.current.contains(event.target as Node)) {
-                toggleCart();
-            }
-        };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isOpen && 
+          popupRef.current && 
+          !popupRef.current.contains(event.target as Node)) {
+        toggleCart();
+      }
+    };
 
-        if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isOpen, toggleCart]);
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, toggleCart]);
 
     const handleModal = () => {
         openModal({
@@ -109,10 +109,9 @@ const CartPopUp: React.FC<CartProps> = ({
                 </>
             ) : (
                 <>
-                    <CartSlidePopup ref={popupRef}
-                                    className={cartSliderClass}>
-
-                    {isOpen && (
+                    <CartSlidePopup ref={popupRef} 
+            className={cartSliderClass}>
+                        {isOpen && (
                             <Cart onCloseBtnClick={toggleCart} scrollbarHeight='100vh'/>
                         )}
                     </CartSlidePopup>

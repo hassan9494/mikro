@@ -130,7 +130,7 @@ import { NewReleases, FlightLand } from '@material-ui/icons';
 // import styled from '@material-ui/styles/styled';
 export const NewProductButton = styled(Button)`
   && {
-    background: linear-gradient(135deg, #fe5e00 0%, #fe5e00b2 100%);
+    background: linear-gradient(135deg, #fe5e00 0%, #fe5e00 100%);
     color: white;
     text-transform: none;
     font-weight: 600;
@@ -147,7 +147,7 @@ export const NewProductButton = styled(Button)`
     // width: 162px;
     
     &:hover {
-      background: linear-gradient(135deg, #fe5e00 0%, #fe5e00b2 100%);
+      background: linear-gradient(135deg, #fe5e00 0%, #fe5e00 100%);
       box-shadow: 0 5px 10px rgba(255, 82, 82, 0.3);
       transform: translateY(-2px);
     }
@@ -165,7 +165,7 @@ export const NewProductButton = styled(Button)`
       height: 200%;
       background: linear-gradient(
         to bottom right,
-        rgba(255, 255, 255, 0.78) 0%,
+        rgba(255, 255, 255, 0.57) 0%,
         rgba(255,255,255,0) 50%
       );
       transform: rotate(30deg);
@@ -185,8 +185,8 @@ export const NewProductButton = styled(Button)`
 `;
 
 export const BackinStockButton = styled(Button)`
-  && {
-    background: linear-gradient(135deg, #133595 0%, #133695b2 100%);
+     && {
+    background: linear-gradient(135deg, #133595 0%, #133695 100%);
     color: white;
     text-transform: none;
     font-weight: 600;
@@ -203,9 +203,13 @@ export const BackinStockButton = styled(Button)`
     // width: 162px;
     
     &:hover {
-      background: linear-gradient(135deg, #133595 0%, #133695b2 100%);
-      box-shadow: 0 5px 10px rgba(61, 187, 179, 0.3);
+    background: linear-gradient(135deg, #133595 0%, #133695 100%);
+    box-shadow: 0 5px 10px rgba(61, 187, 179, 0.3);
       transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
     }
     
     &::before {
@@ -217,7 +221,7 @@ export const BackinStockButton = styled(Button)`
       height: 200%;
       background: linear-gradient(
         to bottom right,
-        rgba(255, 255, 255, 0.74) 0%,
+        rgba(255, 255, 255, 0.57) 0%,
         rgba(255,255,255,0) 50%
       );
       transform: rotate(30deg);
@@ -234,4 +238,5 @@ export const BackinStockButton = styled(Button)`
       justify-content: center;
     }
   }
+
 `;

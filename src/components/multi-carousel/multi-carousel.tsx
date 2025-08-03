@@ -3,7 +3,7 @@ import { themeGet } from '@styled-system/theme-get';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 
-// Styled Components
+// Styled Components (keep all your existing styles)
 const SingleItem = styled.li`
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   border-radius: ${themeGet('radii.base', '6px')};
@@ -98,40 +98,36 @@ const CloseButton = styled.button`
   }
 `;
 
-// Carousel responsive settings
+// Carousel responsive settings (keep your existing responsive config)
 const responsive = {
     desktop: {
-        breakpoint: {
-            max: 3000,
-            min: 1024,
-        },
+        breakpoint: { max: 3000, min: 1024 },
         items: 1,
     },
     mobile: {
-        breakpoint: {
-            max: 464,
-            min: 0,
-        },
+        breakpoint: { max: 464, min: 0 },
         items: 1,
     },
     tablet: {
-        breakpoint: {
-            max: 1024,
-            min: 200,
-        },
+        breakpoint: { max: 1024, min: 200 },
         items: 1,
     },
 };
 
-// Main Component
-const CarouselWithCustomDots = ({
-                                    items = [],
-                                    deviceType: { mobile, tablet, desktop },
-                                    title,
-                                    ...rest
-                                }: any) => {
+interface CarouselWithCustomDotsProps {
+    items: Array<{ url: string; id?: number; name?: string; size?: number }>;
+    deviceType: { mobile: boolean; tablet: boolean; desktop: boolean };
+    title?: string;
+    selectedColor?: any;
+}
 
-    // State for zoom functionality
+const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
+    items = [],
+    deviceType: { mobile, tablet, desktop },
+    title = '',
+    selectedColor,
+    ...rest
+}) => {
     const [zoom, setZoom] = useState({
         active: false,
         img: '',
@@ -139,11 +135,17 @@ const CarouselWithCustomDots = ({
         backgroundPosition: '0% 0%'
     });
 
-    // State for popup functionality
     const [popup, setPopup] = useState({
         show: false,
         img: ''
     });
+
+    // Get the correct set of images to display
+    const displayItems = selectedColor?.gallery?.length > 0 
+        ? selectedColor.gallery 
+        : selectedColor?.image 
+            ? [{ url: selectedColor.image }] 
+            : items;
 
     // Handle mouse movement for zoom effect
     const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>, imgUrl: string) => {
@@ -181,7 +183,7 @@ const CarouselWithCustomDots = ({
     };
 
     // Main carousel slides
-    const children = items.slice(0, 6).map((item: any, index: number) => (
+    const children = displayItems.slice(0, 6).map((item: any, index: number) => (
         <ZoomContainer
             key={index}
             onMouseEnter={() => setZoom(prev => ({ ...prev, active: true, img: item.url }))}
@@ -192,28 +194,38 @@ const CarouselWithCustomDots = ({
                 alt={title}
                 onMouseMove={(e) => handleMouseMove(e, item.url)}
                 onClick={() => handleThumbnailClick(item.url)}
+                onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/default-product.png';
+                }}
             />
         </ZoomContainer>
     ));
 
     // Thumbnail images for dots
-    const images = items.map((item: any, index: number) => (
+    const images = displayItems.map((item: any, index: number) => (
         <img
             src={item.url}
             key={index}
             alt={title}
             style={{ width: '100%', height: '100%', position: 'relative', cursor: 'pointer' }}
-            // onClick={() => handleThumbnailClick(item.url)}
+            onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/default-product.png';
+            }}
         />
     ));
 
     // Custom dot component
     const CustomDot = ({
-                           index,
-                           onClick,
-                           active,
-                           carouselState: { currentSlide, deviceType },
-                       }: any) => {
+        index,
+        onClick,
+        active,
+    }: {
+        index: number;
+        onClick: () => void;
+        active: boolean;
+    }) => {
         return (
             <SingleItem
                 data-index={index}
@@ -227,13 +239,7 @@ const CarouselWithCustomDots = ({
     };
 
     // Determine device type
-    let deviceType = 'desktop';
-    if (mobile) {
-        deviceType = 'mobile';
-    }
-    if (tablet) {
-        deviceType = 'tablet';
-    }
+    const deviceType = mobile ? 'mobile' : tablet ? 'tablet' : 'desktop';
 
     return (
         <>
@@ -250,33 +256,44 @@ const CarouselWithCustomDots = ({
                 customDot={<CustomDot />}
                 {...rest}
             >
-                {children}
+                {children.length > 0 ? children : (
+                    <ZoomContainer>
+                        <ZoomableImage
+                            src="/default-product.png"
+                            alt="Default product image"
+                        />
+                    </ZoomContainer>
+                )}
             </Carousel>
 
             {/* Zoom overlay */}
-            <ZoomOverlay
-                show={zoom.active}
-                position={zoom.position}
-                style={{
-                    backgroundImage: `url(${zoom.img})`,
-                    backgroundPosition: zoom.backgroundPosition
-                }}
-            />
+            {zoom.img && (
+                <ZoomOverlay
+                    show={zoom.active}
+                    position={zoom.position}
+                    style={{
+                        backgroundImage: `url(${zoom.img})`,
+                        backgroundPosition: zoom.backgroundPosition
+                    }}
+                />
+            )}
 
             {/* Image popup */}
-            <ImagePopup show={popup.show} onClick={closePopup}>
-                <CloseButton onClick={(e) => {
-                    e.stopPropagation();
-                    closePopup();
-                }}>
-                    ×
-                </CloseButton>
-                <PopupImage
-                    src={popup.img}
-                    alt={title}
-                    onClick={e => e.stopPropagation()}
-                />
-            </ImagePopup>
+            {popup.img && (
+                <ImagePopup show={popup.show} onClick={closePopup}>
+                    <CloseButton onClick={(e) => {
+                        e.stopPropagation();
+                        closePopup();
+                    }}>
+                        ×
+                    </CloseButton>
+                    <PopupImage
+                        src={popup.img}
+                        alt={title}
+                        onClick={e => e.stopPropagation()}
+                    />
+                </ImagePopup>
+            )}
         </>
     );
 };

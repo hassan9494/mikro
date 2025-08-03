@@ -199,7 +199,7 @@ export const MedicineCol = styled.div`
 
 export const SliderStyles = styled.div`
   position: relative;
-
+  
   .slider-container {
     width: 100%;
     max-width: 100vw;
@@ -263,7 +263,7 @@ export const SliderStyles = styled.div`
     justify-content: center;
     top: 50%;
     transform: translateY(-50%);
-
+    
     &:before {
       font-family: 'slick';
       font-size: 24px;
@@ -272,7 +272,7 @@ export const SliderStyles = styled.div`
       position: relative;
       top: -1px;
     }
-
+    
     &:hover {
       background: white;
       &:before {
@@ -283,7 +283,7 @@ export const SliderStyles = styled.div`
 
   .slick-prev {
     left: 10px;
-
+    
     &:before {
       content: '←';
     }
@@ -291,7 +291,7 @@ export const SliderStyles = styled.div`
 
   .slick-next {
     right: 10px;
-
+    
     &:before {
       content: '→';
     }
@@ -305,17 +305,17 @@ export const SliderStyles = styled.div`
     display: flex !important;
     justify-content: center;
     align-items: center;
-
+    
     li {
       margin: 0 5px;
       width: 12px;
       height: 12px;
-
+      
       button {
         width: 12px;
         height: 12px;
         padding: 0;
-
+        
         &:before {
           content: '';
           width: 12px;
@@ -326,7 +326,7 @@ export const SliderStyles = styled.div`
           transition: all 0.3s ease;
         }
       }
-
+      
       &.slick-active {
         button:before {
           background: #fe5e00;
@@ -354,7 +354,7 @@ export const SliderStyles = styled.div`
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-
+    
     &:hover {
       background-color: #008a6d;
     }
@@ -365,7 +365,7 @@ export const SliderStyles = styled.div`
     .slick-arrow {
       width: 50px;
       height: 50px;
-
+      
       &:before {
         font-size: 20px;
       }
@@ -376,11 +376,11 @@ export const SliderStyles = styled.div`
     .slick-arrow {
       // display: none !important;
     }
-
+    
     .slider-inner {
       padding: 0 20px;
     }
-
+    
     .slider-title {
       font-size: 24px;
     }
@@ -390,12 +390,12 @@ export const SliderStyles = styled.div`
     .slider-inner {
       padding: 0 15px;
     }
-
+    
     .slider-title {
       font-size: 22px;
       margin-bottom: 20px;
     }
-
+    
     .show-more-button {
       padding: 12px 40px;
       font-size: 15px;
@@ -406,30 +406,30 @@ export const SliderStyles = styled.div`
     .slider-container {
       padding: 20px 0;
     }
-
+    
     .slider-title {
       font-size: 20px;
     }
-
+    
     .slick-dots {
       bottom: 5px;
       padding-top: 15px;
-
+      
       li {
         margin: 0 3px;
         width: 10px;
         height: 10px;
-
+        
         button {
           width: 10px;
           height: 10px;
-
+          
           &:before {
             width: 10px;
             height: 10px;
           }
         }
-
+        
         &.slick-active {
           button:before {
             width: 12px;
@@ -438,11 +438,10 @@ export const SliderStyles = styled.div`
         }
       }
     }
-
+    
     .show-more-button {
       padding: 10px 30px;
       font-size: 14px;
     }
   }
 `;
-

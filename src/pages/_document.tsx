@@ -64,12 +64,13 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
                     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet" />
                     <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons' async={true}/>
                     <link
-                        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-                        rel="stylesheet"
-                    />
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+            rel="stylesheet"
+          />
 
                 </Head>
                 <body>
+                <div id="modal-root"></div>
                 <Main />
                 <NextScript />
                 </body>
