@@ -253,7 +253,7 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
                 deviceType={deviceType}
                 autoPlay={false}
                 arrows={false}
-                customDot={<CustomDot />}
+                customDot={<CustomDot  active={false} onClick={null} index={1}/>}
                 {...rest}
             >
                 {children.length > 0 ? children : (
