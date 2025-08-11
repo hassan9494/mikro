@@ -60,15 +60,21 @@ export function useArticles(type) {
 
 
 export function useArticle(id) {
-    const { data, mutate, error } = useSWR(`website/article/${id}`, fetcher, { revalidateOnFocus: false });
-    const loading = !data && !error;
-    return {
-        loading,
-        error,
-        data: data,
-        mutate,
-    };
+  const shouldFetch = id != null && id !== 'undefined';
+  const { data, mutate, error } = useSWR(
+    shouldFetch ? `website/article/${id}` : null,
+    fetcher,
+    { revalidateOnFocus: false }
+  );
+  const loading = shouldFetch && !data && !error;
+  return {
+    loading,
+    error,
+    data: data,
+    mutate,
+  };
 }
+
 export async function getArticle(id) {
     const { data } = await axiosInstance.get(`website/article/${id}`);
     return data?.data;

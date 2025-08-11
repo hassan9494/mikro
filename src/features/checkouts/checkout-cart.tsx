@@ -12,7 +12,6 @@ import {
     ListItemText,
     makeStyles
 } from "@material-ui/core";
-import { AddItemToCart } from "../../components/add-item-to-cart";
 import MoneyFormat from "../../components/money-format/money-format";
 import {
     Bold,
@@ -26,7 +25,6 @@ import { NoCartBag } from "../../assets/icons/NoCartBag";
 import { FormattedMessage } from "react-intl";
 import { useCart } from "../../contexts/cart/use-cart";
 import useTranslation from "../../utils/use-translation";
-import useAddresses from "../../data/use-address";
 import {CheckoutQuantityControl} from "./checkout-quantity-control";
 import Coupon from "../coupon/coupon";
 import { verifyCoupon } from "../../data/use-coupon";
@@ -116,6 +114,13 @@ const CheckoutCart = ({ shippingCost }) => {
         applyCoupon,
         coupon,
     } = useCart();
+    
+    const subtotal = calculateSubTotalPrice();
+    // Override shipping cost to 0 if subtotal >= 20
+    const finalShippingCost = subtotal >= 20 ? 0 : shippingCost;
+    const showFreeShippingMessage = subtotal >= 20 && cartItemsCount > 0;
+    const showEncouragementMessage = subtotal > 0 && subtotal < 20;
+    const amountNeeded = (20 - subtotal).toFixed(2);
 
     useEffect(() => {
         if (coupon) check(coupon.code)
@@ -132,15 +137,10 @@ const CheckoutCart = ({ shippingCost }) => {
 
     return (
         <Card variant="outlined" className={classes.margin}>
-
             <CardHeader title={t('cartTitle')} />
-
             <Divider />
-
             <CardContent>
-
                 <OrderInfo>
-
                     <List>
                         {cartItemsCount > 0 ? (
                             items.map((item) => (
@@ -151,7 +151,6 @@ const CheckoutCart = ({ shippingCost }) => {
                                 <NoProductImg>
                                     <NoCartBag/>
                                 </NoProductImg>
-
                                 <NoProductMsg>
                                     <FormattedMessage
                                         id='noProductFound'
@@ -160,11 +159,9 @@ const CheckoutCart = ({ shippingCost }) => {
                                 </NoProductMsg>
                             </>
                         )}
-
                     </List>
 
                     <CalculationWrapper>
-
                         <TextWrapper>
                             <Text>
                                 <FormattedMessage
@@ -173,7 +170,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                 />
                             </Text>
                             <Text>
-                                <MoneyFormat value={calculateSubTotalPrice()}  currencyPosition='end' />
+                                <MoneyFormat value={subtotal}  currencyPosition='end' />
                             </Text>
                         </TextWrapper>
 
@@ -183,9 +180,34 @@ const CheckoutCart = ({ shippingCost }) => {
                                     id='intlOrderShippingCost'
                                     defaultMessage='Shipping Cost'
                                 />
+                                {showFreeShippingMessage && (
+                                    <div style={{ fontSize: 12, color: 'green', marginTop: 4 }}>
+                                        <FormattedMessage 
+                                            id="freeShippingMessage"
+                                            defaultMessage="Free shipping for 20+ JD orders"
+                                        />
+                                    </div>
+                                )}
+                                {showEncouragementMessage && (
+                                    <div style={{ 
+                                        fontSize: 12, 
+                                        color: '#e94560', 
+                                        marginTop: 4,
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 4
+                                    }}>
+                                        <FormattedMessage 
+                                            id="freeShippingEncouragement"
+                                            defaultMessage="Add {amount} JD more for free shipping"
+                                            values={{ amount: amountNeeded }}
+                                        />
+                                        🚚
+                                    </div>
+                                )}
                             </Text>
-
-                            <Text><MoneyFormat value={shippingCost} currencyPosition='end' /></Text>
+                            <Text><MoneyFormat value={finalShippingCost} currencyPosition='end' /></Text>
                         </TextWrapper>
 
                         <TextWrapper>
@@ -208,7 +230,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                 </Small>
                             </Bold>
                             <Bold>
-                                <MoneyFormat value={(parseFloat(calculatePrice()) + shippingCost)} currencyPosition='end' />
+                                <MoneyFormat value={(parseFloat(calculatePrice()) + finalShippingCost)} currencyPosition='end' />
                             </Bold>
                         </TextWrapper>
 
@@ -246,12 +268,9 @@ const CheckoutCart = ({ shippingCost }) => {
                                 )}
                             </CouponBoxWrapper>
                         )}
-
                     </CalculationWrapper>
                 </OrderInfo>
-
             </CardContent>
-
         </Card>
     )
 }

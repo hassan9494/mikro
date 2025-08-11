@@ -34,9 +34,7 @@ import Address from "../../address/address";
 import CheckoutCart from "../checkout-cart";
 import useAddresses from "../../../data/use-address";
 
-// The type of props Checkout Form receives
-interface MyFormProps {
-}
+interface MyFormProps {}
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -45,11 +43,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
-
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
-
     const {
         items,
         coupon,
@@ -90,32 +86,20 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
     }, [addresses]);
 
     return (
-
         <CheckoutWrapper>
-
             <CheckoutContainer>
-
                 <CheckoutInformation>
                     <CheckoutCart shippingCost={shippingCost}/>
                 </CheckoutInformation>
 
                 <CheckoutInformation>
-
                     <Card variant="outlined" className={classes.margin}>
-
-                        <CardHeader
-                            title={t('checkoutDeliveryAddress')}
-                        />
-
+                        <CardHeader title={t('checkoutDeliveryAddress')} />
                         <Divider />
-
                         <CardContent>
-
                             <Address/>
-
                             <form onSubmit={handleSubmit}>
-
-                                <FormControl fullWidth variant="outlined" className={classes.margin} >
+                                <FormControl fullWidth variant="outlined" className={classes.margin}>
                                     <TextField
                                         label={t('notesPlaceholder')}
                                         multiline
@@ -125,8 +109,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
                                         onChange={e => setNotes(e.target.value)}
                                     />
                                 </FormControl>
-
-
 
                                 <TermConditionText>
                                     <FormattedMessage
@@ -143,14 +125,12 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
                                     </Link>
                                 </TermConditionText>
 
-                                {/* CheckoutSubmit */}
                                 <CheckoutSubmit>
                                     <Button
                                         type="submit"
                                         variant="contained"
                                         color="secondary"
                                         disabled={loading}
-                                        // loading={loading}
                                         disableElevation
                                         fullWidth
                                     >
@@ -159,20 +139,13 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
                                             defaultMessage='Proceed to Checkout'
                                         />
                                     </Button>
-
                                 </CheckoutSubmit>
                             </form>
-
                         </CardContent>
-
                     </Card>
-
                 </CheckoutInformation>
-
             </CheckoutContainer>
-
         </CheckoutWrapper>
-
     );
 };
 
