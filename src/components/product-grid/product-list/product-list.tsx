@@ -53,7 +53,7 @@ export const Products: React.FC<ProductsProps> = ({
 }) => {
   const router = useRouter();
   const [countPerPage, setCountPerPage] = useState(fetchLimit);
-  const [filter, setFilter] = useState('sale'); // Set default value to 'sale'
+  const [filter, setFilter] = useState(''); // Set default value to 'sale'
   const [inStock, setInStock] = useState(false);
   const isHomePage = router.pathname === '/';
 
