@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { get } from 'styled-system';
+import { get, paddingBottom } from 'styled-system';
 import css from '@styled-system/css';
 
 export const InjectRTL = styled.div`
@@ -29,18 +29,21 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
             textShadow: '1px 1px 1px rgba(0, 0, 0, 0.004)',
             overflow: 'scroll !important',
             paddingRight: '0 !important',
+            paddingBottom: '0 !important', 
         },
         h1: {
             fontFamily: 'heading',
             fontSize: '5xl',
             fontWeight: 'semiBold',
             margin: 0,
+             lineHeight: '1.5',
         },
         h2: {
             fontFamily: 'heading',
             fontSize: '3xl',
             fontWeight: 'semiBold',
             margin: 0,
+             lineHeight: '1.5',
         },
         h3: {
             fontFamily: 'heading',
@@ -149,12 +152,11 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
         },
 
         '@media (max-width: 999px)': {
-            '.JKzuk' :{
-                padding: '0 !important'
-            }
+          '.JKzuk' :{
+            padding: '0 !important'
+          }
         },
-
-
+        
         '@media (max-width: 1199px) and (min-width: 991px)': {
             '.image-item': {
                 paddingLeft: '10px',
@@ -209,6 +211,17 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
             width: '1px !important',
             whiteSpace: 'nowrap !important',
         },
+        '.footer-logo': {
+  maxWidth: '200px',
+  height: 'auto',
+},
+
+'@media (min-width: 990px) and (max-width: 1115px)': {
+  '.footer-logo': {
+    maxWidth: '160px',
+  },
+},
+
 //@ts-ignore
         ...theme.globals,
     })

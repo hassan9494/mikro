@@ -230,7 +230,6 @@ export const ProductDescription = styled.p`
   &:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.16);
   }
-
 `;
 
 export const ColorsContainer = styled.div`

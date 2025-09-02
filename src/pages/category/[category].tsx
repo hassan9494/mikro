@@ -17,6 +17,7 @@ import { useRefScroll } from 'utils/use-ref-scroll';
 import { ModalProvider } from 'contexts/modal/modal.provider';
 import Footer from "../../layouts/footer";
 import {useSocial} from "../../data/use-website";
+import useCategory from "../../data/use-category";
 
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));
 const CartPopUp = dynamic(() => import('features/carts/cart-popup'), {
@@ -25,6 +26,7 @@ const CartPopUp = dynamic(() => import('features/carts/cart-popup'), {
 
 const CategoryPage: React.FC<any> = ({ deviceType }) => {
     const { data: social } = useSocial();
+    const { data:categories } = useCategory();
     const { query } = useRouter();
     const { elRef: targetRef, scroll } = useRefScroll({
         percentOfElement: 0,
@@ -37,10 +39,41 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
         }
     }, [query.text, query.category]);
     const PAGE_TYPE: any = query.type;
+    const canonical = `https://mikroelectron.com/category/${query.category}`;
+    const selectedCategory = categories?.find((item) => item?.slug === query.category);
+    const baseUrl = "https://mikroelectron.com";
+    const categoryName = selectedCategory?.meta_title && selectedCategory?.meta_title !== selectedCategory?.title
+        ? `${selectedCategory?.title} | ${selectedCategory?.meta_title}`
+        : selectedCategory?.title;
+    const categoryDescription = selectedCategory?.meta_description && selectedCategory?.meta_description !== selectedCategory?.description
+        ? `${selectedCategory?.description} ${selectedCategory?.meta_description}`
+        : selectedCategory?.description || `Browse products and subcategories in ${selectedCategory?.title}.`;
+    const categoryJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": categoryName,
+        "description": categoryDescription,
+        "url": `${baseUrl}/category/${selectedCategory?.slug}`,
+        "image": selectedCategory?.image,
+        "itemListElement": selectedCategory?.children?.map((child, idx) => ({
+            "@type": "ListItem",
+            "position": idx + 1,
+            "name": child.title,
+            "url": `${baseUrl}/category/${child.slug}`,
+            "image": child.image
+        }))
+    };
 
     return (
         <>
-            <SEO  />
+            <SEO
+                title={categoryName}
+                description={categoryDescription}
+                keywords={selectedCategory?.title}
+                canonical={`${baseUrl}/category/${selectedCategory?.slug}`}
+                image={selectedCategory?.image}
+                jsonLd={categoryJsonLd}
+            />
             <ModalProvider>
                 <Modal>
                     <MainWrapper>

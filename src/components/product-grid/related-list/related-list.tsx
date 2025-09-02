@@ -1,29 +1,26 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled from 'styled-components';
-
 import {
     LoaderWrapper,
     LoaderItem,
     ProductCardWrapper,
     SliderStyles
 } from './related-list.style';
-import {CURRENCY} from 'utils/constant';
+import { CURRENCY } from 'utils/constant';
 import Placeholder from 'components/placeholder/placeholder';
 import Fade from 'react-reveal/Fade';
 import useRelatedProducts from "../../../data/use-related-products";
-import {FormattedMessage} from "react-intl";
-import {ProductCard} from 'components/product-card/product-card-six';
-import {Button} from "../../button/button";
-
+import { FormattedMessage } from "react-intl";
+import { ProductCard } from 'components/product-card/product-card-six';
+import { Button } from "../../button/button";
 
 const ErrorMessage = dynamic(() =>
     import('components/error-message/error-message')
 );
-
 
 type ProductsProps = {
     deviceType?: {
@@ -35,20 +32,20 @@ type ProductsProps = {
 };
 
 export const RelatedProducts: React.FC<ProductsProps> = ({
-                                                             deviceType,
-                                                             slug
-                                                         }) => {
+    deviceType,
+    slug
+}) => {
     const [showAll, setShowAll] = useState(false);
-    const {data, error} = useRelatedProducts({
+    const { data, error } = useRelatedProducts({
         sku: slug
     });
 
     const NextArrow = (props) => {
-        const {className, style, onClick} = props;
+        const { className, style, onClick } = props;
         return (
             <div
                 className={className}
-                style={{...style, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 onClick={onClick}
                 aria-hidden="true"
             />
@@ -56,11 +53,11 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
     };
 
     const PrevArrow = (props) => {
-        const {className, style, onClick} = props;
+        const { className, style, onClick } = props;
         return (
             <div
                 className={className}
-                style={{...style, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 onClick={onClick}
                 aria-hidden="true"
             />
@@ -79,8 +76,8 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
         cssEase: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
         adaptiveHeight: true,
         arrows: true,
-        nextArrow: <NextArrow/>,
-        prevArrow: <PrevArrow/>,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 1280,
@@ -120,23 +117,22 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
         ]
     };
 
-    if (error) return <ErrorMessage message={error.message}/>;
-
+    if (error) return <ErrorMessage message={error.message} />;
 
     if (!data) {
         return (
             <LoaderWrapper>
                 <LoaderItem>
-                    <Placeholder uniqueKey="1"/>
+                    <Placeholder uniqueKey="1" />
                 </LoaderItem>
                 <LoaderItem>
-                    <Placeholder uniqueKey="2"/>
+                    <Placeholder uniqueKey="2" />
                 </LoaderItem>
                 <LoaderItem>
-                    <Placeholder uniqueKey="3"/>
+                    <Placeholder uniqueKey="3" />
                 </LoaderItem>
                 <LoaderItem>
-                    <Placeholder uniqueKey="4"/>
+                    <Placeholder uniqueKey="4" />
                 </LoaderItem>
             </LoaderWrapper>
         );
@@ -149,18 +145,17 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
     const displayCount = showAll ? data.length : Math.min(8, data.length);
     const hasMore = data.length > 8;
 
-
     const renderCard = (props, index) => (
         <ProductCardWrapper className="product-card-wrapper" key={`${props.id}-${index}`}>
             <Fade
                 duration={800}
                 delay={index * 10}
-                style={{height: '100%'}}
+                style={{ height: '100%' }}
                 mountOnEnter
                 unmountOnExit
                 appear
             >
-                <ProductCard data={props}/>
+                <ProductCard data={props} />
             </Fade>
         </ProductCardWrapper>
     );
@@ -175,7 +170,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                             defaultMessage="Related Items"
                         />
                     </h2>
-
+                    
                     <Slider {...sliderSettings}>
                         {data.slice(0, displayCount).map((item, index) => (
                             <div key={`slide-${item.id}-${index}`} className="slide-item">
@@ -183,7 +178,6 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                             </div>
                         ))}
                     </Slider>
-
 
                     {!showAll && hasMore && (
                         <div className="show-more-container">
@@ -199,7 +193,6 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                 </div>
             </div>
         </SliderStyles>
-
     );
 };
 

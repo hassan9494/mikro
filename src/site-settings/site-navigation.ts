@@ -2,7 +2,7 @@ export const HOME_PAGE = '/';
 export const COURSES_PAGE = '/courses';
 export const SERVICES_PAGE = '/services';
 export const TUTORIALS_PAGE = '/tutorials';
-
+export const ABOUT_US_PAGE = '/about';
 export const GROCERY_PAGE = '/grocery';
 export const GROCERY_PAGE_TWO = '/grocery-two';
 export const MAKEUP_PAGE = '/makeup';
@@ -57,6 +57,13 @@ export const PROFILE_MENU_ITEM = {
     defaultMessage: 'Profile',
     href: PROFILE_PAGE,
 };
+export const ABOUT_US_MENU_ITEM = {
+    id: 'nav.about_us',
+    defaultMessage: 'About Us',
+    href: ABOUT_US_PAGE,
+    icon: 'About', // Make sure you have this icon
+    dynamic: false,
+};
 export const AUTHORIZED_MENU_ITEMS = [
     PROFILE_MENU_ITEM,
     ORDER_MENU_ITEM,
@@ -100,6 +107,13 @@ export const CATEGORY_MENU_ITEMS = [
         href: TUTORIALS_PAGE,
         icon: 'Tutorial',
         dynamic: true,
+    },
+       {
+        id: 'About',
+        href: ABOUT_US_PAGE,
+        defaultMessage: 'About Us',
+        icon: 'About',
+        dynamic: false,
     },
 ];
 

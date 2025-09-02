@@ -445,4 +445,3 @@ export const SliderStyles = styled.div`
     }
   }
 `;
-

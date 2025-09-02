@@ -70,3 +70,19 @@ export const RemoveButton = styled.button({
         color: 'red',
     },
 });
+export const VariantInfo = styled.div`
+    margin: 5px 0;
+    font-size: 13px;
+    color: #666;
+`;
+
+export const VariantItem = styled.div`
+    display: flex;
+    margin-bottom: 3px;
+    
+    span {
+        font-weight: 500;
+        margin-right: 5px;
+        color: #333;
+    }
+`;

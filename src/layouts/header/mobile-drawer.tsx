@@ -41,22 +41,78 @@ import useCategory from "../../data/use-category";
 import {router} from "next/client";
 import styled from "styled-components";
 import css from '@styled-system/css';
+import { Whatshot, Update} from '@material-ui/icons'; 
+
+// Styled components for better organization
+const ButtonContainer = styled.div(
+  css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    margin: '0 15px 15px 15px',
+  })
+);
+
+const StyledButton = styled(BTN)(
+  css({
+    width: '100% !important',
+    padding: '10px 15px !important',
+    borderRadius: '6px !important',
+    fontSize: '14px !important',
+    fontWeight: '600 !important',
+    textTransform: 'none !important',
+    boxShadow: 'none !important',
+    display: 'flex !important',
+    alignItems: 'center !important',
+    justifyContent: 'center !important',
+    transition: 'background-color 0.3s ease !important',
+    '& .MuiButton-startIcon': {
+      marginRight: '8px !important',
+    },
+    '&:hover': {
+      // This will apply to all buttons
+      opacity: 0.9,
+    }
+  })
+);
+
+// Create specific button styles with hover colors
+const NewProductButton = styled(StyledButton)(
+  css({
+    backgroundColor: '#FF5722 !important',
+    color: 'white !important',
+    '&:hover': {
+      backgroundColor: '#E64A19 !important', // Darker shade for hover
+    }
+  })
+);
+
+const BackinStockButton = styled(StyledButton)(
+  css({
+    backgroundColor: '#133595 !important',
+    color: 'white !important',
+    '&:hover': {
+      backgroundColor: '#133595 !important', // Darker shade for hover
+    }
+  })
+);
 
 const TreeWrapper = styled.div(
-    css({
-        marginLeft: '40px',
-        marginRight :'10px'
-    })
+  css({
+    padding: '0 15px',
+    marginTop: '10px',
+  })
 );
 
 const CategoryTitle = styled.div(
-    css({
-        fontSize : '18px',
-        marginLeft: '40px',
-        marginRight :'10px',
-        marginBottom :'10px',
-        color: '#fe5e00',
-    })
+  css({
+    fontSize: '18px',
+    fontWeight: '700',
+    color: '#fe5e00',
+    padding: '15px 15px 5px',
+    borderBottom: '1px solid #f1f1f1',
+    marginBottom: '15px',
+  })
 );
 
 const MobileDrawer: React.FunctionComponent = () => {
@@ -69,7 +125,7 @@ const MobileDrawer: React.FunctionComponent = () => {
         authState: { isAuthenticated },
         authDispatch,
     } = useContext<any>(AuthContext);
-    // Toggle drawer
+
     const toggleHandler = React.useCallback(() => {
         dispatch({
             type: 'TOGGLE_DRAWER',
@@ -176,19 +232,61 @@ const MobileDrawer: React.FunctionComponent = () => {
                                     />
                                 </DrawerMenuItem>
                             ))}
+                            
                             <CategoryTitle>
-                                Categories :
+                                <FormattedMessage id="Categories" defaultMessage="Categories" />
                             </CategoryTitle>
-                            <BTN
-                                variant="contained"
-                                disableElevation
-                                color="primary"
-                                onClick={()=>onCategoryClick('new_product')}
-                                style={{marginLeft:35,width:"auto",marginBottom:15}}>
-                                <FormattedMessage id="New Products" defaultMessage="New Products"/>
-                            </BTN>
-                            <TreeWrapper>
+                            
+                            <ButtonContainer>
+  <NewProductButton
+    variant="contained"
+    disableElevation
+    onClick={() => onCategoryClick('new_product')}
+    startIcon={ <Whatshot style={{ 
+                                                    fontSize: '1.8rem',
+                                                    marginRight: '10px',
+                                                    flexShrink: 0,
+                                                    color: '#ffffffff' // Orange-red color for "hot" items
+                                                }} />}
+  >
+     <span style={{ 
+                                                    fontSize: '1.4rem', 
+                                                    fontWeight: 700,
+                                                    lineHeight: '1.2',
+                                                    whiteSpace: 'nowrap',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    textAlign: 'center'
+                                                }}>
+                                                    <FormattedMessage id="New Products" defaultMessage="New Products"/>
+                                                </span>
+  </NewProductButton>
+  
+  <BackinStockButton
+    variant="contained"
+    disableElevation
+    onClick={() => onCategoryClick('back_in_stock')}
+    startIcon={<Update style={{ 
+                                                    fontSize: '1.8rem',
+                                                    marginRight: '10px',
+                                                    flexShrink: 0,
+                                                    color: '#ffffffff' // Green color for restocked items
+                                                }} />}
+  >
+<span style={{ 
+                                                fontSize: '1.4rem', 
+                                                fontWeight: 700,
+                                                lineHeight: '1.2',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                textAlign: 'center'
+                                            }}>
+                                                <FormattedMessage id="Back in Stock" defaultMessage="Back in Stock"/>
+                                            </span>  </BackinStockButton>
+</ButtonContainer>
 
+                            <TreeWrapper>
                                 <TreeMenu
                                     data={data}
                                     onClick={onCategoryClick}
@@ -196,10 +294,6 @@ const MobileDrawer: React.FunctionComponent = () => {
                                 />
                             </TreeWrapper>
                         </DrawerMenu>
-
-
-
-
 
                         {isAuthenticated && (
                             <UserOptionMenu>
@@ -215,7 +309,6 @@ const MobileDrawer: React.FunctionComponent = () => {
                                 </DrawerMenuItem>
                             </UserOptionMenu>
                         )}
-
                     </DrawerContentWrapper>
                 </Scrollbar>
             </DrawerBody>

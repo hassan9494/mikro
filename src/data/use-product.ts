@@ -19,6 +19,7 @@ export default function useProduct({ slug }: Props) {
     const loading = !data && !error;
     let product = data?.filter((current) => current.slug === slug);
 
+    
     return {
         loading,
         error,

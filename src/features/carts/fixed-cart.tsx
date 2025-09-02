@@ -54,6 +54,7 @@ const FixedCart: React.FC<CartPropsType> = ({
     const { isRtl } = useLocale();
 
     return (
+        
         <CartPopupBody className={className} style={style}>
             <PopupHeader>
                 <PopupItemCount>
