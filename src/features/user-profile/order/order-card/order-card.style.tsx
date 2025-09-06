@@ -34,7 +34,21 @@ export const ProgressWrapper = styled(ProgressWrappers)`
     flex-direction: column;
   }
 `;
+// Add these to your existing styles
+export const ProductList = styled.div`
+  margin-top: 5px;
+`;
 
+export const ProductItem = styled.div`
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 3px;
+  color: #666;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
 export const OrderListHeader = styled.div`
   padding: 15px 20px;
   display: flex;

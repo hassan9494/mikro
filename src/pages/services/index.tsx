@@ -336,6 +336,7 @@ const ServicesPage: NextPage<{}> = () => {
                   backgroundColor: 'transparent',
                   color: '#133695', 
                   fontWeight: activeFilter === 'all' ? 700 : 400,
+                  fontSize: isMobile ? '1.4rem' : '2rem',
                 }}
               >
                 Our Services

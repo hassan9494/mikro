@@ -62,7 +62,7 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
                                                     key={`${key}-${value}`}
                                                     label={`${key}: ${value}`}
                                                     size="small"
-                                                    style={{ 
+                                                    style={{
                                                         marginRight: 4,
                                                         marginBottom: 4,
                                                         fontSize: '0.7rem'
@@ -82,16 +82,16 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
                     <CheckoutQuantityControl data={product} />
                 </Grid>
                 <Grid item md={4} xs={4} style={{ marginBottom: 'auto', marginTop: 'auto' }}>
-                    <Chip 
+                    <Chip
                         label={
                             <strong>
-                                <MoneyFormat 
-                                    value={(displayPrice * quantity)} 
+                                <MoneyFormat
+                                    value={(displayPrice * quantity)}
                                     currencyPosition='end'
                                 />
                             </strong>
-                        } 
-                        variant="outlined" 
+                        }
+                        variant="outlined"
                         color="primary"
                     />
                 </Grid>
@@ -114,7 +114,7 @@ const CheckoutCart = ({ shippingCost }) => {
         applyCoupon,
         coupon,
     } = useCart();
-    
+
     const subtotal = calculateSubTotalPrice();
     // Override shipping cost to 0 if subtotal >= 20
     const finalShippingCost = subtotal >= 20 ? 0 : shippingCost;
@@ -181,24 +181,32 @@ const CheckoutCart = ({ shippingCost }) => {
                                     defaultMessage='Shipping Cost'
                                 />
                                 {showFreeShippingMessage && (
-                                    <div style={{ fontSize: 12, color: 'green', marginTop: 4 }}>
-                                        <FormattedMessage 
+                                    <div style={{
+                                        fontSize: 12,
+                                        color: 'green',
+                                        marginTop: 4,
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        alignItems: 'center'
+                                    }}>
+                                        <FormattedMessage
                                             id="freeShippingMessage"
                                             defaultMessage="Free shipping for 20+ JD orders"
                                         />
                                     </div>
                                 )}
                                 {showEncouragementMessage && (
-                                    <div style={{ 
-                                        fontSize: 12, 
-                                        color: '#e94560', 
+                                    <div style={{
+                                        fontSize: 12,
+                                        color: '#e94560',
                                         marginTop: 4,
                                         fontWeight: 'bold',
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: 4
                                     }}>
-                                        <FormattedMessage 
+                                        <FormattedMessage
                                             id="freeShippingEncouragement"
                                             defaultMessage="Add {amount} JD more for free shipping"
                                             values={{ amount: amountNeeded }}
@@ -207,7 +215,15 @@ const CheckoutCart = ({ shippingCost }) => {
                                     </div>
                                 )}
                             </Text>
-                            <Text><MoneyFormat value={finalShippingCost} currencyPosition='end' /></Text>
+                            <Text>
+                                {finalShippingCost === 0 ? (
+                                    <span style={{ color: 'green', fontWeight: 'bold' }}>
+        <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
+      </span>
+                                ) : (
+                                    <MoneyFormat value={finalShippingCost} currencyPosition='end' />
+                                )}
+                            </Text>
                         </TextWrapper>
 
                         <TextWrapper>

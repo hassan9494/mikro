@@ -53,9 +53,9 @@ const components = {
 };
 
 const OrderCard: React.FC<MobileOrderCardProps> = ({
-   className,
-   orders,
-}) => {
+                                                       className,
+                                                       orders,
+                                                   }) => {
     return (
         <>
             <Collapse
@@ -79,10 +79,16 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
                                         Order Date: <span>{moment(order.date).format('Y/MM/DD')}</span>
                                     </Meta>
                                     <Meta>
-                                        Delivery Time:
+                                        Delivery Cost:
                                         <span>
-                                            <MoneyFormat value={order.shipping?.cost} />
-                                        </span>
+    {order.shipping?.free ? (
+        <span style={{ color: 'green', fontWeight: 'bold' }}>
+        <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
+      </span>
+    ) : (
+        <MoneyFormat value={order.shipping?.cost} />
+    )}
+  </span>
                                     </Meta>
                                     <Meta className="price">
                                         Total Price:
@@ -119,8 +125,14 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
                                     <PriceRow>
                                         Delivery Fee
                                         <span>
-                                            <MoneyFormat value={order.shipping?.cost} />
-                                        </span>
+    {order.shipping?.free ? (
+        <span style={{ color: 'green', fontWeight: 'bold' }}>
+        <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
+      </span>
+    ) : (
+        <MoneyFormat value={order.shipping?.cost} />
+    )}
+  </span>
                                     </PriceRow>
                                     <PriceRow className="grandTotal">
                                         Total
