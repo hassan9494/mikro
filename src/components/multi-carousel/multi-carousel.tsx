@@ -40,23 +40,23 @@ const ZoomableImage = styled.img`
   cursor: zoom-in;
 `;
 
-const ZoomOverlay = styled.div<{ show: boolean; position: { x: number; y: number } }>`
-  position: fixed;
-  display: ${({ show }) => (show ? 'block' : 'none')};
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-repeat: no-repeat;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  pointer-events: none;
-  left: ${({ position }) => position.x}px;
-  top: ${({ position }) => position.y}px;
-  transform: translate(-50%, -50%);
-  background-size: 400% 400%;
-`;
+// const ZoomOverlay = styled.div<{ show: boolean; position: { x: number; y: number } }>`
+//   position: fixed;
+//   display: ${({ show }) => (show ? 'block' : 'none')};
+//   width: 200px;
+//   height: 200px;
+//   border: 1px solid #ddd;
+//   border-radius: 4px;
+//   background-repeat: no-repeat;
+//   background-color: white;
+//   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+//   z-index: 1000;
+//   pointer-events: none;
+//   left: ${({ position }) => position.x}px;
+//   top: ${({ position }) => position.y}px;
+//   transform: translate(-50%, -50%);
+//   background-size: 400% 400%;
+// `;
 
 const ImagePopup = styled.div<{ show: boolean }>`
   position: fixed;
@@ -640,14 +640,14 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
         </Carousel>
 
         {/* Zoom overlay */}
-        <ZoomOverlay
-            show={zoom.active}
-            position={zoom.position}
-            style={{
-              backgroundImage: `url(${zoom.img})`,
-              backgroundPosition: zoom.backgroundPosition
-            }}
-        />
+        {/* <ZoomOverlay
+        show={zoom.active}
+        position={zoom.position}
+        style={{
+          backgroundImage: `url(${zoom.img})`,
+          backgroundPosition: zoom.backgroundPosition
+        }}
+      /> */}
 
         {/* Image popup */}
         <ImagePopup show={popup.show} onClick={closePopup}>

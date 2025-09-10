@@ -308,7 +308,7 @@ const MobileDrawer: React.FunctionComponent = () => {
     const { data, error } = useCategory();
     const { user, loading } = useUser();
     const [menuStates, setMenuStates] = useState({
-        mainMenu: true,
+        mainMenu: false,
         moreOptions: false
     });
 
