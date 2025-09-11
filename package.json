@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next",
     "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next build",
-    "start": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next start -p 3003",
+    "start": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next start -p 3004",
     "generate": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next generate",
     "postbuild": "next-sitemap && node remove-host-from-robots.js"
   },

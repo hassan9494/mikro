@@ -34,20 +34,20 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
         offsetPX: -110,
     });
     React.useEffect(() => {
-        if (query.text || query.category) {
+        if (query?.text || query?.category) {
             scroll();
         }
-    }, [query.text, query.category]);
-    const PAGE_TYPE: any = query.type;
-    const canonical = `https://mikroelectron.com/category/${query.category}`;
-    const selectedCategory = categories?.find((item) => item?.slug === query.category);
+    }, [query?.text, query?.category]);
+    const PAGE_TYPE: any = query?.type;
+    const canonical = `https://mikroelectron.com/category/${query?.category}`;
+    const selectedCategory = categories?.find((item) => item?.slug === query?.category);
     const baseUrl = "https://mikroelectron.com";
     const categoryName = selectedCategory?.meta_title && selectedCategory?.meta_title !== selectedCategory?.title
         ? `${selectedCategory?.title} | ${selectedCategory?.meta_title}`
         : selectedCategory?.title;
     const categoryDescription = selectedCategory?.meta_description && selectedCategory?.meta_description !== selectedCategory?.description
         ? `${selectedCategory?.description} ${selectedCategory?.meta_description}`
-        : selectedCategory?.description || `Browse products and subcategories in ${selectedCategory?.title}.`;
+        : selectedCategory?.description || `Browse products in ${selectedCategory?.title}.`;
     const categoryJsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",

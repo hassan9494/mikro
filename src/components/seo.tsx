@@ -7,6 +7,8 @@ import { siteMetadata } from "../site-settings/site-metadata";
 type SeoProps = {
     title?: string;
     description?: string;
+    itemTitle?: string;
+    itemDescription?: string;
     keywords?: string;
     canonical?: string;
     css?: string;
@@ -18,6 +20,8 @@ type SeoProps = {
 export const SEO: React.FC<SeoProps> = ({
                                             title,
                                             description,
+                                            itemTitle,
+                                            itemDescription,
                                             keywords,
                                             canonical,
                                             css,
@@ -25,15 +29,18 @@ export const SEO: React.FC<SeoProps> = ({
                                             image,
                                             jsonLd, // <-- Add this here
                                         }) => {
-    const data = { ...siteMetadata, title, description, keywords, canonical, css, js, image, jsonLd };
+    const data = { ...siteMetadata, title, description,itemTitle,itemDescription, keywords, canonical, css, js, image, jsonLd };
+    const itemMainTitle = data?.itemTitle ? data?.itemTitle : data?.title;
+    const itemMainDescription = data?.itemDescription ? data?.itemDescription : data?.description;
+
     return (
         <Head>
-            <title>{siteMetadata.getTitle(title)}</title>
-            <meta name="description" content={data?.description}/>
+            <title>{itemMainTitle}</title>
+            <meta name="description" content={itemMainDescription}/>
             <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1"/>
             <meta property="og:type" content="website"/>
-            <meta name="og:title" property="og:title" content={data?.title}/>
-            <meta name="og:description" property="og:description" content={data?.description}/>
+            <meta name="og:title" property="og:title" content={itemMainTitle}/>
+            <meta name="og:description" property="og:description" content={itemMainDescription}/>
             <meta property="og:site_name" content="Mikroelectron"/>
             <meta property="og:url" content={`${data?.canonical}`}/>
             {data?.css && <link rel="stylesheet" href={`${data?.css}`}/>}
@@ -42,6 +49,9 @@ export const SEO: React.FC<SeoProps> = ({
             ) : (
                 <meta property="og:image" content="https://mikroelectron.com/assets/img/logo-1.png"/>
             )}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={itemMainTitle} />
+            <meta name="twitter:description" content={itemMainDescription} />
             {data?.image && <meta name="twitter:image" content={`${data?.image}`}/>}
             {data?.canonical && <link rel="canonical" href={`${data?.canonical}`}/>}
             {data?.js && <script type="text/javascript" src={`${data?.js}`}></script>}

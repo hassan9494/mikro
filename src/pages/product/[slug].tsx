@@ -15,6 +15,18 @@ import {useSocial} from "../../data/use-website";
 import {ContentSection, MainContentArea, MainWrapper} from "../../assets/styles/pages.style";
 import {ModalProvider} from "../../contexts/modal/modal.provider";
 
+const stripHtml = (html) => {
+    if (typeof window !== 'undefined') {
+        // Client-side
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    } else {
+        // Server-side
+        return html.replace(/<[^>]*>?/gm, '');
+    }
+};
+
 const ProductDetails = dynamic(() =>
     import('components/product-details/product-details-one/product-details-one')
 );
@@ -54,25 +66,30 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
 
     const { data: product } = useProduct(data?.slug || router.query.slug);
     // Prepare meta fields
+
+    const cleanShortDescription = data.short_description ? stripHtml(data.short_description) : '';
+    const cleanDescription = data.description ? stripHtml(data.description) : '';
     const title = getMetaField(data, 'meta_title', data.title);
-    const description = getMetaField(data, 'meta_description', data.short_description || data.description);
+    const description = getMetaField(data, 'meta_description', cleanShortDescription || cleanDescription);
     const keywords = getMetaField(data, 'meta_keyword', undefined);
+    const productTitle = data?.title
+    const productShortDescription = cleanShortDescription;
     const canonical = `https://mikroelectron.com/product/${data.slug}`;
     const image = data.image;
     // Prepare concatenated name and description for JSON-LD
     const productName = (data.meta_title && data.meta_title !== data.title)
         ? `${data.title} | ${data.meta_title}`
         : data.title;
-    const productDescription = (data.meta_description && data.meta_description !== data.description)
-        ? `${data.description} ${data.meta_description}`
-        : data.description;
+    const productDescriptionText = (data.meta_description && data.meta_description !== cleanDescription)
+        ? `${cleanDescription} ${data.meta_description}`
+        : cleanDescription;
     // Prepare JSON-LD structured data
     const productJsonLd = {
         "@context": "https://schema.org/",
         "@type": "Product",
         "name": productName,
-        "description": productDescription,
-        "disambiguatingDescription": data.short_description,
+        "description": productDescriptionText,
+        "disambiguatingDescription": cleanShortDescription,
         "sku": data.sku,
         "mpn": data.sku, // If you have a separate MPN, use it
         "brand": {
@@ -132,6 +149,8 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
             <SEO
                 title={title}
                 description={description}
+                itemTitle={productTitle}
+                itemDescription={productShortDescription}
                 keywords={keywords}
                 canonical={canonical}
                 image={image}
