@@ -28,33 +28,49 @@ const ImageWrapper = styled.div(
         },
     })
 );
+
 const Tree = React.memo(
     ({
          children,
          name,
          icon,
-         // isOpen,
          onClick,
          dropdown,
          onToggleBtnClick,
          depth,
          image,
          defaultOpen = false,
+         isOpen, // New prop to control open state
+         onToggle, // New prop to handle toggle
      }: any) => {
-        const [isOpen, setOpen] = useState(defaultOpen);
+        const [internalOpen, setInternalOpen] = useState(defaultOpen);
+        const isControlled = isOpen !== undefined;
+        const open = isControlled ? isOpen : internalOpen;
+
         useEffect(() => {
-            setOpen(defaultOpen);
-        }, [defaultOpen]);
-        const previous = usePrevious(isOpen);
+            if (!isControlled) {
+                setInternalOpen(defaultOpen);
+            }
+        }, [defaultOpen, isControlled]);
+
+        const previous = usePrevious(open);
         const [bind, { height: viewHeight }] = useMeasure();
         const { height, opacity, transform } = useSpring<any>({
             from: { height: 0, opacity: 0, transform: 'translate3d(20px,0,0)' },
             to: {
-                height: isOpen ? viewHeight : 0,
-                opacity: isOpen ? 1 : 0,
-                transform: `translate3d(${isOpen ? 0 : 20}px,0,0)`,
+                height: open ? viewHeight : 0,
+                opacity: open ? 1 : 0,
+                transform: `translate3d(${open ? 0 : 20}px,0,0)`,
             },
         });
+
+        const handleToggle = () => {
+            if (onToggle) {
+                onToggle();
+            } else if (!isControlled) {
+                setInternalOpen(!open);
+            }
+        };
         // const Icon = icon ? Icons[icon] : depth === 'child' ? Icons['Minus'] : null;
         // const Icon = icon ? Icons[icon] : null;
         // const Icon = ({ iconName, style }: { iconName: any; style?: any }) => {
@@ -67,7 +83,7 @@ const Tree = React.memo(
         // };
         return (
             <Frame depth={depth}>
-                <Header open={isOpen} depth={depth} className={depth}>
+                <Header open={open} depth={depth} className={depth}>
                     {/*{icon && (*/}
 
                     {/*<IconWrapper depth={depth}>*/}
@@ -81,33 +97,36 @@ const Tree = React.memo(
                     {/*</IconWrapper>*/}
                     {/*)}*/}
                     {image && (
-                    <ImageWrapper>
-                        <Image
-                            src={image}
-                            alt={name}
-                            width={50}
-                            height={50}
-                            unoptimized={true}
-                        />
-                    </ImageWrapper>
+                        <ImageWrapper>
+                            <Image
+                                src={image}
+                                alt={name}
+                                width={50}
+                                height={50}
+                                unoptimized={true}
+                            />
+                        </ImageWrapper>
                     )}
 
                     <Title onClick={onClick}>{name}</Title>
 
                     {dropdown === true && (
                         <Button
-                            onClick={() => setOpen(!isOpen)}
+                            onClick={handleToggle}
                             variant="text"
                             className="toggleButton"
                         >
-                            <ArrowNext width="16px"/>
+                            <ArrowNext width="16px" style={{
+                                transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
+                                transition: 'transform 0.3s ease-in-out'
+                            }}/>
                         </Button>
                     )}
                 </Header>
                 <Content
                     style={{
                         opacity,
-                        height: isOpen && previous === isOpen ? 'auto' : height,
+                        height: open && previous === open ? 'auto' : height,
                     }}
                 >
                     <animated.div style={{ transform }} {...bind} children={children}/>
@@ -124,11 +143,17 @@ type Props = {
     active: string | string[];
 };
 export const TreeMenu: React.FC<Props> = ({
-  data,
-  className,
-  onClick,
-  active,
-}) => {
+                                              data,
+                                              className,
+                                              onClick,
+                                              active,
+                                          }) => {
+    const [expandedNode, setExpandedNode] = useState<string | null>(null);
+
+    const handleToggle = (slug: string) => {
+        setExpandedNode(expandedNode === slug ? null : slug);
+    };
+
     const handler = (children) => {
         return children.map((subOption) => {
             if (subOption.parent) {
@@ -141,6 +166,8 @@ export const TreeMenu: React.FC<Props> = ({
                         depth="child"
                         onClick={() => onClick(subOption.slug)}
                         defaultOpen={active === subOption.slug}
+                        isOpen={expandedNode === subOption.slug}
+                        onToggle={() => handleToggle(subOption.slug)}
                     />
                 );
             }
@@ -156,6 +183,8 @@ export const TreeMenu: React.FC<Props> = ({
                         active === subOption.slug ||
                         subOption.children.some((item) => item.slug === active)
                     }
+                    isOpen={expandedNode === subOption.slug}
+                    onToggle={() => handleToggle(subOption.slug)}
                 >
                     {handler(subOption.children)}
                 </Tree>

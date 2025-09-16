@@ -1,8 +1,8 @@
-const https = require('https');
+const http = require('http');
 
 function fetchProducts() {
     return new Promise((resolve, reject) => {
-        https.get(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/allProducts`, (res) => {
+        http.get(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/allProducts`, (res) => {
             let data = '';
             res.on('data', chunk => {
                 data += chunk;
@@ -27,7 +27,7 @@ function fetchProducts() {
 
 function fetchCategories() {
     return new Promise((resolve, reject) => {
-        https.get(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/allCategoris`, (res) => {
+        http.get(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/allCategoris`, (res) => {
             let data = '';
             res.on('data', chunk => {
                 data += chunk;
