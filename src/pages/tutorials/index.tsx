@@ -25,7 +25,7 @@ import { useState, useEffect, useMemo } from 'react';
 import ShareIcon from '@material-ui/icons/Share';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Footer from '../../layouts/footer';
-import YoutubeIcon from '@material-ui/icons/Youtube';
+import YoutubeIcon from '@material-ui/icons/YouTube';
 
 // Brand colors
 const primaryColor = '#fe5e00'; // Orange
