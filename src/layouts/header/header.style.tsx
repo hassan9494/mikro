@@ -462,7 +462,7 @@ export const DrawerClose = styled.div`
 
 export const DrawerProfile = styled.div`
   background-color: ${themeGet('colors.gray.200', '#F7F7F7')};
-  padding: 45px;
+  // padding: 45px;
 `;
 
 export const LogoutView = styled.div`
@@ -489,7 +489,6 @@ export const LoginView = styled.div`
   display: flex;
   align-items: center;
 `;
-
 export const UserAvatar = styled.div`
   width: 50px;
   height: 50px;
@@ -525,7 +524,7 @@ export const UserDetails = styled.div`
 `;
 
 export const DrawerMenu = styled.div`
-  padding: 40px 0;
+  padding: 10px 0 45px 0;
 `;
 
 export const DrawerMenuItem = styled.div`
@@ -575,7 +574,7 @@ export const DrawerMenuItem = styled.div`
 `;
 
 export const UserOptionMenu = styled.div`
-  padding: 45px 0;
+  padding: 0 0 45px 0;
   border-top: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
 `;
 

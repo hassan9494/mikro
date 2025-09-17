@@ -19,8 +19,8 @@ export const ProductDetailsWrapper = styled.div`
 `;
 
 export const ProductPreview = styled.div`
-  width: 50%;
-  padding: 60px;
+  width: 45%;
+  padding:0 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,12 +34,12 @@ export const ProductPreview = styled.div`
   }
 
   @media (max-width: 990px) {
-    padding: 30px 40px 60px;
+    padding: 1px 40px 60px;
   }
   @media (max-width: 767px) {
     flex: 0 0 100%;
     max-width: 100%;
-    padding: 30px 25px 60px;
+    padding: 1px 25px 60px;
     order: 0;
   }
 `;

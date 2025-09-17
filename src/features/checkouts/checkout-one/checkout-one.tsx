@@ -52,12 +52,12 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
     // Calculate shipping cost
     const subtotal = calculateSubTotalPrice();
     let shippingCost = 0;
-    
+
     if (address && address.length > 0) {
         const primaryAddress = address.find(addr => addr.is_primary) || address[0];
         shippingCost = parseFloat(primaryAddress.shipping_cost) || 0;
     }
-    
+
     const shippingFee = subtotal >= 20 ? 0 : shippingCost;
     const total = Number(calculatePrice()) + shippingFee;
     const showFreeShipping = subtotal >= 20 && cartItemsCount > 0;
@@ -85,7 +85,7 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
             setIsValid(true);
         }
     }, [state]);
-    
+
     useEffect(() => {
         return () => {
             if (isRestaurant) {
@@ -134,25 +134,25 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                                     defaultMessage='Shipping Fee'
                                 />
                                 {showFreeShipping && (
-                                    <div style={{ 
-                                        fontSize: 12, 
+                                    <div style={{
+                                        fontSize: 12,
                                         color: 'green',
                                         marginTop: 4
                                     }}>
-                                        <FormattedMessage 
+                                        <FormattedMessage
                                             id="freeShippingMessage"
                                             defaultMessage="Free shipping for 20+ JD orders"
                                         />
                                     </div>
                                 )}
                                 {showEncouragement && (
-                                    <div style={{ 
-                                        fontSize: 12, 
+                                    <div style={{
+                                        fontSize: 12,
                                         color: '#e94560',
                                         marginTop: 4,
                                         fontWeight: 'bold'
                                     }}>
-                                        <FormattedMessage 
+                                        <FormattedMessage
                                             id="freeShippingEncouragement"
                                             defaultMessage="Add {amount} JD more for free shipping"
                                             values={{ amount: amountNeeded }}
@@ -161,11 +161,13 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                                 )}
                             </OrderLabel>
                             <OrderAmount>
-                                {shippingFee > 0 ? `JD ${shippingFee.toFixed(2)}` : 
-                                    <span style={{ color: 'green' }}>
-                                        <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
-                                    </span>
-                                }
+                                {shippingFee === 0 ? (
+                                    <span style={{ color: 'green', fontWeight: 'bold' }}>
+        <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
+      </span>
+                                ) : (
+                                    `JD ${shippingFee.toFixed(2)}`
+                                )}
                             </OrderAmount>
                         </OrderSummaryItem>
 
@@ -201,8 +203,8 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                             <OrderLabel>
                                 <FormattedMessage id='totalText' defaultMessage='Total'/>
                                 <div style={{ fontSize: 12, opacity: 0.8 }}>
-                                    <FormattedMessage 
-                                        id='vatIncludedText' 
+                                    <FormattedMessage
+                                        id='vatIncludedText'
                                         defaultMessage='(Incl. VAT)'
                                     />
                                 </div>

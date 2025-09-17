@@ -21,7 +21,7 @@ const AuthMenu = ({ isAuthenticated, onJoin, onLogout }: Props) => {
             direction="right"
             className="user-pages-dropdown"
             handler={
-                <Avatar style={{backgroundColor: 'green'}}>
+                <Avatar style={{backgroundColor: '#133695'}}>
                     <Person />
                 </Avatar>
             }

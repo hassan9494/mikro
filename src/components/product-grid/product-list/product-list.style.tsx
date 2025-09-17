@@ -348,4 +348,33 @@ export const CheckboxLabel = styled.label<{ checked: boolean }>`
   }
 `;
 
+import { Accordion } from '@material-ui/core';
+
+export const MobileFilterWrapper = styled.div`
+  margin-bottom: 20px;
+  width: 100%;
+  
+  .MuiAccordion-root {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    
+    &:before {
+      display: none;
+    }
+  }
+  
+  .MuiAccordionSummary-content {
+    align-items: center;
+    display: flex;
+  }
+`;
+
+export const MobileFilterSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 0;
+`;
+
+
 

@@ -68,7 +68,14 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                             defaultMessage="Delivery Fee"
                         />
                         <Price>
-                            <MoneyFormat value={shipping?.cost} />
+                            {shipping?.free ? (
+                                <span style={{ color: 'green', fontWeight: 'bold' }}>
+                                    <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
+                                </span>
+                            ) : (
+                                <MoneyFormat value={shipping?.cost} />
+                            )}
+
                         </Price>
                     </PriceRow>
                     <PriceRow className="grandTotal">

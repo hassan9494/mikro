@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Link from 'next/link';
 import OrderReceivedWrapper, {
     OrderReceivedContainer,
@@ -13,9 +13,9 @@ import OrderReceivedWrapper, {
     ListTitle,
     ListDes,
 } from './order-received.style';
-import { FormattedMessage } from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 import Router from "next/router";
-import { useAppState } from "../../contexts/app/app.provider";
+import {useAppState} from "../../contexts/app/app.provider";
 import MoneyFormat from "components/money-format/money-format";
 import moment from "moment";
 
@@ -63,14 +63,14 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                                     defaultMessage="Order Number"
                                 />
                             </Text>
-                            <Text>#{ received?.number }</Text>
+                            <Text>#{received?.number}</Text>
                         </InfoBlock>
 
                         <InfoBlock>
                             <Text bold className="title">
                                 <FormattedMessage id="totalText" defaultMessage="Total"/>
                             </Text>
-                            <Text><MoneyFormat value={received?.total - received?.coupon_discount} /></Text>
+                            <Text><MoneyFormat value={received?.total - received?.coupon_discount}/></Text>
                         </InfoBlock>
 
                         <InfoBlock>
@@ -108,7 +108,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             </Text>
                         </ListTitle>
                         <ListDes>
-                            <Text>{ received?.items?.length } Items</Text>
+                            <Text>{received?.items?.length} Items</Text>
                         </ListDes>
                     </ListItem>
 
@@ -122,7 +122,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             </Text>
                         </ListTitle>
                         <ListDes>
-                            <Text>{ moment(received?.date).format('Y/M/D') }</Text>
+                            <Text>{moment(received?.date).format('Y/M/D')}</Text>
                         </ListDes>
                     </ListItem>
 
@@ -137,7 +137,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                         </ListTitle>
                         <ListDes>
                             <Text>
-                                { received?.shipping?.city }
+                                {received?.shipping?.city}
                             </Text>
                         </ListDes>
                     </ListItem>
@@ -153,7 +153,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                         </ListTitle>
                         <ListDes>
                             <Text>
-                                { received?.shipping?.address }
+                                {received?.shipping?.address}
                             </Text>
                         </ListDes>
                     </ListItem>
@@ -175,7 +175,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             </Text>
                         </ListTitle>
                         <ListDes>
-                            <Text><MoneyFormat value={received?.subtotal} /></Text>
+                            <Text><MoneyFormat value={received?.subtotal}/></Text>
                         </ListDes>
                     </ListItem>
 
@@ -186,8 +186,17 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             </Text>
                         </ListTitle>
                         <ListDes>
-                            <Text><MoneyFormat value={received?.shipping?.cost} /></Text>
+                            <Text>
+                                {received?.shipping?.free ? (
+                                    <span style={{color: 'green', fontWeight: 'bold'}}>
+          <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
+        </span>
+                                ) : (
+                                    <MoneyFormat value={received?.shipping?.cost}/>
+                                )}
+                            </Text>
                         </ListDes>
+
                     </ListItem>
 
                     <ListItem>
@@ -197,7 +206,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             </Text>
                         </ListTitle>
                         <ListDes>
-                            <Text><MoneyFormat value={received?.total} /></Text>
+                            <Text><MoneyFormat value={received?.total}/></Text>
                         </ListDes>
                     </ListItem>
                 </TotalAmount>

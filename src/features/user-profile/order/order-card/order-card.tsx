@@ -6,10 +6,10 @@ import {
     Status,
     OrderMeta,
     Meta,
+    ProductList,
+    ProductItem,
 } from './order-card.style';
 import { FormattedMessage } from 'react-intl';
-
-import { CURRENCY } from 'utils/constant';
 import MoneyFormat from "../../../../components/money-format/money-format";
 import moment from "moment";
 
@@ -20,10 +20,13 @@ type OrderCardProps = {
 };
 
 const OrderCard: React.FC<OrderCardProps> = ({
-     onClick,
-     className,
-     order,
- }) => {
+                                                 onClick,
+                                                 className,
+                                                 order,
+                                             }) => {
+    // Get product names from order items
+    const productNames = order?.items?.map(item => item.name) || [];
+
     return (
         <>
             <SingleOrderList onClick={onClick} className={className}>
@@ -46,6 +49,22 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         />
                         : <span>{moment(order.date).format('Y/MM/DD')}</span>
                     </Meta>
+
+                    {productNames.length > 0 && (
+                        <Meta>
+                            <FormattedMessage
+                                id="intlOrderCardItemsText"
+                                defaultMessage="Items"
+                            />
+                            :
+                            <ProductList>
+                                {productNames.map((name, index) => (
+                                    <ProductItem key={index}>{name}</ProductItem>
+                                ))}
+                            </ProductList>
+                        </Meta>
+                    )}
+
                     <Meta className="price">
                         <FormattedMessage
                             id="intlOrderCardTotalText"
@@ -54,7 +73,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         :
                         <span>
                             <MoneyFormat value={order.total} />
-            </span>
+                        </span>
                     </Meta>
                 </OrderMeta>
             </SingleOrderList>
