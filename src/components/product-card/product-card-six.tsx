@@ -956,7 +956,12 @@ export const ProductCard = ({ data }: Props) => {
                                                         <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{variant.title}</div>
                                                         {isOutOfStock && <div style={{ color: '#f44336' }}>Out of Stock</div>}
                                                         {variant.short_description && (
-                                                            <div>{variant.short_description}</div>
+                                                            <div>
+                                                                {typeof variant.short_description === 'string'
+                                                                    ? variant.short_description
+                                                                    : variant.short_description.en || Object.values(variant.short_description)[0]
+                                                                }
+                                                            </div>
                                                         )}
                                                     </div>
                                                 }
@@ -1005,7 +1010,10 @@ export const ProductCard = ({ data }: Props) => {
 
                                 {selectedVariant?.short_description && (
                                     <VariantDescription>
-                                        {selectedVariant?.short_description}
+                                        {typeof selectedVariant.short_description === 'string'
+                                            ? selectedVariant.short_description
+                                            : selectedVariant.short_description.en || Object.values(selectedVariant.short_description)[0]
+                                        }
                                     </VariantDescription>
                                 )}
 
