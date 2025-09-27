@@ -389,3 +389,97 @@ export const RelatedItems = styled.div`
     }
   }
 `;
+
+// Add these styles to your product-details-one.style.js file
+export const VariantSelector = styled.div`
+  margin-bottom: 15px;
+  padding: 10px 0;
+`;
+
+export const VariantChip = styled.div.attrs(props => ({
+      'data-selected': props['data-selected'],
+      'data-outofstock': props['data-outofstock']
+}))`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 2px solid ${props => props['data-selected'] === 'true' ? '#1976d2' : '#e0e0e0'};
+  border-radius: 8px;
+  cursor: ${props => props['data-outofstock'] === 'true' ? 'not-allowed' : 'pointer'};
+  transition: all 0.2s ease;
+  background: ${props => {
+      if (props['data-selected'] === 'true') return '#e3f2fd';
+      if (props['data-outofstock'] === 'true') return '#f5f5f5';
+      return 'white';
+}};
+  min-width: 60px;
+  max-width: 70px;
+  height: 60px;
+  box-shadow: ${props => props['data-selected'] === 'true' ? '0 4px 8px rgba(25, 118, 210, 0.2)' : '0 2px 4px rgba(0,0,0,0.05)'};
+  
+  &:hover {
+    border-color: ${props => props['data-outofstock'] === 'true' ? '#e0e0e0' : '#1976d2'};
+    transform: ${props => props['data-outofstock'] === 'true' ? 'none' : 'translateY(-2px)'};
+    box-shadow: ${props => props['data-outofstock'] === 'true' ? '0 2px 4px rgba(0,0,0,0.05)' : '0 4px 12px rgba(25, 118, 210, 0.3)'};
+  }
+  
+  span {
+    margin-top: 4px;
+    font-size: 10px;
+    font-weight: ${props => props['data-selected'] === 'true' ? '600' : '400'};
+    color: ${props => {
+      if (props['data-outofstock'] === 'true') return '#9e9e9e';
+      return props['data-selected'] === 'true' ? '#1976d2' : '#333';
+}};
+    text-align: center;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
+
+export const VariantImage = styled.img`
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 4px;
+  opacity: ${props => props['data-outofstock'] === 'true' ? 0.5 : 1};
+  filter: ${props => props['data-outofstock'] === 'true' ? 'grayscale(80%)' : 'none'};
+`;
+
+export const SelectedVariantIndicator = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #1976d2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1;
+`;
+
+export const OutOfStockOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  background: rgba(245, 0, 0, 0.7);
+  color: white;
+  font-size: 7px;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 2px;
+  white-space: nowrap;
+  z-index: 2;
+`;

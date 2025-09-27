@@ -5,6 +5,7 @@ import {useCart} from "../../../contexts/cart/use-cart";
 
 interface Props {
     data: any;
+    variant?: any; // Add variant prop if needed
 }
 const useStyles = makeStyles((theme) => ({
     input: {
@@ -22,54 +23,54 @@ const CustomTextField = withStyles({
     },
 })(TextField);
 
-export const AddToCart: React.FC<Props> = ({data}) => {
-
+export const AddToCart: React.FC<Props> = ({data, variant}) => {
     const classes = useStyles();
     const {addItem, removeItem, getItem} = useCart();
     const [value, setValue] = useState(1);
 
+    // Generate unique ID for cart items
+    const getCartItemId = () => {
+        return variant?.id ? `${data.id}_${variant.id}` : data.id;
+    };
+
+    const cartItemId = getCartItemId();
+    const itemInCart = getItem(data.id, variant?.id || null);
+    const currentQty = itemInCart?.quantity || 0;
+
     const handleAddClick = (e, newValue = null) => {
         e.stopPropagation();
-        // addItem(data);
-        const currentQty = getItem(data.id)?.quantity || 0;
-        const max = data.availableQty - currentQty;
+        const max = (variant?.availableQty || data.availableQty) - currentQty;
         newValue = newValue || value + 1;
-        if (max >= (newValue)) setValue(newValue)
+        if (max >= newValue) setValue(newValue)
     };
 
     const handleRemoveClick = (e) => {
         e.stopPropagation();
         let newValue = (value - 1) > 0 ? (value - 1) : 1;
         setValue(newValue)
-        // removeItem(data);
     };
 
-        // Generate unique ID based on product and color
-    const getItemId = (item) => {
-        return item.color ? `${item.id}-${item.color.id}` : item.id;
-    };
-  const addToCart = (e) => {
-    // Include the selected color in the item data
-      const itemToAdd = {
+    const addToCart = (e) => {
+        // Create item with the exact same structure as handleAddToCart
+        const item = {
             ...data,
-            // Include color information in the cart item
-            id: getItemId(data), // Use combined ID
-            originalId: data.id, // Keep original product ID
-            colorId: data.color?.id,
-            colorTitle: data.color?.title,
-            price: data.color?.price || data.price,
-            sale_price: data.color?.sale_price || data.sale_price,
-            availableQty: data.color?.availableQty || data.availableQty,
-            image: data.color?.image || data.image
+            ...(variant || {}),
+            baseProductId: data.id,
+            variantId: variant?.id || null,
+            id: data.id, // Always use the base product ID
+            baseTitle: data.title,
+            title: variant
+                ? `${data.title} - ${variant.title}`
+                : data.title,
         };
-    
-    addItem(itemToAdd, value);
-    setValue(1);
-}
+
+        console.log("Adding to cart:", item);
+        addItem(item, value);
+        setValue(1);
+    }
 
     const isMaxed = () => {
-        const currentQty = getItem(data.id)?.quantity || 0;
-        return currentQty >= data.availableQty;
+        return currentQty >= (variant?.availableQty || data.availableQty);
     }
 
     return (
@@ -85,16 +86,14 @@ export const AddToCart: React.FC<Props> = ({data}) => {
                 style={{width: 60}}
                 onChange={e => {
                     const qty = Number(e.target.value)
-                    if (!isNaN(qty) && qty > 0 && qty <= data.availableQty) {
+                    if (!isNaN(qty) && qty > 0 && qty <= (variant?.availableQty || data.availableQty)) {
                         handleAddClick(e, qty)
                     }
                 }}
                 value={value}
-                inputProps={
-                    {
-                        style: {textAlign: 'center'},
-                    }
-                } // the change is here
+                inputProps={{
+                    style: {textAlign: 'center'},
+                }}
             />
             <Button variant='contained' onClick={handleAddClick} size='small' disableElevation style={{borderRadius: 0, marginRight: 10}}>
                 <Plus/>

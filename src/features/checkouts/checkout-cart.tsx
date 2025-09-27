@@ -25,7 +25,7 @@ import { NoCartBag } from "../../assets/icons/NoCartBag";
 import { FormattedMessage } from "react-intl";
 import { useCart } from "../../contexts/cart/use-cart";
 import useTranslation from "../../utils/use-translation";
-import {CheckoutQuantityControl} from "./checkout-quantity-control";
+import { CheckoutQuantityControl } from "./checkout-quantity-control";
 import Coupon from "../coupon/coupon";
 import { verifyCoupon } from "../../data/use-coupon";
 import Link from "next/link";
@@ -39,9 +39,23 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
 }));
+
 const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
-    const { id, quantity, title, name, unit, price, sale_price, image, slug, variants } = product;
-    const displayPrice = sale_price ? sale_price : price;
+    const {
+        id,
+        quantity,
+        title,
+        name,
+        unit,
+        price,
+        sale_price,
+        image,
+        slug,
+        variantId,
+        variantTitle
+    } = product;
+
+    const displayPrice = sale_price || price;
 
     return (
         <Grid container alignItems="center" spacing={2} style={{ marginBottom: 16 }}>
@@ -55,20 +69,14 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
                             primary={
                                 <div>
                                     <div style={{ fontWeight: 500 }}>{title}</div>
-                                    {variants && Object.keys(variants).length > 0 && (
-                                        <div style={{ marginTop: 4 }}>
-                                            {Object.entries(variants).map(([key, value]) => (
-                                                <Chip
-                                                    key={`${key}-${value}`}
-                                                    label={`${key}: ${value}`}
-                                                    size="small"
-                                                    style={{
-                                                        marginRight: 4,
-                                                        marginBottom: 4,
-                                                        fontSize: '0.7rem'
-                                                    }}
-                                                />
-                                            ))}
+                                    {variantTitle && (
+                                        <div style={{
+                                            marginTop: 4,
+                                            fontSize: '0.8rem',
+                                            color: '#666',
+                                            fontStyle: 'italic'
+                                        }}>
+                                            <FormattedMessage id="variant" defaultMessage="Variant" />: {variantTitle}
                                         </div>
                                     )}
                                 </div>
@@ -87,7 +95,6 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
                             <strong>
                                 <MoneyFormat
                                     value={(displayPrice * quantity)}
-                                    currencyPosition='end'
                                 />
                             </strong>
                         }
@@ -100,7 +107,10 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
     );
 };
 
-const CheckoutCart = ({ shippingCost }) => {
+const CheckoutCart = ({
+                          shippingCost,
+                          onPrepareOrderData
+                      }) => {
     const classes = useStyles();
     const { t } = useTranslation();
     const [hasCoupon, setHasCoupon] = useState(false);
@@ -116,22 +126,39 @@ const CheckoutCart = ({ shippingCost }) => {
     } = useCart();
 
     const subtotal = calculateSubTotalPrice();
-    // Override shipping cost to 0 if subtotal >= 20
     const finalShippingCost = subtotal >= 20 ? 0 : shippingCost;
     const showFreeShippingMessage = subtotal >= 20 && cartItemsCount > 0;
     const showEncouragementMessage = subtotal > 0 && subtotal < 20;
     const amountNeeded = (20 - subtotal).toFixed(2);
 
+
+
     useEffect(() => {
-        if (coupon) check(coupon.code)
-    }, [])
+        if (coupon) check(coupon.code);
+
+        // Prepare order data for submission
+// In checkout-cart.tsx, update the products mapping:
+// In checkout components, ensure you're using baseProductId and variantId
+        const products = items.map(item => ({
+            id: item.baseProductId,
+            variant_id: item.variantId || null,
+            quantity: item.quantity
+        }));
+
+        if (onPrepareOrderData) {
+            onPrepareOrderData({
+                products,
+                coupon: coupon ? coupon.code : null
+            });
+        }
+    }, [items, coupon]);
 
     const check = async (code) => {
         try {
             const data = await verifyCoupon(code);
             applyCoupon({...data, code});
         } catch (e) {
-            removeCoupon()
+            removeCoupon();
         }
     }
 
@@ -144,7 +171,10 @@ const CheckoutCart = ({ shippingCost }) => {
                     <List>
                         {cartItemsCount > 0 ? (
                             items.map((item) => (
-                                <CheckoutCartItem key={`cartItem-${item.id}`} product={item}/>
+                                <CheckoutCartItem
+                                    key={`cartItem-${item.id}-${item.variantId || ''}`}
+                                    product={item}
+                                />
                             ))
                         ) : (
                             <>
@@ -170,7 +200,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                 />
                             </Text>
                             <Text>
-                                <MoneyFormat value={subtotal}  currencyPosition='end' />
+                                <MoneyFormat value={subtotal} />
                             </Text>
                         </TextWrapper>
 
@@ -181,15 +211,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                     defaultMessage='Shipping Cost'
                                 />
                                 {showFreeShippingMessage && (
-                                    <div style={{
-                                        fontSize: 12,
-                                        color: 'green',
-                                        marginTop: 4,
-                                        fontWeight: 'bold',
-                                        display: 'flex',
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'center'
-                                    }}>
+                                    <div style={{ fontSize: 12, color: 'green', marginTop: 4 }}>
                                         <FormattedMessage
                                             id="freeShippingMessage"
                                             defaultMessage="Free shipping for 20+ JD orders"
@@ -215,15 +237,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                     </div>
                                 )}
                             </Text>
-                            <Text>
-                                {finalShippingCost === 0 ? (
-                                    <span style={{ color: 'green', fontWeight: 'bold' }}>
-        <FormattedMessage id='freeShipping' defaultMessage='FREE'/>
-      </span>
-                                ) : (
-                                    <MoneyFormat value={finalShippingCost} currencyPosition='end' />
-                                )}
-                            </Text>
+                            <Text><MoneyFormat value={finalShippingCost} /></Text>
                         </TextWrapper>
 
                         <TextWrapper>
@@ -234,7 +248,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                 />
                             </Text>
                             <Text>
-                                <MoneyFormat value={calculateDiscount()} currencyPosition='end' />
+                                <MoneyFormat value={calculateDiscount()} />
                             </Text>
                         </TextWrapper>
 
@@ -246,7 +260,7 @@ const CheckoutCart = ({ shippingCost }) => {
                                 </Small>
                             </Bold>
                             <Bold>
-                                <MoneyFormat value={(parseFloat(calculatePrice()) + finalShippingCost)} currencyPosition='end' />
+                                <MoneyFormat value={(parseFloat(calculatePrice()) + finalShippingCost)} />
                             </Bold>
                         </TextWrapper>
 
@@ -288,7 +302,7 @@ const CheckoutCart = ({ shippingCost }) => {
                 </OrderInfo>
             </CardContent>
         </Card>
-    )
-}
+    );
+};
 
 export default CheckoutCart;

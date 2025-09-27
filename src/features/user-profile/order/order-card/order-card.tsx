@@ -8,6 +8,7 @@ import {
     Meta,
     ProductList,
     ProductItem,
+    ColorVariantItem, // You'll need to add this to your style file
 } from './order-card.style';
 import { FormattedMessage } from 'react-intl';
 import MoneyFormat from "../../../../components/money-format/money-format";
@@ -24,8 +25,31 @@ const OrderCard: React.FC<OrderCardProps> = ({
                                                  className,
                                                  order,
                                              }) => {
-    // Get product names from order items
-    const productNames = order?.items?.map(item => item.name) || [];
+    // Function to render product items with color variants
+    const renderProductItems = () => {
+        return order?.items?.map((item, index) => {
+            if (item.has_colors && item.colors.length > 0) {
+                // Product with colors - show main name and color variants
+                return (
+                    <div key={index}>
+                        <ProductItem><strong>{item.name}</strong></ProductItem>
+                        {item.colors.map((color, colorIndex) => (
+                            <ColorVariantItem key={colorIndex}>
+                                - {color.name}
+                            </ColorVariantItem>
+                        ))}
+                    </div>
+                );
+            } else {
+                // Product without colors - show just the name
+                return (
+                    <ProductItem key={index}>
+                        {item.name}
+                    </ProductItem>
+                );
+            }
+        });
+    };
 
     return (
         <>
@@ -50,7 +74,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         : <span>{moment(order.date).format('Y/MM/DD')}</span>
                     </Meta>
 
-                    {productNames.length > 0 && (
+                    {order?.items && order.items.length > 0 && (
                         <Meta>
                             <FormattedMessage
                                 id="intlOrderCardItemsText"
@@ -58,9 +82,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                             />
                             :
                             <ProductList>
-                                {productNames.map((name, index) => (
-                                    <ProductItem key={index}>{name}</ProductItem>
-                                ))}
+                                {renderProductItems()}
                             </ProductList>
                         </Meta>
                     )}

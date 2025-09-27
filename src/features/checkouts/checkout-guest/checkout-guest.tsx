@@ -81,8 +81,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
                 address
             },
             notes:notes,
-            products: items.map(({ id, quantity }) => ({ id, quantity }))
-        }
+            products: items.map(item => ({
+                id: item.baseProductId,  // Use baseProductId instead of id
+                variant_id: item.variantId || null,
+                quantity: item.quantity
+            }))      }
         try {
             const res = await order.create(data);
             toast.success('Order received');
@@ -110,7 +113,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
             <CheckoutContainer>
 
                 <CheckoutInformation>
-                    <CheckoutCart shippingCost={shippingCost}/>
+                    <CheckoutCart shippingCost={shippingCost} onPrepareOrderData={undefined}/>
                 </CheckoutInformation>
 
                 <CheckoutInformation>

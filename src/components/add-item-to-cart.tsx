@@ -70,6 +70,15 @@ interface Props {
 export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
     const { addItem, removeItem, getItem, isInCart } = useCart();
 
+    // Generate unique ID for cart items
+    const getCartItemId = () => {
+        return data.variantId ? `${data.baseProductId || data.id}_${data.variantId}` : data.id;
+    };
+
+    const cartItemId = getCartItemId();
+    const itemInCart = isInCart(data.baseProductId || data.id, data.variantId || null);
+    const cartItem = itemInCart ? getItem(data.baseProductId || data.id, data.variantId || null) : null;
+
     const handleAddClick = (e) => {
         e.stopPropagation();
         addItem(data);
@@ -79,7 +88,18 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
         e.stopPropagation();
         removeItem(data);
     };
-    return !isInCart(data.id) ? (
+
+    const handleIncrement = (e) => {
+        e.stopPropagation();
+        addItem(data);
+    };
+
+    const handleDecrement = (e) => {
+        e.stopPropagation();
+        removeItem(data, 1);
+    };
+
+    return !itemInCart ? (
         <Button
             aria-label="add item to cart"
             onClick={handleAddClick}
@@ -104,9 +124,9 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
         </Button>
     ) : (
         <Counter
-            value={getItem(data.id).quantity}
-            onDecrement={handleRemoveClick}
-            onIncrement={handleAddClick}
+            value={cartItem.quantity}
+            onDecrement={handleDecrement}
+            onIncrement={handleIncrement}
             className="card-counter"
             variant={variant || 'altHorizontal'}
         />
