@@ -30,11 +30,11 @@ export const AddToCart: React.FC<Props> = ({data, variant}) => {
 
     // Generate unique ID for cart items
     const getCartItemId = () => {
-        return variant?.id ? `${data.id}_${variant.id}` : data.id;
+        return variant?.color_id ? `${variant.color_id}` : data.id;
     };
 
     const cartItemId = getCartItemId();
-    const itemInCart = getItem(data.id, variant?.id || null);
+    const itemInCart = getItem(data.id, variant?.color_id || null);
     const currentQty = itemInCart?.quantity || 0;
 
     const handleAddClick = (e, newValue = null) => {
@@ -56,11 +56,11 @@ export const AddToCart: React.FC<Props> = ({data, variant}) => {
             ...data,
             ...(variant || {}),
             baseProductId: data.id,
-            variantId: variant?.id || null,
+            variantId: variant?.color_id || null,
             id: data.id, // Always use the base product ID
             baseTitle: data.title,
             title: variant
-                ? `${data.title} - ${variant.title}`
+                ? variant.name
                 : data.title,
         };
 

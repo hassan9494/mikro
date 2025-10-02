@@ -72,12 +72,12 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
 
     // Generate unique ID for cart items
     const getCartItemId = () => {
-        return data.variantId ? `${data.baseProductId || data.id}_${data.variantId}` : data.id;
+        return data.id;
     };
 
     const cartItemId = getCartItemId();
-    const itemInCart = isInCart(data.baseProductId || data.id, data.variantId || null);
-    const cartItem = itemInCart ? getItem(data.baseProductId || data.id, data.variantId || null) : null;
+    const itemInCart = isInCart(data.id, data.variantId || null);
+    const cartItem = itemInCart ? getItem(data.id, data.variantId || null) : null;
 
     const handleAddClick = (e) => {
         e.stopPropagation();

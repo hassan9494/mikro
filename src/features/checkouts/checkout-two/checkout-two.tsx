@@ -69,8 +69,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
             notes,
             coupon_id: coupon?.id,
             products: items.map(item => ({
-                id: item.baseProductId,  // Changed from product_id to id
-                variant_id: item.variantId || null,
+                id: item.variantId || item.baseProductId,  // Changed from product_id to id
+                // variant_id: item.variantId || null,
                 quantity: item.quantity
             }))
         }

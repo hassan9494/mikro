@@ -820,10 +820,10 @@ export const ProductCard = ({ data }: Props) => {
             ...selectedVariant,
             baseProductId: data.id,
             variantId: selectedVariant.id,
-            id: data.id,
+            id: selectedVariant.id || data.id,
             baseTitle: data.title,
             title: selectedVariant
-                ? `${data.title} - ${selectedVariant.title}`
+                ? selectedVariant.name
                 : data.title,
         };
     };
@@ -902,7 +902,7 @@ export const ProductCard = ({ data }: Props) => {
                                     unoptimized={true}
                                 />
                             </ProductImageContainer>
-                            <ProductTitle>{title} {selectedVariant ? `- ${selectedVariant.title}` : ''} </ProductTitle>
+                            <ProductTitle>{selectedVariant ? `${selectedVariant.name}` : title} </ProductTitle>
 
                             <PriceContainer>
                                 <CurrentPrice>
@@ -1036,7 +1036,7 @@ export const ProductCard = ({ data }: Props) => {
                                     getAvailableQty() === 0 ?
                                         'Out of Stock' :
                                         <>
-                                            Add to Cart - <MoneyFormat value={getEffectivePrice()} />
+                                            Select this option - <MoneyFormat value={getEffectivePrice()} />
                                         </>
                                 }
                             </AddToCartButton>
