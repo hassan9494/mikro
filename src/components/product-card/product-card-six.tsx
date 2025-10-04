@@ -814,13 +814,24 @@ export const ProductCard = ({ data }: Props) => {
 
     const getCartData = () => {
         if (!selectedVariant) return data;
-
+// console.log({
+//     ...data,
+//     // ...selectedVariant,
+//     baseProductId: selectedVariant.color_id,
+//     variantId: selectedVariant.color_id,
+//     id: selectedVariant.color_id || data.id,
+//     baseTitle: data.title,
+//     title: selectedVariant
+//         ? selectedVariant.name
+//         : data.title,
+// })
         return {
             ...data,
             ...selectedVariant,
-            baseProductId: data.id,
-            variantId: selectedVariant.id,
-            id: selectedVariant.id || data.id,
+            baseProductId: selectedVariant.color_id,
+            // id: selectedVariant.color_id,
+            variantId: selectedVariant.color_id,
+            id: selectedVariant.color_id || data.id,
             baseTitle: data.title,
             title: selectedVariant
                 ? selectedVariant.name

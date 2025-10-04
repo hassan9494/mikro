@@ -83,7 +83,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
             notes:notes,
             products: items.map(item => ({
                 id: item.variantId || item.baseProductId,  // Use baseProductId instead of id
-                variant_id: item.variantId || null,
+                // variant_id: item.variantId || null,
                 quantity: item.quantity
             }))      }
         try {
