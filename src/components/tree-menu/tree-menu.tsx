@@ -64,7 +64,7 @@ const Tree = React.memo(
             },
         });
 
-        const handleToggle = () => {
+        const handleToggle = (e) => {
             e.stopPropagation();
             if (onToggle) {
                 onToggle();
