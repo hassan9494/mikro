@@ -144,16 +144,16 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     const hasAdminAccess = user?.roles?.some(role => adminRoles.includes(role.name));
 
-    useEffect(() => {
-        if (product?.hasVariants && product?.colors?.length) {
-            // Select the first available variant, or the first one if none are available
-            const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
-            setSelectedVariant(availableVariant);
-        }
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-        }, 500);
-    }, [product]);
+    // useEffect(() => {
+    //     if (product?.hasVariants && product?.colors?.length) {
+    //         // Select the first available variant, or the first one if none are available
+    //         const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
+    //         setSelectedVariant(availableVariant);
+    //     }
+    //     setTimeout(() => {
+    //         window.scrollTo(0, 0);
+    //     }, 500);
+    // }, [product]);
 
     const handleVariantChange = (variant) => {
         // Allow selection even if out of stock, but show a message
@@ -402,7 +402,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     )}
                                 </ProductDescription>
 
-                                <ProductCategories categories={product?.categories}/>
+                                <ProductCategories categories={displayProduct?.categories}/>
                                 {hasAdminAccess && (
                                     <div>
                                         <a href={`${url}/product/edit/${product?.id}`} target='_blank' rel="noreferrer">
@@ -428,16 +428,16 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                 </Tabs>
                                 <Box p={1}>
                                     <TabPanel value={value} index={0}>
-                                        <div dangerouslySetInnerHTML={{__html: product.description}} />
+                                        <div dangerouslySetInnerHTML={{__html: displayProduct.description}} />
                                     </TabPanel>
                                     <TabPanel value={value} index={1}>
-                                        <div dangerouslySetInnerHTML={{__html: product.features}} />
+                                        <div dangerouslySetInnerHTML={{__html: displayProduct.features}} />
                                     </TabPanel>
                                     <TabPanel value={value} index={2}>
-                                        <div dangerouslySetInnerHTML={{__html: product.documents}} />
+                                        <div dangerouslySetInnerHTML={{__html: displayProduct.documents}} />
                                     </TabPanel>
                                     <TabPanel value={value} index={3}>
-                                        <div dangerouslySetInnerHTML={{__html: product.packageInclude}} />
+                                        <div dangerouslySetInnerHTML={{__html: displayProduct.packageInclude}} />
                                     </TabPanel>
                                 </Box>
                             </div>
@@ -473,7 +473,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
                         <RelatedItems>
                             <RelatedProducts
-                                slug={data?.id}
+                                slug={displayProduct?.color_id ?? data?.id}
                                 deviceType={deviceType}
                             />
                         </RelatedItems>
