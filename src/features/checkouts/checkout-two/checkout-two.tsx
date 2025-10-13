@@ -63,11 +63,19 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
         e.preventDefault();
         if (!(calculatePrice() > 0 && cartItemsCount > 0)) return;
         setLoading(true);
+
+        // Prepare data with both IDs
         const data = {
             notes,
             coupon_id: coupon?.id,
-            products: items.map(({id, quantity}) => ({ id, quantity }))
+            products: items.map(item => ({
+                id: item.variantId || item.baseProductId,  // Changed from product_id to id
+                // variant_id: item.variantId || null,
+                quantity: item.quantity
+            }))
         }
+
+        console.log("Final Submission Payload:", data); // Add this
         try {
             const res = await order.create(data, true);
             toast.success('Order received');
@@ -89,7 +97,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = () => {
         <CheckoutWrapper>
             <CheckoutContainer>
                 <CheckoutInformation>
-                    <CheckoutCart shippingCost={shippingCost}/>
+                    <CheckoutCart shippingCost={shippingCost} onPrepareOrderData={undefined}/>
                 </CheckoutInformation>
 
                 <CheckoutInformation>

@@ -64,7 +64,8 @@ const Tree = React.memo(
             },
         });
 
-        const handleToggle = () => {
+        const handleToggle = (e) => {
+            e.stopPropagation();
             if (onToggle) {
                 onToggle();
             } else if (!isControlled) {
@@ -83,7 +84,7 @@ const Tree = React.memo(
         // };
         return (
             <Frame depth={depth}>
-                <Header open={open} depth={depth} className={depth}>
+                <Header open={open} depth={depth} className={depth} onClick={onClick}>
                     {/*{icon && (*/}
 
                     {/*<IconWrapper depth={depth}>*/}
@@ -108,7 +109,7 @@ const Tree = React.memo(
                         </ImageWrapper>
                     )}
 
-                    <Title onClick={onClick}>{name}</Title>
+                    <Title>{name}</Title>
 
                     {dropdown === true && (
                         <Button
