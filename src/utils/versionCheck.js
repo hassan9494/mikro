@@ -20,7 +20,13 @@ export const checkAndClearCache = () => {
     if (storedVersion !== currentVersion) {
         console.log('🔄 Clearing cart cache. Version changed from', storedVersion, 'to', currentVersion);
 
-        // Clear ALL possible cart storage keys
+        // SPECIFICALLY CLEAR THE @cart-session KEY
+        if (localStorage.getItem('@cart-session')) {
+            localStorage.removeItem('@cart-session');
+            console.log('🗑️ Removed cart key: @cart-session');
+        }
+
+        // Also clear any other potential cart keys (as backup)
         const cartKeys = [
             'cart',
             'cart-state',
@@ -30,19 +36,10 @@ export const checkAndClearCache = () => {
             'shop-cart'
         ];
 
-        // Remove specific cart keys
         cartKeys.forEach(key => {
             if (localStorage.getItem(key)) {
                 localStorage.removeItem(key);
                 console.log('🗑️ Removed cart key:', key);
-            }
-        });
-
-        // Remove any other keys containing 'cart'
-        Object.keys(localStorage).forEach(key => {
-            if (key.toLowerCase().includes('cart')) {
-                localStorage.removeItem(key);
-                console.log('🗑️ Removed cart-related key:', key);
             }
         });
 
