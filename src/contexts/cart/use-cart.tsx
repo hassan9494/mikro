@@ -1,4 +1,4 @@
-import React, {useReducer, useContext, createContext, useEffect} from 'react';
+import React, { useReducer, useContext, createContext } from 'react';
 import { reducer, cartItemsTotalPrice } from './cart.reducer';
 import { useStorage } from 'utils/use-storage';
 
@@ -159,22 +159,8 @@ export const CartProvider = ({ children }) => {
         getDiscount,
         toggleRestaurant,
     } = useCartActions();
-    useEffect(() => {
-        const FORCE_CLEAR_VERSION = 'v5.0.2-FORCE-CLEAR'; // CHANGE THIS FOR EACH DEPLOYMENT
-
-        if (localStorage.getItem('force-clear-version') !== FORCE_CLEAR_VERSION) {
-            console.log('🧹 FORCE CLEARING CART - NEW VERSION');
-
-            // Clear everything
-            localStorage.removeItem('@cart-session');
-            localStorage.setItem('force-clear-version', FORCE_CLEAR_VERSION);
-
-            // Force rehydrate with empty state
-            rehydrateLocalState(INITIAL_STATE);
-        }
-    }, [rehydrateLocalState]);
-
     const { rehydrated, error } = useStorage(state, rehydrateLocalState);
+
     return (
         <CartContext.Provider
             value={{

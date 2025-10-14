@@ -21,25 +21,15 @@ const hydrate = (value) => {
     return JSON.stringify(value);
 };
 
+// ⚠️ CHANGE THIS VERSION STRING FOR EACH DEPLOYMENT ⚠️
+const CURRENT_BUILD_VERSION = 'build-2024-01-15-v2'; // UPDATE THIS FOR EACH NEW BUILD
+
 const config = {
     key: '@cart-session',
     version: 1,
     migrate: (state) => {
         return { ...state };
     },
-};
-
-// Get current app version
-const getAppVersion = () => {
-    if (typeof window === 'undefined') return null;
-    let currentVersion = null;
-    if (window.__NEXT_DATA__) {
-        currentVersion = window.__NEXT_DATA__.runtimeConfig?.APP_VERSION;
-    }
-    if (!currentVersion) {
-        currentVersion = `v5.0.2-${Date.now().toString().slice(-8)}`;
-    }
-    return currentVersion;
 };
 
 export const useStorage = (state, setState) => {
@@ -60,23 +50,27 @@ export const useStorage = (state, setState) => {
 
     useEffect(() => {
         async function init() {
-            const currentVersion = getAppVersion();
-            const storedVersion = localStorage.getItem('app-version');
+            // ⚠️ VERSION CHECK - Clear cart if build version changed
+            const lastBuildVersion = localStorage.getItem('last-build-version');
 
-            // VERSION CHECK: If versions don't match, clear cart data
-            if (storedVersion !== currentVersion) {
-                console.log('🔄 Version changed, clearing cart data');
-                // Clear the cart state
-                setState(INITIAL_STATE);
-                // Remove cart data from localStorage
+            if (lastBuildVersion !== CURRENT_BUILD_VERSION) {
+                console.log('🚨 BUILD VERSION CHANGED - CLEARING CART');
+
+                // 1. Clear localStorage
                 localStorage.removeItem(config.key);
-                // Update stored version
-                localStorage.setItem('app-version', currentVersion);
+
+                // 2. Set empty state in React
+                setState(INITIAL_STATE);
+
+                // 3. Update to new build version
+                localStorage.setItem('last-build-version', CURRENT_BUILD_VERSION);
+
+                console.log('✅ Cart cleared for new build version:', CURRENT_BUILD_VERSION);
                 setRehydrated(true);
                 return;
             }
 
-            // Normal rehydration if versions match
+            // Normal rehydration if same version
             const storedValue = localStorage.getItem(config.key);
             const restoredValue = rehydrate(storedValue);
 
@@ -87,11 +81,6 @@ export const useStorage = (state, setState) => {
             }
 
             setRehydrated(true);
-
-            // Initialize version if first time
-            if (!storedVersion) {
-                localStorage.setItem('app-version', currentVersion);
-            }
         }
 
         init();
@@ -99,13 +88,7 @@ export const useStorage = (state, setState) => {
 
     useEffect(() => {
         if (rehydrated) {
-            // Only persist to localStorage if we're not in a version change scenario
-            const currentVersion = getAppVersion();
-            const storedVersion = localStorage.getItem('app-version');
-
-            if (storedVersion === currentVersion) {
-                localStorage.setItem(config.key, hydrate(state));
-            }
+            localStorage.setItem(config.key, hydrate(state));
         }
     }, [state, rehydrated]);
 
