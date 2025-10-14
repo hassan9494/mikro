@@ -5,7 +5,7 @@ import { defaultTheme } from 'site-settings/site-theme/default';
 import { AppProvider, useAppState } from 'contexts/app/app.provider';
 import { AuthProvider } from 'contexts/auth/auth.provider';
 import { LanguageProvider } from 'contexts/language/language.provider';
-import { CartProvider } from 'contexts/cart/use-cart';
+import {CartProvider, useCart} from 'contexts/cart/use-cart';
 import { useMedia } from 'utils/use-media';
 import AppLayout from 'layouts/app-layout';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -28,10 +28,10 @@ import 'typeface-poppins';
 import React from 'react';
 import { OrderProvider } from "../contexts/order/order.provider";
 import {useSocial} from "../data/use-website";
-import { useVersionCheck } from '../utils/versionCheck';
+// import { useVersionCheck } from '../utils/versionCheck';
 
 export default function ExtendedApp({ Component, pageProps }) {
-    const checkAndClearCache = useVersionCheck();
+    // const checkAndClearCache = useVersionCheck();
     useEffect(() => {
         // Inject head scripts
         const headScripts = document.documentElement.getAttribute('data-head-scripts');
@@ -59,9 +59,41 @@ export default function ExtendedApp({ Component, pageProps }) {
             });
         }
     }, []);
+    const { clearCart } = useCart();
+
     useEffect(() => {
+        const checkAndClearCache = () => {
+            if (typeof window === 'undefined') return;
+
+            let currentVersion = null;
+            if (typeof window !== 'undefined' && window.__NEXT_DATA__) {
+                currentVersion = window.__NEXT_DATA__.runtimeConfig?.APP_VERSION;
+            }
+            if (!currentVersion) {
+                currentVersion = `v5.0.2-${Date.now().toString().slice(-8)}`;
+            }
+
+            const storedVersion = localStorage.getItem('app-version');
+
+            if (storedVersion !== currentVersion) {
+                console.log('🔄 Clearing cart cache. Version changed');
+
+                // Use your cart context's clear function
+                if (clearCart) {
+                    clearCart();
+                    console.log('✅ Cart cleared via context');
+                }
+
+                localStorage.setItem('app-version', currentVersion);
+            }
+
+            if (!storedVersion) {
+                localStorage.setItem('app-version', currentVersion);
+            }
+        };
+
         checkAndClearCache();
-    }, [checkAndClearCache]);
+    }, [clearCart]);
 
     useEffect(() => {
         // Remove the server-side injected CSS.
