@@ -28,6 +28,7 @@ import 'typeface-poppins';
 import React from 'react';
 import { OrderProvider } from "../contexts/order/order.provider";
 import {useSocial} from "../data/use-website";
+import { checkAndClearCache } from '../utils/versionCheck';
 
 export default function ExtendedApp({ Component, pageProps }) {
     useEffect(() => {
@@ -56,6 +57,9 @@ export default function ExtendedApp({ Component, pageProps }) {
                 body.appendChild(script);
             });
         }
+    }, []);
+    useEffect(() => {
+        checkAndClearCache();
     }, []);
 
     useEffect(() => {
