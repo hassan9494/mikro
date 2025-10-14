@@ -21,6 +21,9 @@ const hydrate = (value) => {
     return JSON.stringify(value);
 };
 
+// ⚠️ CHANGE THIS VERSION STRING FOR EACH DEPLOYMENT ⚠️
+const CURRENT_BUILD_VERSION = 'build-2024-01-15-v2'; // UPDATE THIS FOR EACH NEW BUILD
+
 const config = {
     key: '@cart-session',
     version: 1,
@@ -47,9 +50,36 @@ export const useStorage = (state, setState) => {
 
     useEffect(() => {
         async function init() {
+            // ⚠️ VERSION CHECK - Clear cart if build version changed
+            const lastBuildVersion = localStorage.getItem('last-build-version');
+
+            if (lastBuildVersion !== CURRENT_BUILD_VERSION) {
+                console.log('🚨 BUILD VERSION CHANGED - CLEARING CART');
+
+                // 1. Clear localStorage
+                localStorage.removeItem(config.key);
+
+                // 2. Set empty state in React
+                setState(INITIAL_STATE);
+
+                // 3. Update to new build version
+                localStorage.setItem('last-build-version', CURRENT_BUILD_VERSION);
+
+                console.log('✅ Cart cleared for new build version:', CURRENT_BUILD_VERSION);
+                setRehydrated(true);
+                return;
+            }
+
+            // Normal rehydration if same version
             const storedValue = localStorage.getItem(config.key);
             const restoredValue = rehydrate(storedValue);
-            setState(restoredValue || config.migrate(INITIAL_STATE));
+
+            if (restoredValue) {
+                setState(restoredValue);
+            } else {
+                setState(config.migrate(INITIAL_STATE));
+            }
+
             setRehydrated(true);
         }
 
