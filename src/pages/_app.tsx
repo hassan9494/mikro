@@ -64,6 +64,34 @@ export default function ExtendedApp({ Component, pageProps }) {
         }
     }, [clearCart]);
     useEffect(() => {
+        // Nuclear option - intercept and block cart persistence
+        const originalSetItem = localStorage.setItem;
+
+        localStorage.setItem = function(key, value) {
+            if (key === '@cart-session') {
+                // Check if we're trying to save non-empty cart
+                try {
+                    const cartData = JSON.parse(value);
+                    if (cartData.items && cartData.items.length > 0) {
+                        console.log('🚫 BLOCKING CART PERSISTENCE');
+                        return; // Don't save!
+                    }
+                } catch (e) {
+                    // Continue with original behavior if parsing fails
+                }
+            }
+            return originalSetItem.apply(this, arguments);
+        };
+
+        // Clear existing cart immediately
+        localStorage.removeItem('@cart-session');
+
+        // Restore original function after 10 seconds
+        setTimeout(() => {
+            localStorage.setItem = originalSetItem;
+        }, 10000);
+    }, []);
+    useEffect(() => {
         // Inject head scripts
         const headScripts = document.documentElement.getAttribute('data-head-scripts');
         if (headScripts) {
