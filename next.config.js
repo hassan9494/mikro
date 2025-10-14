@@ -1,7 +1,7 @@
 const withPlugins = require('next-compose-plugins');
 const withOptimizedImages = require('next-optimized-images');
 
-// Use package.json version + timestamp
+// Create unique version using package.json version + timestamp
 const APP_VERSION = `v${require('./package.json').version}-${Date.now()}`;
 
 // next.js configuration
