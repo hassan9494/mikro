@@ -1,55 +1,42 @@
-export const checkAndClearCache = () => {
-    if (typeof window === 'undefined') return;
+import { useCart } from 'contexts/cart/use-cart';
 
-    // Get current version from Next.js config
-    let currentVersion = null;
+export const useVersionCheck = () => {
+    const { clearCart } = useCart();
 
-    // Try to get version from Next.js runtime config
-    if (typeof window !== 'undefined' && window.__NEXT_DATA__) {
-        currentVersion = window.__NEXT_DATA__.runtimeConfig?.APP_VERSION;
-    }
+    const checkAndClearCache = () => {
+        if (typeof window === 'undefined') return;
 
-    // Fallback: use package version + timestamp
-    if (!currentVersion) {
-        currentVersion = `v5.0.2-${Date.now().toString().slice(-8)}`;
-    }
-
-    const storedVersion = localStorage.getItem('app-version');
-
-    // If version changed, clear cart data
-    if (storedVersion !== currentVersion) {
-        console.log('🔄 Clearing cart cache. Version changed from', storedVersion, 'to', currentVersion);
-
-        // SPECIFICALLY CLEAR THE @cart-session KEY
-        if (localStorage.getItem('@cart-session')) {
-            localStorage.removeItem('@cart-session');
-            console.log('🗑️ Removed cart key: @cart-session');
+        // Get current version
+        let currentVersion = null;
+        if (typeof window !== 'undefined' && window.__NEXT_DATA__) {
+            currentVersion = window.__NEXT_DATA__.runtimeConfig?.APP_VERSION;
+        }
+        if (!currentVersion) {
+            currentVersion = `v5.0.2-${Date.now().toString().slice(-8)}`;
         }
 
-        // Also clear any other potential cart keys (as backup)
-        const cartKeys = [
-            'cart',
-            'cart-state',
-            'cart-items',
-            'cart-total',
-            'pickbazar-cart',
-            'shop-cart'
-        ];
+        const storedVersion = localStorage.getItem('app-version');
 
-        cartKeys.forEach(key => {
-            if (localStorage.getItem(key)) {
-                localStorage.removeItem(key);
-                console.log('🗑️ Removed cart key:', key);
+        if (storedVersion !== currentVersion) {
+            console.log('🔄 Clearing cart cache. Version changed');
+
+            // CLEAR THE REACT STATE, not just localStorage
+            if (clearCart) {
+                clearCart(); // This calls your cart context's clear function
+                console.log('✅ Cart state cleared via context');
             }
-        });
 
-        // Store new version
-        localStorage.setItem('app-version', currentVersion);
-        console.log('✅ Cart cache cleared successfully');
-    }
+            // Also clear localStorage as backup
+            localStorage.removeItem('@cart-session');
 
-    // Initialize version if first time
-    if (!storedVersion) {
-        localStorage.setItem('app-version', currentVersion);
-    }
+            localStorage.setItem('app-version', currentVersion);
+            console.log('✅ Cart cache cleared successfully');
+        }
+
+        if (!storedVersion) {
+            localStorage.setItem('app-version', currentVersion);
+        }
+    };
+
+    return checkAndClearCache;
 };

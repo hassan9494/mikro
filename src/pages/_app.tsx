@@ -28,9 +28,10 @@ import 'typeface-poppins';
 import React from 'react';
 import { OrderProvider } from "../contexts/order/order.provider";
 import {useSocial} from "../data/use-website";
-import { checkAndClearCache } from '../utils/versionCheck';
+import { useVersionCheck } from '../utils/versionCheck';
 
 export default function ExtendedApp({ Component, pageProps }) {
+    const checkAndClearCache = useVersionCheck();
     useEffect(() => {
         // Inject head scripts
         const headScripts = document.documentElement.getAttribute('data-head-scripts');
@@ -60,7 +61,7 @@ export default function ExtendedApp({ Component, pageProps }) {
     }, []);
     useEffect(() => {
         checkAndClearCache();
-    }, []);
+    }, [checkAndClearCache]);
 
     useEffect(() => {
         // Remove the server-side injected CSS.
