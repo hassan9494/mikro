@@ -53,6 +53,8 @@ const Cart: React.FC<CartPropsType> = ({
     const [hasCoupon, setCoupon] = useState(false);
     const { isRtl } = useLocale();
 
+    const isEmpty = cartItemsCount === 0;
+
     return (
         <CartPopupBody className={className} style={style}>
             <PopupHeader>
@@ -74,7 +76,7 @@ const Cart: React.FC<CartPropsType> = ({
                 </CloseButton>
             </PopupHeader>
 
-            <Scrollbar className='cart-scrollbar'>
+            <Scrollbar className='cart-scrollbar'   style={{ minHeight: isEmpty ? '300px' : 'auto'}}>
                 <ItemWrapper className='items-wrapper'>
                     {!!cartItemsCount ? (
                         items.map((item) => (
@@ -87,17 +89,28 @@ const Cart: React.FC<CartPropsType> = ({
                             />
                         ))
                     ) : (
-                        <>
-                            <NoProductImg>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '300px',
+                            width: '100%',
+                            padding: '20px'
+                        }}>
+
+                        <NoProductImg>
                                 <NoCartBag/>
                             </NoProductImg>
-                            <NoProductMsg>
+                            {/* <NoProductMsg>
                                 <FormattedMessage
                                     id='noProductFound'
                                     defaultMessage='No products found'
                                 />
-                            </NoProductMsg>
-                        </>
+                            </NoProductMsg> */}
+
+
+                        </div>
                     )}
                 </ItemWrapper>
             </Scrollbar>

@@ -30,7 +30,7 @@ const ZoomContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 450px;
+  height: 550px;
 `;
 
 const ZoomableImage = styled.img`

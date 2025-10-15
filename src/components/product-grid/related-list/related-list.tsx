@@ -35,7 +35,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
     deviceType,
     slug
 }) => {
-    const [showAll, setShowAll] = useState(false);
+    // const [showAll, setShowAll] = useState(false);
     const { data, error } = useRelatedProducts({
         sku: slug
     });
@@ -66,7 +66,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
 
     const sliderSettings = {
         dots: true,
-        infinite: true,
+        infinite: data && data.length > 4,
         speed: 800,
         slidesToShow: 4,
         slidesToScroll: 1,
@@ -83,7 +83,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                 breakpoint: 1280,
                 settings: {
                     slidesToShow: 3,
-                    infinite: true,
+                    infinite: data && data.length > 3,
                     autoplay: true
                 }
             },
@@ -92,7 +92,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                 settings: {
                     slidesToShow: 3,
                     arrows: true,
-                    infinite: true,
+                    infinite:  data && data.length > 3,
                     autoplay: true
                 }
             },
@@ -101,7 +101,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                 settings: {
                     slidesToShow: 2,
                     arrows: true,
-                    infinite: true,
+                    infinite:  data && data.length > 2,
                     autoplay: true
                 }
             },
@@ -110,7 +110,7 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                 settings: {
                     slidesToShow: 1,
                     arrows: true,
-                    infinite: true,
+                    infinite:  data && data.length > 1,
                     autoplay: true
                 }
             }
@@ -142,8 +142,8 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
         return <></>;
     }
 
-    const displayCount = showAll ? data.length : Math.min(8, data.length);
-    const hasMore = data.length > 8;
+    // const displayCount = showAll ? data.length : Math.min(8, data.length);
+    // const hasMore = data.length > 8;
 
     const renderCard = (props, index) => (
         <ProductCardWrapper className="product-card-wrapper" key={`${props.id}-${index}`}>
@@ -172,24 +172,24 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
                     </h2>
                     
                     <Slider {...sliderSettings}>
-                        {data.slice(0, displayCount).map((item, index) => (
+                        {data.map((item, index) => (
                             <div key={`slide-${item.id}-${index}`} className="slide-item">
                                 {renderCard(item, index)}
                             </div>
                         ))}
                     </Slider>
 
-                    {!showAll && hasMore && (
-                        <div className="show-more-container">
-                            <Button
-                                onClick={() => setShowAll(true)}
-                                className="show-more-button"
-                                title="Show more related products"
-                            >
-                                + {data.length - 8} More
-                            </Button>
-                        </div>
-                    )}
+                    {/*{!showAll && hasMore && (*/}
+                    {/*    <div className="show-more-container">*/}
+                    {/*        <Button*/}
+                    {/*            onClick={() => setShowAll(true)}*/}
+                    {/*            className="show-more-button"*/}
+                    {/*            title="Show more related products"*/}
+                    {/*        >*/}
+                    {/*            + {data.length - 8} More*/}
+                    {/*        </Button>*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                 </div>
             </div>
         </SliderStyles>
