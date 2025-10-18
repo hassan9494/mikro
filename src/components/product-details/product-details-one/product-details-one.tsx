@@ -290,8 +290,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     </div>
                                 ) : (
                                     <ReplacementWrapper>
-                                        <FormattedMessage id='retired'
-                                                          defaultMessage="This product is retired now ,the replacement is :"/>
+                                        <span style={{color:'red'}}>
+                                            <FormattedMessage id='retired'
+                                                              defaultMessage="This product is retired now ,the replacement is :"/>
+                                        </span>
+
                                         <ProductCardWrapper>
                                             <Fade
                                                 duration={800}

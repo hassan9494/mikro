@@ -65,7 +65,7 @@ export const ReplacementProductCard = ({ data }: Props) => {
 
 
     return (
-        <Card>
+        <Card style={{border:'1px dotted',borderRadius:'5px',padding:'5px'}}>
             <Link href="/product/[slug]" as={`/product/${slug}`}>
                 <a>
                     <ImageWrapper>
