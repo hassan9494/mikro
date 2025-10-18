@@ -129,10 +129,10 @@ const CheckoutCart = ({
     console.log(setting)
 
     const subtotal = calculateSubTotalPrice();
-    const finalShippingCost = subtotal >= setting?.value ? 0 : shippingCost;
-    const showFreeShippingMessage = subtotal >= setting?.value && cartItemsCount > 0;
-    const showEncouragementMessage = subtotal > 0 && subtotal < setting?.value;
-    const amountNeeded = (setting?.value - subtotal).toFixed(2);
+    const finalShippingCost = subtotal >= parseFloat(setting?.value) ? 0 : shippingCost;
+    const showFreeShippingMessage = subtotal >= parseFloat(setting?.value) && cartItemsCount > 0;
+    const showEncouragementMessage = subtotal > 0 && subtotal < parseFloat(setting?.value);
+    const amountNeeded = (parseFloat(setting?.value) - subtotal).toFixed(2);
 
 
 
