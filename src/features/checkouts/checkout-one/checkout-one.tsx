@@ -60,11 +60,11 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
     }
     const { data: setting } = useSettings();
 console.log(setting)
-    const shippingFee = subtotal >= setting.value ? 0 : shippingCost;
+    const shippingFee = subtotal >= parseFloat(setting?.value) ? 0 : shippingCost;
     const total = Number(calculatePrice()) + shippingFee;
-    const showFreeShipping = subtotal >= setting.value && cartItemsCount > 0;
-    const showEncouragement = subtotal > 0 && subtotal < setting.value;
-    const amountNeeded = (setting.value - subtotal).toFixed(2);
+    const showFreeShipping = subtotal >= parseFloat(setting?.value) && cartItemsCount > 0;
+    const showEncouragement = subtotal > 0 && subtotal < parseFloat(setting?.value);
+    const amountNeeded = (parseFloat(setting?.value) - subtotal).toFixed(2);
 
     const handleSubmit = async () => {
         setLoading(true);
