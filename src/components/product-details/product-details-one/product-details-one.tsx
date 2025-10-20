@@ -437,8 +437,128 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         <div dangerouslySetInnerHTML={{__html: displayProduct.features}} />
                                     </TabPanel>
                                     <TabPanel value={value} index={2}>
-                                        <div dangerouslySetInnerHTML={{__html: displayProduct.documents}} />
+                                        {product.documents && (
+                                            <Typography variant="h6" gutterBottom style={{ fontWeight: 600, marginBottom: '16px' }}>
+                                                <FormattedMessage id="datasheets" defaultMessage="Documents" />
+                                            </Typography>
+                                        )}
+
+
+                                        {/* Existing documents content */}
+                                        {product.documents && (
+                                            <div
+                                                style={{
+                                                    marginBottom: product.datasheets?.length > 0 ? '24px' : '0',
+                                                    padding: '16px',
+                                                    backgroundColor: '#f8f9fa',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid #e9ecef'
+                                                }}
+                                                dangerouslySetInnerHTML={{ __html: product.documents }}
+                                            />
+                                        )}
+
+                                        {/* Datasheets section */}
+                                        {product.datasheets && product.datasheets.length > 0 && (
+                                            <div style={{ marginTop: product.documents ? '24px' : '0' }}>
+                                                <Typography variant="h6" gutterBottom style={{ fontWeight: 600, marginBottom: '16px' }}>
+                                                    <FormattedMessage id="datasheets" defaultMessage="Datasheets & Files" />
+                                                </Typography>
+
+                                                <div style={{
+                                                    display: 'grid',
+                                                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                                                    gap: '16px',
+                                                    alignItems: 'stretch'
+                                                }}>
+                                                    {product.datasheets.map((datasheet: any, index: number) => (
+                                                        <div
+                                                            key={index}
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                height: '60px',
+                                                                padding: '8px 12px',
+                                                                border: '1px solid #e0e0e0',
+                                                                borderRadius: '6px',
+                                                                backgroundColor: '#fff',
+                                                                transition: 'all 0.2s ease',
+                                                                cursor: 'pointer',
+                                                                textDecoration: 'none',
+                                                                color: 'inherit',
+                                                                boxSizing: 'border-box'
+                                                            }}
+                                                            onClick={() => window.open(datasheet.value, '_blank')}
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.backgroundColor = '#f8f9fa';
+                                                                e.currentTarget.style.borderColor = '#0070f3';
+                                                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 112, 243, 0.15)';
+                                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.backgroundColor = '#fff';
+                                                                e.currentTarget.style.borderColor = '#e0e0e0';
+                                                                e.currentTarget.style.boxShadow = 'none';
+                                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                            }}
+                                                        >
+                                                            {/* Download Icon */}
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                marginRight: '12px',
+                                                                color: '#0070f3'
+                                                            }}>
+                                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                                                </svg>
+                                                            </div>
+
+                                                            {/* File Name */}
+                                                            <div style={{ textAlign: 'center'  }}>
+                                                                <Typography
+                                                                    variant="subtitle1"
+                                                                    style={{
+                                                                        fontWeight: 500,
+                                                                        wordBreak: 'break-word',
+                                                                        display: '-webkit-box',
+                                                                        WebkitLineClamp: 2,
+                                                                        WebkitBoxOrient: 'vertical',
+                                                                        overflow: 'hidden',
+                                                                        lineHeight: '1.4'
+                                                                    }}
+                                                                >
+                                                                    {datasheet.name}
+                                                                </Typography>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Fallback message if no documents or datasheets */}
+                                        {!product.documents && (!product.datasheets || product.datasheets.length === 0) && (
+                                            <div style={{
+                                                textAlign: 'center',
+                                                padding: '40px 20px',
+                                                border: '1px dashed #e0e0e0',
+                                                borderRadius: '8px',
+                                                backgroundColor: '#fafafa'
+                                            }}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontStyle: 'italic' }}>
+                                                    <FormattedMessage id="noDocuments" defaultMessage="No documents or datasheets available for this product." />
+                                                </Typography>
+                                            </div>
+                                        )}
                                     </TabPanel>
+
                                     <TabPanel value={value} index={3}>
                                         <div dangerouslySetInnerHTML={{__html: displayProduct.packageInclude}} />
                                     </TabPanel>
