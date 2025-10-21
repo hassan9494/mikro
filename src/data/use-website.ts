@@ -46,6 +46,20 @@ export function useSocial() {
     };
 
 }
+export function useSettings() {
+
+    const { data, mutate, error } = useSWR('website/settings', fetcher, { revalidateOnFocus: false });
+
+    const loading = !data && !error;
+
+    return {
+        loading,
+        error,
+        data: data || [],
+        mutate,
+    };
+
+}
 
 export function useArticles(type) {
     const { data, mutate, error } = useSWR(`website/article?type=${type}`, fetcher, { revalidateOnFocus: false });

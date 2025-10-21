@@ -29,6 +29,7 @@ import { CheckoutQuantityControl } from "./checkout-quantity-control";
 import Coupon from "../coupon/coupon";
 import { verifyCoupon } from "../../data/use-coupon";
 import Link from "next/link";
+import {useSettings} from "../../data/use-website";
 
 type CartItemProps = {
     product: any;
@@ -124,12 +125,14 @@ const CheckoutCart = ({
         applyCoupon,
         coupon,
     } = useCart();
+    const { data: setting } = useSettings();
+    console.log(setting)
 
     const subtotal = calculateSubTotalPrice();
-    const finalShippingCost = subtotal >= 20 ? 0 : shippingCost;
-    const showFreeShippingMessage = subtotal >= 20 && cartItemsCount > 0;
-    const showEncouragementMessage = subtotal > 0 && subtotal < 20;
-    const amountNeeded = (20 - subtotal).toFixed(2);
+    const finalShippingCost = subtotal >= parseFloat(setting?.value) ? 0 : shippingCost;
+    const showFreeShippingMessage = subtotal >= parseFloat(setting?.value) && cartItemsCount > 0;
+    const showEncouragementMessage = subtotal > 0 && subtotal < parseFloat(setting?.value);
+    const amountNeeded = (parseFloat(setting?.value) - subtotal).toFixed(2);
 
 
 
@@ -213,8 +216,11 @@ const CheckoutCart = ({
                                 {showFreeShippingMessage && (
                                     <div style={{ fontSize: 12, color: 'green', marginTop: 4 }}>
                                         <FormattedMessage
-                                            id="freeShippingMessage"
-                                            defaultMessage="Free shipping for 20+ JD orders"
+                                            id="tets"
+                                            defaultMessage="Free shipping for {value} JD orders"
+                                            values={{
+                                                value: <strong>{setting?.value || '20'}</strong>
+                                            }}
                                         />
                                     </div>
                                 )}

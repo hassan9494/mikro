@@ -24,6 +24,7 @@ import Address from 'features/address/address';
 import Contact from 'features/contact/contact';
 import Payment from 'features/payment/payment';
 import Schedules from 'features/schedule/schedule';
+import {useSettings, useSocial} from "../../../data/use-website";
 
 // The type of props Checkout Form receives
 interface MyFormProps {
@@ -57,12 +58,13 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
         const primaryAddress = address.find(addr => addr.is_primary) || address[0];
         shippingCost = parseFloat(primaryAddress.shipping_cost) || 0;
     }
-
-    const shippingFee = subtotal >= 20 ? 0 : shippingCost;
+    const { data: setting } = useSettings();
+console.log(setting)
+    const shippingFee = subtotal >= parseFloat(setting?.value) ? 0 : shippingCost;
     const total = Number(calculatePrice()) + shippingFee;
-    const showFreeShipping = subtotal >= 20 && cartItemsCount > 0;
-    const showEncouragement = subtotal > 0 && subtotal < 20;
-    const amountNeeded = (20 - subtotal).toFixed(2);
+    const showFreeShipping = subtotal >= parseFloat(setting?.value) && cartItemsCount > 0;
+    const showEncouragement = subtotal > 0 && subtotal < parseFloat(setting?.value);
+    const amountNeeded = (parseFloat(setting?.value) - subtotal).toFixed(2);
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -140,8 +142,11 @@ const Checkout: React.FC<MyFormProps> = ({ token, deviceType }) => {
                                         marginTop: 4
                                     }}>
                                         <FormattedMessage
-                                            id="freeShippingMessage"
-                                            defaultMessage="Free shipping for 20+ JD orders"
+                                            id="tets"
+                                            defaultMessage="Free shipping for {value} JD orders"
+                                            values={{
+                                                value: <strong>{setting?.value || '20'}</strong>
+                                            }}
                                         />
                                     </div>
                                 )}
