@@ -13,6 +13,8 @@ import {
     RemoveButton,
 } from './cart-item.style';
 import MoneyFormat from "../money-format/money-format";
+import { FormattedMessage } from 'react-intl';
+import { variant } from 'styled-system';
 
 interface Props {
     data: any;
@@ -22,13 +24,14 @@ interface Props {
 }
 
 export const CartItem: React.FC<Props> = ({
-  data,
-  onDecrement,
-  onIncrement,
-  onRemove,
-}) => {
-    const { title, image, price, sale_price, unit, quantity } = data;
-    const displayPrice = sale_price ? sale_price : price;
+                                              data,
+                                              onDecrement,
+                                              onIncrement,
+                                              onRemove,
+                                          }) => {
+    const {baseProductId, title, image, price, sale_price, unit, quantity, variantTitle, variantId } = data;
+    const displayPrice = sale_price || price;
+
     return (
         <ItemBox>
             <Counter
@@ -37,9 +40,23 @@ export const CartItem: React.FC<Props> = ({
                 onIncrement={onIncrement}
                 variant="lightVertical"
             />
-            <Image src={image}/>
+            <Image src={image || '/default-product.png'}/>
             <Information>
-                <Name>{title}</Name>
+                <Name>
+                    {variantId
+                        ? `${title} (ID: ${baseProductId}-${variantId})`
+                        : `${title} (ID: ${baseProductId})`}
+                    {variantTitle && (
+                        <div style={{
+                            fontSize: '0.8rem',
+                            color: '#666',
+                            marginTop: '4px',
+                            fontStyle: 'italic'
+                        }}>
+                            <FormattedMessage id="variant" defaultMessage="Variant" />: {variantTitle}
+                        </div>
+                    )}
+                </Name>
                 <Price>
                     <MoneyFormat value={displayPrice} />
                 </Price>

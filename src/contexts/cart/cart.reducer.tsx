@@ -59,12 +59,90 @@ export const reducer = (state, action) => {
             return { ...state, ...action.payload };
         case 'TOGGLE_CART':
             return { ...state, isOpen: !state.isOpen };
-        case 'ADD_ITEM':
-            return { ...state, items: addItemToCart(state, action) };
-        case 'REMOVE_ITEM':
-            return { ...state, items: removeItemFromCart(state, action) };
-        case 'CLEAR_ITEM_FROM_CART':
-            return { ...state, items: clearItemFromCart(state, action) };
+        case 'ADD_ITEM': {
+            const { payload } = action;
+
+            // Use the same ID generation logic
+            const itemId = payload.variantId
+                ? `${payload.baseProductId}_${payload.variantId}`
+                : payload.baseProductId.toString();
+
+            const existingItemIndex = state.items.findIndex(
+                item => item.id === itemId
+            );
+
+            if (existingItemIndex > -1) {
+                const newState = [...state.items];
+                newState[existingItemIndex].quantity += payload.quantity;
+                return { ...state, items: newState };
+            }
+
+            return { ...state, items: [...state.items, { ...payload, id: itemId }] };
+        }
+        case 'REMOVE_ITEM': {
+            const { payload } = action;
+            const itemId = payload.variantId
+                ? `${payload.baseProductId}_${payload.variantId}`
+                : payload.baseProductId.toString();
+
+            return {
+                ...state,
+                items: state.items.reduce((acc, item) => {
+                    const currentItemId = item.variantId
+                        ? `${item.baseProductId}_${item.variantId}`
+                        : item.baseProductId.toString();
+
+                    if (currentItemId === itemId) {
+                        const newQuantity = item.quantity - payload.quantity;
+                        return newQuantity > 0
+                            ? [...acc, { ...item, quantity: newQuantity }]
+                            : [...acc];
+                    }
+                    return [...acc, item];
+                }, []),
+            };
+        }
+        case 'CLEAR_ITEM_FROM_CART': {
+            const { payload } = action;
+            const itemId = payload.variantId
+                ? `${payload.baseProductId}_${payload.variantId}`
+                : payload.baseProductId.toString();
+
+            return {
+                ...state,
+                items: state.items.filter(item => {
+                    const currentItemId = item.variantId
+                        ? `${item.baseProductId}_${item.variantId}`
+                        : item.baseProductId.toString();
+                    return currentItemId !== itemId;
+                }),
+            };
+        }
+            const isInCartHandler = (baseProductId, variantId = null) => {
+                const itemId = variantId
+                    ? `${baseProductId}_${variantId}`
+                    : baseProductId.toString();
+
+                return state.items?.some(item => {
+                    const currentItemId = item.variantId
+                        ? `${item.baseProductId}_${item.variantId}`
+                        : item.baseProductId.toString();
+                    return currentItemId === itemId;
+                });
+            };
+
+            const getItemHandler = (baseProductId, variantId = null) => {
+                const itemId = variantId
+                    ? `${baseProductId}_${variantId}`
+                    : baseProductId.toString();
+
+                return state.items?.find(item => {
+                    const currentItemId = item.variantId
+                        ? `${item.baseProductId}_${item.variantId}`
+                        : item.baseProductId.toString();
+                    return currentItemId === itemId;
+                });
+            };
         case 'CLEAR_CART':
             return { ...state, items: [], coupon: null };
         case 'APPLY_COUPON':

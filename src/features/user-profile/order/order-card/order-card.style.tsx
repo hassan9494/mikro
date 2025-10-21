@@ -153,3 +153,10 @@ export const OrderTableMobile = styled.div`
     border: 0;
   }
 `;
+
+export const ColorVariantItem = styled.div`
+    margin-left: 20px;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 2px;
+`

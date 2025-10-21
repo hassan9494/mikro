@@ -71,11 +71,15 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                                     zIndex: 2
                                 }}
                             >
-                                {item.availableQty ? (
-                                    <AddItemToCart data={item} variant={'full'} />
-                                ) : (
-                                    'Out Of Stock'
-                                )}
+                                {
+                                    item.colors.length > 0 && item.hasVariants ?
+                                        'Select Options' :
+                                        item.availableQty ? (
+                                            <AddItemToCart data={item} variant={'full'} />
+                                        ) : (
+                                            'Out Of Stock'
+                                        )
+                                }
                             </Box>
                         </Box>
                     }
