@@ -166,5 +166,7 @@
   "cuisineText": "Cocina",
   "minOrderText": "La orden mínima",
   "fromText": "Desde",
-  "loadMoreButton": "Carga más"
+  "loadMoreButton": "Carga más",
+  "kitIncludes": "Kit Includes"
+
 }

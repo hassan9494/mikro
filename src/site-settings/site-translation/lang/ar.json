@@ -175,5 +175,7 @@
   "notesPlaceholder": "ملاحظات",
   "streetPlaceholder": "الشارع",
   "phonePlaceholder": "رقم الهاتف",
-  "processCheckout": "تثبيت الطلب"
+  "processCheckout": "تثبيت الطلب",
+  "kitIncludes": "مكونات المجموعة"
+
 }

@@ -560,8 +560,157 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     </TabPanel>
 
                                     <TabPanel value={value} index={3}>
-                                        <div dangerouslySetInnerHTML={{__html: displayProduct.packageInclude}} />
+                                        {/* Existing packageInclude content */}
+                                        {product.packageInclude && (
+                                            <div
+                                                style={{
+                                                    marginBottom: product.kit?.length > 0 ? '24px' : '0',
+                                                    padding: '16px',
+                                                    backgroundColor: '#f8f9fa',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid #e9ecef'
+                                                }}
+                                                dangerouslySetInnerHTML={{ __html: product.packageInclude }}
+                                            />
+                                        )}
+
+                                        {/* Kit Items Section - Improved Table Layout */}
+                                        {product.kit && product.kit.length > 0 && (
+                                            <div style={{ marginTop: product.packageInclude ? '24px' : '0' }}>
+                                                <Typography variant="h6" gutterBottom style={{ fontWeight: 600, marginBottom: '20px' }}>
+                                                    <FormattedMessage id="kitIncludes" defaultMessage="Kit Includes" />
+                                                </Typography>
+
+                                                <div style={{
+                                                    border: '1px solid #e0e0e0',
+                                                    borderRadius: '8px',
+                                                    overflow: 'hidden',
+                                                    backgroundColor: '#fff',
+                                                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                                                    maxWidth: 'fit-content'
+
+                                                }}>
+                                                    {/* Table Header */}
+                                                    <div style={{
+                                                        display: 'grid',
+                                                        gridTemplateColumns: '100px 1fr 100px',
+                                                        padding: '5px 50px',
+                                                        backgroundColor: '#f8f9fa',
+                                                        borderBottom: '1px solid #e0e0e0',
+                                                        fontWeight: 600,
+                                                        fontSize: '14px',
+                                                        color: '#333',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <div>Image</div>
+                                                        <div style={{ padding: '0 16px' }}>Product Name</div>
+                                                        <div style={{ textAlign: 'center' }}>Quantity</div>
+                                                    </div>
+
+                                                    {/* Table Rows */}
+                                                    {product.kit.map((kitItem: any, index: number) => (
+                                                        <div
+                                                            key={kitItem.id}
+                                                            style={{
+                                                                display: 'grid',
+                                                                gridTemplateColumns: '100px 1fr 100px',
+                                                                padding: '1px 50px',
+                                                                alignItems: 'center',
+                                                                borderBottom: index < product.kit.length - 1 ? '1px solid #f5f5f5' : 'none',
+                                                                cursor: 'pointer',
+                                                                transition: 'all 0.2s ease',
+                                                                textDecoration: 'none',
+                                                                color: 'inherit',
+                                                                minHeight: '80px'
+                                                            }}
+                                                            onClick={() => Router.push(`/product/${kitItem.slug}`)}
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.backgroundColor = '#f8fafc';
+                                                                e.currentTarget.style.borderLeft = '3px solid #0070f3';
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.backgroundColor = '#fff';
+                                                                e.currentTarget.style.borderLeft = '3px solid transparent';
+                                                            }}
+                                                        >
+                                                            {/* Product Image */}
+                                                            <div>
+                                                                <img
+                                                                    src={kitItem.image || LogoImage}
+                                                                    alt={kitItem.name}
+                                                                    style={{
+                                                                        width: '60px',
+                                                                        height: '50px',
+                                                                        objectFit: 'cover',
+                                                                        borderRadius: '6px',
+                                                                        border: '1px solid #e0e0e0'
+                                                                    }}
+                                                                />
+                                                            </div>
+
+                                                            {/* Product Name */}
+                                                            <div style={{ padding: '0 16px' }}>
+                                                                <Typography
+                                                                    variant="body1"
+                                                                    style={{
+                                                                        fontWeight: 500,
+                                                                        lineHeight: '1.4',
+                                                                        fontSize: '15px'
+                                                                    }}
+                                                                >
+                                                                    {kitItem.name}
+                                                                </Typography>
+                                                            </div>
+
+                                                            {/* Quantity */}
+                                                            <div style={{ textAlign: 'center' }}>
+                                                                <div style={{
+                                                                    display: 'inline-flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    // backgroundColor: '#fe5e00',
+                                                                    color: 'black',
+                                                                    borderRadius: '20px',
+                                                                    padding: '2px',
+                                                                    minWidth: '20px'
+                                                                }}>
+                                                                    <Typography
+                                                                        variant="body1"
+                                                                        style={{
+                                                                            fontWeight: 600,
+                                                                            fontSize: '14px'
+                                                                        }}
+                                                                    >
+                                                                        {kitItem.quantity}
+                                                                    </Typography>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+
+                                            </div>
+                                        )}
+
+                                        {/* Fallback message if no packageInclude and no kit items */}
+                                        {!product.packageInclude && (!product.kit || product.kit.length === 0) && (
+                                            <div style={{
+                                                textAlign: 'center',
+                                                padding: '40px 20px',
+                                                border: '1px dashed #e0e0e0',
+                                                borderRadius: '8px',
+                                                backgroundColor: '#fafafa'
+                                            }}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontStyle: 'italic' }}>
+                                                    <FormattedMessage id="noProductInclude" defaultMessage="No additional product information available." />
+                                                </Typography>
+                                            </div>
+                                        )}
                                     </TabPanel>
+
+
+
                                 </Box>
                             </div>
 
