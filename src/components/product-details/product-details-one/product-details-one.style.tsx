@@ -471,14 +471,14 @@ export const SelectedVariantIndicator = styled.div`
 
 export const OutOfStockOverlay = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 20%;
+  left: 20%;
   transform: translate(-50%, -50%) rotate(-45deg);
-  background: rgba(245, 0, 0, 0.7);
+  background: rgba(245, 0, 0, 0.5);
   color: white;
   font-size: 7px;
   font-weight: bold;
-  padding: 2px 4px;
+  padding: 1px 2px;
   border-radius: 2px;
   white-space: nowrap;
   z-index: 2;

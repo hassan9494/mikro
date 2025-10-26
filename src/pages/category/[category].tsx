@@ -66,6 +66,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
 
     return (
         <>
+            {categories &&
             <SEO
                 title={categoryName}
                 description={categoryDescription}
@@ -74,6 +75,8 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
                 image={selectedCategory?.image}
                 jsonLd={categoryJsonLd}
             />
+            }
+
             <ModalProvider>
                 <Modal>
                     <MainWrapper>
