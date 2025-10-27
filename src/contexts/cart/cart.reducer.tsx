@@ -83,14 +83,14 @@ export const reducer = (state, action) => {
             const { payload } = action;
             const itemId = payload.variantId
                 ? `${payload.baseProductId}_${payload.variantId}`
-                : payload.baseProductId.toString();
+                : payload.id.toString();
 
             return {
                 ...state,
                 items: state.items.reduce((acc, item) => {
                     const currentItemId = item.variantId
                         ? `${item.baseProductId}_${item.variantId}`
-                        : item.baseProductId.toString();
+                        : item.id.toString();
 
                     if (currentItemId === itemId) {
                         const newQuantity = item.quantity - payload.quantity;
