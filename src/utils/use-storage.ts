@@ -22,7 +22,7 @@ const hydrate = (value) => {
 };
 
 // ⚠️ CHANGE THIS VERSION STRING FOR EACH DEPLOYMENT ⚠️
-const CURRENT_BUILD_VERSION = 'build-2024-01-15-v3'; // UPDATE THIS FOR EACH NEW BUILD
+const CURRENT_BUILD_VERSION = 'build-2024-01-15-v4'; // UPDATE THIS FOR EACH NEW BUILD
 
 const config = {
     key: '@cart-session',
