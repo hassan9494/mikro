@@ -1,33 +1,33 @@
-const nextConfig = {
-    compress: true,
-    poweredByHeader: false,
-    generateEtags: false,
+const withPlugins = require('next-compose-plugins');
+const withOptimizedImages = require('next-optimized-images');
 
+// Create unique version using package.json version + timestamp
+const APP_VERSION = `v${require('./package.json').version}-${Date.now()}`;
+
+// next.js configuration
+const nextConfig = {
     images: {
         domains: [
             's3.eu-central-1.amazonaws.com',
+            '127.0.0.1',
             'api.mikroelectron.com',
             'apitest.mikroelectron.com',
             '134.209.88.205',
         ],
         formats: ['image/avif', 'image/webp'],
-        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },
-
-    // Remove source maps in production
-    productionBrowserSourceMaps: false,
-
-    // Optimize compiler
+    compress: true,
+    poweredByHeader: false,
+    // Remove experimental.optimizeCss or set it to false
     experimental: {
-        optimizeCss: true,
-        scrollRestoration: true,
+        optimizeCss: false, // Disable this for now
     },
-
-    // Reduce bundle size
-    compiler: {
-        removeConsole: process.env.NODE_ENV === 'production',
-    },
+    // Enable Webpack 5
+    webpack5: true,
 };
 
-module.exports = nextConfig;
+module.exports = withPlugins([
+    withOptimizedImages,
+], nextConfig);
