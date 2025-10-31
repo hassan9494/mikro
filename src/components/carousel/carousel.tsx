@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
@@ -50,6 +50,27 @@ const ButtonNext = styled('button')`
 
 const ButtonGroupWrapper = styled('div')``;
 
+// Optimized image component
+const OptimizedImg = styled.img`
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  object-fit: cover;
+`;
+
+const SlideContainer = styled.div`
+  padding: 0 15px;
+  overflow: hidden;
+`;
+
+const LinkWrapper = styled.a`
+  display: flex;
+  cursor: pointer;
+  text-decoration: none;
+  height: 100%;
+`;
+
 const PrevButton = ({ onClick, children }: any) => {
     return (
         <ButtonPrev
@@ -63,6 +84,7 @@ const PrevButton = ({ onClick, children }: any) => {
         </ButtonPrev>
     );
 };
+
 const NextButton = ({ onClick, children }: any) => {
     return (
         <ButtonNext
@@ -101,8 +123,6 @@ const ButtonGroup = ({ next, previous }: any) => {
                     </NextButton>
                 </>
             )}
-
-            {/* if prop isRtl true swap prev and next btn */}
         </ButtonGroupWrapper>
     );
 };
@@ -123,6 +143,7 @@ type Props = {
     customRightArrow?: React.ReactElement;
     itemClass?: string;
 };
+
 const responsive = {
     desktop: {
         breakpoint: { max: 3000, min: 1024 },
@@ -137,6 +158,7 @@ const responsive = {
         items: 1,
     },
 };
+
 export default function CustomCarousel({
                                            data,
                                            deviceType: { mobile, tablet, desktop },
@@ -149,6 +171,24 @@ export default function CustomCarousel({
                                            isRtl,
                                            ...props
                                        }: Props) {
+    if (!data || data.length === 0) return null;
+
+    // Preload first 3 images for better user experience
+    useEffect(() => {
+        if (data) {
+            const imagesToPreload = data.slice(0, 3); // Preload first 3 images
+            imagesToPreload.forEach((item, index) => {
+                if (item.image) {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'image';
+                    link.href = item.image;
+                    document.head.appendChild(link);
+                }
+            });
+        }
+    }, [data]);
+
     return (
         <div dir='ltr'>
             <Carousel
@@ -165,30 +205,28 @@ export default function CustomCarousel({
                 additionalTransfrom={0}
                 customButtonGroup={<ButtonGroup/>}
                 {...props}
-                // use dir ltr when rtl true
             >
                 {data.map((item: any, index: number) => {
                     if (component) return component(item);
+
                     return (
-                        <div style={{ padding: '0 15px', overflow: 'hidden' }} key={index}>
-                            <a
+                        <SlideContainer key={index}>
+                            <LinkWrapper
                                 href={item.link}
-                                style={{ display: 'flex', cursor: 'pointer' }}
                                 target='_blank'
+                                rel="noopener noreferrer"
                             >
-                                <img
-                                    key={item.id}
+                                <OptimizedImg
                                     src={item.image}
-                                    alt={item?.alt}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'block',
-                                        position: 'relative',
-                                    }}
+                                    alt={item?.alt || `Carousel item ${index + 1}`}
+                                    loading={index < 3 ? "eager" : "lazy"} // Load first 3 immediately
+                                    decoding="async"
+                                    fetchPriority={index < 2 ? "high" : "low"} // Highest priority for first 2
+                                    width="400" // Approximate width
+                                    height="300" // Approximate height
                                 />
-                            </a>
-                        </div>
+                            </LinkWrapper>
+                        </SlideContainer>
                     );
                 })}
             </Carousel>

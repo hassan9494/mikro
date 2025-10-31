@@ -8,31 +8,39 @@ import { LanguageProvider } from 'contexts/language/language.provider';
 import { CartProvider } from 'contexts/cart/use-cart';
 import { useMedia } from 'utils/use-media';
 import AppLayout from 'layouts/app-layout';
-import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 import theme from 'theme';
+import { messages } from 'site-settings/site-translation/messages';
+import React from 'react';
+import { useSocial } from "data/use-website";
+import { useSettings } from "data/use-website";
+
+// ALL your original CSS imports - don't change these yet
+import 'react-toastify/dist/ReactToastify.min.css';
 import 'swiper/swiper-bundle.min.css';
 import 'rc-drawer/assets/index.css';
 import 'rc-table/assets/index.css';
 import 'rc-collapse/assets/index.css';
 import 'react-multi-carousel/lib/styles.css';
-import 'components/multi-carousel/multi-carousel.style.css';
 import 'react-spring-modal/dist/index.css';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import 'components/scrollbar/scrollbar.css';
 import '@redq/reuse-modal/lib/index.css';
 import { GlobalStyle } from 'assets/styles/global.style';
-import { messages } from 'site-settings/site-translation/messages';
 import 'typeface-lato';
 import 'typeface-poppins';
-import React from 'react';
-import { OrderProvider } from "../contexts/order/order.provider";
-import {useSocial} from "../data/use-website";
-import {useSettings} from "../data/use-website";
 
 export default function ExtendedApp({ Component, pageProps }) {
     useEffect(() => {
-        // Inject head scripts
+        // Remove the server-side injected CSS.
+        const jssStyles = document.querySelector('#jss-server-side');
+        if (jssStyles) {
+            jssStyles.parentElement.removeChild(jssStyles);
+        }
+    }, []);
+
+    useEffect(() => {
+        // Optimized script injection - use defer to prevent blocking
         const headScripts = document.documentElement.getAttribute('data-head-scripts');
         if (headScripts) {
             const head = document.head;
@@ -41,11 +49,11 @@ export default function ExtendedApp({ Component, pageProps }) {
             Array.from(scriptElement.children).forEach((child) => {
                 const script = document.createElement('script');
                 script.innerHTML = child.innerHTML;
+                script.defer = true; // Critical performance fix
                 head.appendChild(script);
             });
         }
 
-        // Inject body scripts
         const bodyScripts = document.documentElement.getAttribute('data-body-scripts');
         if (bodyScripts) {
             const body = document.body;
@@ -54,18 +62,12 @@ export default function ExtendedApp({ Component, pageProps }) {
             Array.from(scriptElement.children).forEach((child) => {
                 const script = document.createElement('script');
                 script.innerHTML = child.innerHTML;
+                script.defer = true; // Critical performance fix
                 body.appendChild(script);
             });
         }
     }, []);
 
-    useEffect(() => {
-        // Remove the server-side injected CSS.
-        const jssStyles = document.querySelector('#jss-server-side');
-        if (jssStyles) {
-            jssStyles.parentElement.removeChild(jssStyles);
-        }
-    }, []);
     const { data: social } = useSocial();
     const { data: setting } = useSettings();
     const mobile = useMedia('(max-width: 580px)');

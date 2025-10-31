@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SwiperCore, { Navigation, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SliderNav } from './banner.style';
@@ -16,6 +16,9 @@ SwiperCore.use([Autoplay]);
 const ImageWrapper = styled.div({
     position: 'relative',
     marginTop: '10px',
+    width: '100%',
+    height: 'auto',
+
     img: {
         width: '100%',
         height: 'auto',
@@ -32,7 +35,37 @@ const ImageWrapper = styled.div({
     },
 });
 
+const OptimizedImg = styled.img`
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  
+  @media (max-width: 575px) {
+    height: 180px;
+    object-position: left;
+    object-fit: cover;
+  }
+`;
+
 const Banner = ({ data }: Props) => {
+    if (!data || data.length === 0) return null;
+
+    // Preload first banner image for fastest LCP
+    useEffect(() => {
+        if (data && data[0]?.image) {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'image';
+            link.href = data[0].image;
+            document.head.appendChild(link);
+
+            // Cleanup
+            return () => {
+                document.head.removeChild(link);
+            };
+        }
+    }, [data]);
+
     return (
         <Swiper
             id='banner'
@@ -48,7 +81,15 @@ const Banner = ({ data }: Props) => {
             {data.map((item, idx) => (
                 <SwiperSlide key={idx}>
                     <ImageWrapper>
-                        <img src={item.image} alt={item.alt}/>
+                        <OptimizedImg
+                            src={item.image}
+                            alt={item.alt || `Banner ${idx + 1}`}
+                            loading={idx === 0 ? "eager" : "lazy"}
+                            decoding="async"
+                            fetchPriority={idx === 0 ? "high" : "low"}
+                            width="1200"
+                            height="400"
+                        />
                     </ImageWrapper>
                 </SwiperSlide>
             ))}
@@ -61,4 +102,5 @@ const Banner = ({ data }: Props) => {
         </Swiper>
     );
 };
+
 export default Banner;

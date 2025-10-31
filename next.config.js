@@ -5,10 +5,8 @@ const withOptimizedImages = require('next-optimized-images');
 const APP_VERSION = `v${require('./package.json').version}-${Date.now()}`;
 
 // next.js configuration
+
 const nextConfig = {
-    publicRuntimeConfig: {
-        APP_VERSION: APP_VERSION,
-    },
     images: {
         domains: [
             's3.eu-central-1.amazonaws.com',
@@ -17,7 +15,17 @@ const nextConfig = {
             'apitest.mikroelectron.com',
             '134.209.88.205',
         ],
+        formats: ['image/avif', 'image/webp'],
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    },
+    compress: true,
+    poweredByHeader: false,
+    experimental: {
+        optimizeCss: true,
     },
 };
+
+module.exports = nextConfig;
 
 module.exports = withPlugins([withOptimizedImages], nextConfig);

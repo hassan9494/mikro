@@ -741,7 +741,7 @@ interface Variant {
     [key: string]: any;
 }
 
-export const ProductCard = ({ data }: Props) => {
+export const ProductCard = React.memo(({ data }: Props) => {
     const classes = useStyles();
 
     const {
@@ -908,9 +908,12 @@ export const ProductCard = ({ data }: Props) => {
                                 <Image
                                     src={displayImage.src}
                                     alt={title}
-                                    layout="fill"
-                                    objectFit="contain"
-                                    unoptimized={true}
+                                    width={300}
+                                    height={200}
+                                    placeholder="blur"
+                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                                    loading="lazy"
+                                    unoptimized={false} // REMOVE THIS LINE - let Next.js optimize
                                 />
                             </ProductImageContainer>
                             <ProductTitle>{selectedVariant ? `${selectedVariant.name}` : title} </ProductTitle>
@@ -1237,4 +1240,4 @@ export const ProductCard = ({ data }: Props) => {
             </Box>
         </Card>
     );
-};
+});
