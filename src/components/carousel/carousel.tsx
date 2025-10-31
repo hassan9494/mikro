@@ -221,7 +221,6 @@ export default function CustomCarousel({
                                     alt={item?.alt || `Carousel item ${index + 1}`}
                                     loading={index < 3 ? "eager" : "lazy"} // Load first 3 immediately
                                     decoding="async"
-                                    fetchPriority={index < 2 ? "high" : "low"} // Highest priority for first 2
                                     width="400" // Approximate width
                                     height="300" // Approximate height
                                 />
