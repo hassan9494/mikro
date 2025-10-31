@@ -86,7 +86,6 @@ const Banner = ({ data }: Props) => {
                             alt={item.alt || `Banner ${idx + 1}`}
                             loading={idx === 0 ? "eager" : "lazy"}
                             decoding="async"
-                            fetchPriority={idx === 0 ? "high" : "low"}
                             width="1200"
                             height="400"
                         />
