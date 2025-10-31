@@ -62,7 +62,7 @@ const CategoryPage: NextPage<Props> = ({ data, deviceType, social }) => {
         return <Loading />;
     }
 
-    const baseUrl = "http://127.0.0.1:8000";
+    const baseUrl = "https://mikroelectron.com";
 
     const categoryName = selectedCategory?.meta_title && selectedCategory?.meta_title !== selectedCategory?.title
         ? `${selectedCategory?.title} | ${selectedCategory?.meta_title}`
