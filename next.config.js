@@ -5,7 +5,6 @@ const withOptimizedImages = require('next-optimized-images');
 const APP_VERSION = `v${require('./package.json').version}-${Date.now()}`;
 
 // next.js configuration
-
 const nextConfig = {
     images: {
         domains: [
@@ -21,11 +20,14 @@ const nextConfig = {
     },
     compress: true,
     poweredByHeader: false,
+    // Remove experimental.optimizeCss or set it to false
     experimental: {
-        optimizeCss: true,
+        optimizeCss: false, // Disable this for now
     },
+    // Enable Webpack 5
+    webpack5: true,
 };
 
-module.exports = nextConfig;
-
-module.exports = withPlugins([withOptimizedImages], nextConfig);
+module.exports = withPlugins([
+    withOptimizedImages,
+], nextConfig);
