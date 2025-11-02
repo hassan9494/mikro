@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Link from 'next/link';
 import logofooter from './logofooter.png';
 import LocationImage from '../assets/location-image.png';
+import Image from "next/image";
 
 interface SocialProps {
   call?: string;
@@ -72,17 +73,24 @@ export function Footer({ social }: FooterProps) {
               {/* Company Info */}
               <div className="col-12 col-md-6 col-lg-3 pb-0 mb-0">
                 <div className="mb-4">
-                  <img
+                  <Image
                       src={logofooter}
                       alt="Mikroelectron Logo"
+                      width={180}
+                      height={60}
                       className="footer-logo"
-                      style={{
-                        filter: 'brightness(0) invert(1)',
-                        maxWidth: '180px',
-                        height: 'auto',
-                        marginBottom: '1rem'
-                      }}
                   />
+                  {/*<img*/}
+                  {/*    src={logofooter.src}*/}
+                  {/*    alt="Mikroelectron Logo"*/}
+                  {/*    className="footer-logo"*/}
+                  {/*    style={{*/}
+                  {/*      filter: 'brightness(0) invert(1)',*/}
+                  {/*      maxWidth: '180px',*/}
+                  {/*      height: 'auto',*/}
+                  {/*      marginBottom: '1rem'*/}
+                  {/*    }}*/}
+                  {/*/>*/}
                 </div>
                 <p className="text-light mb-4" style={{ lineHeight: '1.6', opacity: 0.9 }}>
                   Your trusted partner for electronics solutions in Jordan. We provide quality components, expert repairs, and innovative technical solutions.
@@ -295,9 +303,16 @@ export function Footer({ social }: FooterProps) {
                 </h5>
                 <div className="location-image-container">
                   <a href={social?.location} target="_blank" title="Show Location" rel="noopener noreferrer">
-                    <img
+                    {/*<img*/}
+                    {/*    src={LocationImage}*/}
+                    {/*    alt="Location"*/}
+                    {/*    className="location-image"*/}
+                    {/*/>*/}
+                    <Image
                         src={LocationImage}
                         alt="Location"
+                        width={200}
+                        height={150}
                         className="location-image"
                     />
                     <div className="location-overlay">
