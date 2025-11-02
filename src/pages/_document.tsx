@@ -61,18 +61,64 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
                 <Head>
                     <meta name="theme-color" content={theme.palette.primary.main} />
                     <link rel="preconnect" href="https://fonts.gstatic.com" />
-                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet" />
-                    <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons' async={true}/>
-                    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-            rel="stylesheet"
-          />
 
+                    {/* Optimized Font Loading */}
+                    <link
+                        rel="preload"
+                        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
+                        as="style"
+                    />
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
+                        rel="stylesheet"
+                    />
+
+                    {/* Load ShareThis script with defer */}
+                    <script
+                        type='text/javascript'
+                        src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons'
+                        defer
+                    />
+
+                    {/* Bootstrap Icons */}
+                    <link
+                        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+                        rel="stylesheet"
+                    />
+
+                    {/* Critical CSS for font loading optimization */}
+                    <style
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                                /* Critical font loading styles */
+                                @font-face {
+                                    font-family: 'Cairo';
+                                    font-style: normal;
+                                    font-display: swap;
+                                }
+                            `,
+                        }}
+                    />
                 </Head>
                 <body>
                 <div id="modal-root"></div>
                 <Main />
                 <NextScript />
+
+                {/* Font loading optimization script */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            // Optimize font loading
+                            const fontLink = document.querySelector('link[href*="fonts.googleapis.com/css2"]');
+                            if (fontLink) {
+                                fontLink.onload = function() {
+                                    this.media = 'all';
+                                };
+                            }
+                        `,
+                    }}
+                />
                 </body>
             </Html>
         );
