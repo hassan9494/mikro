@@ -79,12 +79,6 @@ export function Footer({ social }: FooterProps) {
                       width={180}
                       height={35}
                       className="footer-logo"
-                      style={{
-                        filter: 'brightness(0) invert(1)',
-                        maxWidth: '180px',
-                        height: 'auto',
-                        marginBottom: '1rem'
-                      }}
                   />
                   {/*<img*/}
                   {/*    src={logofooter.src}*/}
