@@ -42,29 +42,122 @@ const Card = styled.div`
   border: 0;
   cursor: pointer;
   transition: 0.25s ease-in-out;
+  width: 100%;
+  height: 325px;
+  padding-bottom: 15px; 
   &:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     transform: translateY(-5px);
   }
 `;
 
-const ImageWrapper = styled.div(
-    css({
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        height: ['190px', '210px'],
-        img: {
-            display: 'block',
-            maxHeight: '100%',
-            maxWidth: '100%',
-            width: 'auto',
-            height: 'auto',
-        },
-    })
-);
+const ImageWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 210px;
+  width: 100%;
+  
+  img {
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+
+`;
+
+const VariantSelectorOverlay = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  width: 40px;
+  height: 210px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+
+  /* Tablet styles */
+  @media (max-width: 1024px) {
+    top: 40px;
+    right: 8px;
+    width: 40px;
+    height: 210px;
+  }
+  @media (max-width: 958px) {
+    width: 70px !important;
+  }
+
+  /* Mobile Landscape */
+  @media (max-width: 768px) {
+    top: 35px;
+    right: 20px;
+    width: 40px;
+    height: 220px;
+  }
+
+  /* Mobile Portrait */
+  @media (max-width: 480px) {
+    top: 40px;
+    right: 10px;
+    width: 40px !important;
+    height: 210px;
+  }
+
+  /* Small Mobile */
+  @media (max-width: 360px) {
+    top: 40px;
+    right: 5px;
+    width: 30px !important;
+    height: 200px;
+  }
+
+  @media (max-width: 337px) {
+    top: 40px;
+    right: 5px;
+    width: 30px;
+    height: 180px !important;
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1440px) {
+    top: 45px;
+    right: 12px;
+    width: 44px;
+    height: 230px;
+  }
+  @media (max-width: 1645px) {
+    top: 40px;
+    right: 5px;
+    width: 44px;
+    height: 210px;
+  }
+
+  @media (max-width: 958px) and (min-width: 768px) {
+    width: 50px;
+    right: 10px;
+  }
+
+  /* Extra Large Desktop */
+  @media (min-width: 1920px) {
+    top: 50px;
+    right: 15px;
+    width: 48px;
+    height: 200px;
+  }
+      @media (min-width: 1640px) {
+    top: 40px;
+    right: 7px;
+    width: 48px;
+    height: 210px;
+  }
+    
+`;
+
+
 
 const Discount = styled.div(
     css({
@@ -423,7 +516,9 @@ const ColorOption = styled.div<{ selected: boolean, outofstock: boolean }>`
   transition: all 0.2s ease;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   border: 3px solid ${props => props.selected ? '#133595' : 'transparent'};
-  
+  display: flex;
+  justify-content: center;
+  align
   &:hover:not(:disabled) {
     transform: ${props => !props.outofstock ? 'translateY(-3px)' : 'none'};
     box-shadow: ${props => !props.outofstock ? '0 5px 10px rgba(0, 0, 0, 0.15)' : 'none'};
@@ -467,7 +562,7 @@ const ColorImage = styled.div`
 
 const ColorName = styled.div`
   margin-top: 0.5rem;
-  text-align: center;
+//   text-align: left;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
@@ -630,97 +725,319 @@ const VariantDescription = styled.div`
   font-size: 0.85rem;
   color: #666;
   line-height: 1.4;
-  font-style: italic;
+//   font-style: italic;
 `;
 
-// Variant Selector Components
 const VariantSelector = styled.div`
-  margin-bottom: 16px;
-`;
-
-const VariantLabel = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 8px;
+  flex-direction: column;
+  justify-content: space-between; // This ensures content spreads out
 `;
 
 const VariantGrid = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1; // Takes available space
+  overflow-y: auto;
+  padding-right: 2px;
+  align-items: center;
+  
+  /* Enhanced scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+  
+  /* Hide scrollbar when not needed */
+  &:not(:hover)::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
 `;
 
+
 const VariantOption = styled.div<{ selected: boolean, available: boolean }>`
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   cursor: ${props => props.available ? 'pointer' : 'not-allowed'};
   opacity: ${props => props.available ? 1 : 0.5};
   position: relative;
   overflow: hidden;
   border: 2px solid ${props => props.selected ? '#133595' : 'transparent'};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
   ${props => props.available && `
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
     }
   `}
-`;
 
+  /* Tablet */
+  @media (max-width: 1024px) {
+    width: 28px;
+    height: 28px;
+  }
+
+@media (max-width: 958px) and (min-width: 768px) {
+  width: 40px;
+  height: 40px;
+}
+
+
+  /* Mobile Landscape */
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Mobile Portrait */
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    border-width: 1.5px;
+  }
+
+  /* Small Mobile */
+  @media (max-width: 360px) {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1440px) {
+    width: 32px;
+    height: 32px;
+  }
+      /* Mobile Landscape */
+  @media (max-width: 768px) and (min-width: 481px) {
+    width: 50px ;
+    height: 50px ;
+  }
+
+  /* Extra Large Desktop */
+  @media (min-width: 1920px) {
+    width: 34px;
+    height: 34px;
+  }
+`;
 const VariantImage = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 4px;
+  border-radius: 50%;
   overflow: hidden;
   position: relative;
   background: #f0f0f0;
   
   img {
     object-fit: cover;
+  
+    
+  /* Tablet */
+  @media (max-width: 1024px) {
+    width: 28px;
+    height: 28px;
   }
+
+  /* Mobile Landscape */
+  @media (max-width: 768px) and (min-width: 481px) {
+    width: 50px ;
+    height: 50px ;
+  }
+@media (max-width: 958px) and (min-width: 768px) {
+  width: 40px;
+  height: 40px;
+}
+
+  /* Mobile Portrait */
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    border-width: 1.5px;
+  }
+
+  /* Small Mobile */
+  @media (max-width: 360px) {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1440px) {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Extra Large Desktop */
+  @media (min-width: 1920px) {
+    width: 34px;
+    heig
+}
 `;
 
 const SelectedIndicator = styled.div<{ selected: boolean }>`
   position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 12px;
-  height: 12px;
+  top: -1px;
+  right: -1px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #133595;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 8px;
+  font-size: 3px;
   opacity: ${props => props.selected ? 1 : 0};
   transform: ${props => props.selected ? 'scale(1)' : 'scale(0)'};
   transition: all 0.2s ease;
   z-index: 2;
+
+  /* Mobile adjustments */
+  @media (max-width: 480px) {
+    width: 5px;
+    height: 5px;
+    top: -1px;
+    right: -1px;
+  }
+
+  /* Large screens */
+  @media (min-width: 1440px) {
+    width: 7px;
+    height: 7px;
+  }
 `;
 
-const MoreVariantsButton = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+const ViewAllButton = styled.div`
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
   background: #f5f7fa;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #666;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+  border: 1px solid #e0e0e0;
+  flex-shrink: 0;
+  margin: 4px auto 0 auto; // Center the button and add top margin
+
   &:hover {
     background: #e6eeff;
     color: #133595;
+    border-color: #133595;
+  }
+
+  /* Hover label that appears above the button */
+  &::after {
+    content: 'Options';
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #133595;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    box-shadow: 0 6px 18px rgba(19, 53, 149, 0.18);
+    z-index: 10;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Small caret (triangle) below the label, pointing down toward the button */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #133595;
+    opacity: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 11;
+  }
+
+  &:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    width: 22px;
+    height: 22px;
+    font-size: 7px;
+    
+    &::after {
+      font-size: 11px;
+      padding: 5px 7px;
+    }
+  }
+
+  @media (max-width: 958px) {
+    // Remove the left positioning for tablet
+  }
+
+  @media (max-width: 480px) {
+    width: 20px;
+    height: 20px;
+    font-size: 6px;
+    
+    &::after {
+      font-size: 10px;
+      padding: 4px 6px;
+    }
+  }  
+    
+  @media (max-width: 337px) {
+    width: 20px;
+    height: 20px;
+    font-size: 6px;
+    
+    &::after {
+      font-size: 10px;
+      padding: 4px 6px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    width: 28px;
+    height: 28px;
+    font-size: 9px;
   }
 `;
 
@@ -814,22 +1131,10 @@ export const ProductCard = React.memo(({ data }: Props) => {
 
     const getCartData = () => {
         if (!selectedVariant) return data;
-// console.log({
-//     ...data,
-//     // ...selectedVariant,
-//     baseProductId: selectedVariant.color_id,
-//     variantId: selectedVariant.color_id,
-//     id: selectedVariant.color_id || data.id,
-//     baseTitle: data.title,
-//     title: selectedVariant
-//         ? selectedVariant.name
-//         : data.title,
-// })
         return {
             ...data,
             ...selectedVariant,
             baseProductId: selectedVariant.color_id,
-            // id: selectedVariant.color_id,
             variantId: selectedVariant.color_id,
             id: selectedVariant.color_id || data.id,
             baseTitle: data.title,
@@ -888,6 +1193,9 @@ export const ProductCard = React.memo(({ data }: Props) => {
         return colorMap[colorName.toLowerCase()] || '#cccccc';
     };
 
+    // Check if product has variants (null/undefined check)
+    const hasVariantsToShow = hasVariants && Array.isArray(colors) && colors.length > 0;
+
     return (
         <Card>
             {showVariantDialog && colors.length > 0 &&
@@ -911,7 +1219,7 @@ export const ProductCard = React.memo(({ data }: Props) => {
                                     width={300}
                                     height={200}
                                     placeholder="blur"
-                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                                     loading="lazy"
                                 />
                             </ProductImageContainer>
@@ -940,9 +1248,14 @@ export const ProductCard = React.memo(({ data }: Props) => {
                                     </SectionTitle>
                                     <ProductDescription>
                                         <DescriptionLabel>Description:</DescriptionLabel>
-                                        {typeof short_description === 'object'
-                                            ? short_description.en || Object.values(short_description)[0]
-                                            : short_description}
+                                        <div
+                                            style={{ marginTop: '0.5rem' }}
+                                            dangerouslySetInnerHTML={{
+                                                __html: typeof short_description === 'object'
+                                                    ? short_description.en || Object.values(short_description)[0] || ''
+                                                    : short_description || ''
+                                            }}
+                                        />
                                     </ProductDescription>
                                 </div>
                             )}
@@ -962,19 +1275,30 @@ export const ProductCard = React.memo(({ data }: Props) => {
 
                                     // @ts-ignore
                                     return (
-                                        <div key={variant.id} style={{ textAlign: 'center', position: 'relative' }}>
+                                        <div
+                                            key={variant.id}
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                textAlign: 'center',
+                                                gap: '0.5rem'
+                                            }}
+                                        >
                                             <Tooltip
                                                 title={
                                                     <div>
                                                         <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{variant.title}</div>
                                                         {isOutOfStock && <div style={{ color: '#f44336' }}>Out of Stock</div>}
                                                         {variant.short_description && (
-                                                            <div>
-                                                                {typeof variant.short_description === 'string'
-                                                                    ? variant.short_description
-                                                                    : variant.short_description.en || Object.values(variant.short_description)[0]
-                                                                }
-                                                            </div>
+                                                            <div
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: typeof variant.short_description === 'string'
+                                                                        ? variant.short_description
+                                                                        : variant.short_description.en || Object.values(variant.short_description)[0] || ''
+                                                                }}
+                                                            />
                                                         )}
                                                     </div>
                                                 }
@@ -993,7 +1317,7 @@ export const ProductCard = React.memo(({ data }: Props) => {
                                                                 alt={variant.title}
                                                                 layout="fill"
                                                                 placeholder="blur"
-                                                                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                                                                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                                                                 loading="lazy"
                                                             />
                                                         ) : (
@@ -1024,12 +1348,13 @@ export const ProductCard = React.memo(({ data }: Props) => {
                                 </div>
 
                                 {selectedVariant?.short_description && (
-                                    <VariantDescription>
-                                        {typeof selectedVariant.short_description === 'string'
-                                            ? selectedVariant.short_description
-                                            : selectedVariant.short_description.en || Object.values(selectedVariant.short_description)[0]
-                                        }
-                                    </VariantDescription>
+                                    <VariantDescription
+                                        dangerouslySetInnerHTML={{
+                                            __html: typeof selectedVariant.short_description === 'string'
+                                                ? selectedVariant.short_description
+                                                : selectedVariant.short_description.en || Object.values(selectedVariant.short_description)[0] || ''
+                                        }}
+                                    />
                                 )}
 
                                 <SelectedPrice style={{ marginTop: '1rem' }}>
@@ -1072,32 +1397,94 @@ export const ProductCard = React.memo(({ data }: Props) => {
             ) as React.ReactNode)}
 
 
+            {/* Vertical Variant Selector Overlay - Now scrollable with all options */}
+            {hasVariants && Array.isArray(colors) && colors.length > 0 ? (
+                <VariantSelectorOverlay>
+                    <VariantSelector>
+                        <VariantGrid>
+                            {colors.map((variant: Variant) => {
+                                const isSelected = selectedVariant?.id === variant.id;
+                                const isAvailable = variant.availableQty !== 0;
+                                const variantImage = variant.image ? getImageUrl(variant.image) : null;
+                                const colorCode = getColorHexCode(variant.title);
+
+                                return (
+
+                                    <VariantOption
+                                        selected={isSelected}
+                                        available={isAvailable}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            isAvailable && handleVariantChange(variant);
+                                        }}
+                                    >
+                                        <VariantImage>
+                                            {variantImage ? (
+                                                <Image
+                                                    src={variantImage.src}
+                                                    alt={variant.title}
+                                                    width={30}
+                                                    height={30}
+                                                    placeholder="blur"
+                                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                                                    loading="lazy"
+                                                />
+                                            ) : (
+                                                <div style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    backgroundColor: colorCode,
+                                                    borderRadius: '50%',
+                                                }} />
+                                            )}
+                                        </VariantImage>
+                                        <SelectedIndicator selected={isSelected}>
+                                            <Check style={{ fontSize: 3 }} />
+                                        </SelectedIndicator>
+                                    </VariantOption>
+                                );
+                            })}
+                        </VariantGrid>
+                        {/* View All Button to open modal */}
+                        <ViewAllButton
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setShowVariantDialog(true);
+                            }}
+                        >
+                            <ExpandMore style={{ fontSize: 10 }} />
+                        </ViewAllButton>
+                    </VariantSelector>
+                </VariantSelectorOverlay>
+            ) : null}
+
+
             <Link href="/product/[slug]" as={`/product/${slug}`}>
-                <a>
-                    <Box position="relative">
+                <a style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <ImageWrapper>
+                        <Image
+                            src={displayImage.src}
+                            alt={title}
+                            width={200}
+                            height={200}
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                            loading="lazy"
+                            onError={(e) => {
+                                e.currentTarget.src = LogoImage;
+                                e.currentTarget.onerror = null;
+                            }}
+                            loader={({ src }) => src}
+                        />
                         <Stock>
                             <RadioButtonChecked style={{width: 16, color: stockColor }} />
                         </Stock>
-                        <ImageWrapper>
-                            <Image
-                                src={displayImage.src}
-                                alt={title}
-                                width={200}
-                                height={200}
-                                placeholder="blur"
-                                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                                loading="lazy"
-                                onError={(e) => {
-                                    e.currentTarget.src = LogoImage;
-                                    e.currentTarget.onerror = null;
-                                }}
-                                loader={({ src }) => src}
-                            />
-                        </ImageWrapper>
                         {getEffectivePrice() < getEffectiveOriginalPrice() && (
                             <Discount>On Sale</Discount>
                         )}
-                    </Box>
+                    </ImageWrapper>
                 </a>
             </Link>
 
@@ -1105,69 +1492,6 @@ export const ProductCard = React.memo(({ data }: Props) => {
                 <Title>
                     {title.substring(0,32) + (title.length > 32 ? '...' : '')}
                 </Title>
-
-                {/* Variant Selector Section */}
-                {hasVariants && colors.length > 0 ? (
-                    <VariantSelector>
-                        <VariantLabel>
-                            <span>Options</span>
-                        </VariantLabel>
-
-                        <VariantGrid>
-                            {colors.slice(0, 5).map((variant: Variant) => {
-                                const isSelected = selectedVariant?.id === variant.id;
-                                const isAvailable = variant.availableQty !== 0;
-                                const variantImage = variant.image ? getImageUrl(variant.image) : null;
-
-                                return (
-                                    <VariantOption
-                                        key={variant.id}
-                                        selected={isSelected}
-                                        available={isAvailable}
-                                        onClick={() => isAvailable && handleVariantChange(variant)}
-                                    >
-                                        <VariantImage>
-                                            {variantImage ? (
-                                                <Image
-                                                    src={variantImage.src}
-                                                    alt={variant.title}
-                                                    width={32}
-                                                    height={32}
-                                                    placeholder="blur"
-                                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                                                    loading="lazy"
-                                                />
-                                            ) : (
-                                                <div style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    backgroundColor: '#f0f0f0',
-                                                    borderRadius: '4px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    color: '#999',
-                                                    fontSize: '8px'
-                                                }}>
-                                                    {variant.title.charAt(0)}
-                                                </div>
-                                            )}
-                                        </VariantImage>
-                                        <SelectedIndicator selected={isSelected}>
-                                            <Check style={{ fontSize: 8 }} />
-                                        </SelectedIndicator>
-                                    </VariantOption>
-                                );
-                            })}
-
-                            {colors.length > 5 && (
-                                <MoreVariantsButton onClick={() => setShowVariantDialog(true)}>
-                                    +{colors.length - 5}
-                                </MoreVariantsButton>
-                            )}
-                        </VariantGrid>
-                    </VariantSelector>
-                ):null}
 
                 {is_available ? (
                     !is_retired ? (
