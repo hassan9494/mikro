@@ -1411,6 +1411,7 @@ export const ProductCard = React.memo(({ data }: Props) => {
                                 return (
 
                                     <VariantOption
+                                        key={variant.id}
                                         selected={isSelected}
                                         available={isAvailable}
                                         onClick={(e) => {
