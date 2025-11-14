@@ -4,6 +4,27 @@ import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 
 // Styled Components
+const CarouselAlignmentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden; 
+  
+  .carousel-with-custom-dots {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  .react-multi-carousel-list {
+    width: 100% !important;
+    max-width: 100%;
+  }
+`;
+
 const SingleItem = styled.li`
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   border-radius: ${themeGet('radii.base', '6px')};
@@ -29,8 +50,26 @@ const ZoomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top:20px;
   width: 100%;
-  height: 550px;
+  height: 625px;
+
+  @media (max-width: 1224px) {
+    height: 570px;
+  }
+     @media (max-width: 1114px) {
+    height: 510px;
+  }
+     @media (max-width: 770px) {
+    height: 620px;
+  }
+           @media (max-width: 600px) {
+    height: 610px;
+  }
+         @media (max-width: 400px) {
+    height: 500px;
+  }
+
 `;
 
 const ZoomableImage = styled.img`
@@ -616,28 +655,31 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
 
   return (
       <>
-        <Carousel
-            showDots
-            ssr
-            infinite={true}
-            slidesToSlide={1}
-            containerClass='carousel-with-custom-dots'
-            responsive={responsive}
-            deviceType={deviceType}
-            autoPlay={false}
-            arrows={false}
-            customDot={<CustomDotWrapper />}
-            {...rest}
-        >
-          {children.length > 0 ? children : (
-              <ZoomContainer>
-                <ZoomableImage
-                    src="/default-product.png"
-                    alt="Default product image"
-                />
-              </ZoomContainer>
-          )}
-        </Carousel>
+        <CarouselAlignmentWrapper>
+          <Carousel
+              showDots
+              ssr
+              infinite={true}
+              slidesToSlide={1}
+              containerClass='carousel-with-custom-dots'
+              responsive={responsive}
+              deviceType={deviceType}
+              autoPlay={false}
+              arrows={false}
+              customDot={<CustomDotWrapper />}
+              {...rest}
+          >
+            {children.length > 0 ? children : (
+                <ZoomContainer>
+                  <ZoomableImage
+                      src="/default-product.png"
+                      alt="Default product image"
+                  />
+                </ZoomContainer>
+            )}
+          </Carousel>
+        </CarouselAlignmentWrapper>
+
 
         {/* Zoom overlay */}
         {/* <ZoomOverlay

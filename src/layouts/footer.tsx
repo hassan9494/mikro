@@ -73,13 +73,25 @@ export function Footer({ social }: FooterProps) {
               {/* Company Info */}
               <div className="col-12 col-md-6 col-lg-3 pb-0 mb-0">
                 <div className="mb-4">
-                  <Image
+                  <img
                       src={logofooter}
                       alt="Mikroelectron Logo"
-                      width={180}
-                      height={60}
                       className="footer-logo"
+                      style={{
+                        // filter: 'brightness(0) invert(1)',
+                        maxWidth: '180px',
+                        height: 'auto',
+                        marginBottom: '1rem'
+                      }}
                   />
+
+                  {/*<Image*/}
+                  {/*    src={logofooter}*/}
+                  {/*    alt="Mikroelectron Logo"*/}
+                  {/*    width={250}*/}
+                  {/*    height={60}*/}
+                  {/*    className="footer-logo"*/}
+                  {/*/>*/}
                   {/*<img*/}
                   {/*    src={logofooter.src}*/}
                   {/*    alt="Mikroelectron Logo"*/}
@@ -502,6 +514,12 @@ export function Footer({ social }: FooterProps) {
   .contact-item:hover a {
     opacity: 1;
   }
+  .footer-logo {
+      filter: brightness(0) invert(1);
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 1rem;
+    }
       @media (max-width: 1050px) and (min-width: 989px) {
     .footer-logo {
       max-width: 160px !important; /* Slightly smaller size */

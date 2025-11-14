@@ -144,16 +144,47 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     const hasAdminAccess = user?.roles?.some(role => adminRoles.includes(role.name));
 
-    // useEffect(() => {
-    //     if (product?.hasVariants && product?.colors?.length) {
-    //         // Select the first available variant, or the first one if none are available
-    //         const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
-    //         setSelectedVariant(availableVariant);
-    //     }
-    //     setTimeout(() => {
-    //         window.scrollTo(0, 0);
-    //     }, 500);
-    // }, [product]);
+    useEffect(() => {
+        if (product?.hasVariants && product?.colors?.length) {
+            // Select the first available variant, or the first one if none are available
+            const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
+            setSelectedVariant(availableVariant);
+        }
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 500);
+    }, [product]);
+
+    // Helper function to get variant status with corrected priority: not available > retired > out of stock
+    const getVariantStatus = (variant) => {
+        const variantAvailable = variant.is_available !== undefined ? variant.is_available : true;
+        const variantRetired = variant.is_retired !== undefined ? variant.is_retired : false;
+        const variantStock = variant.availableQty || 0;
+
+        // Corrected Priority: not available > retired > out of stock
+        if (!variantAvailable) {
+            return 'notAvailable';
+        } else if (variantRetired) {
+            return 'retired';
+        } else if (variantStock === 0) {
+            return 'outOfStock';
+        } else {
+            return 'available';
+        }
+    };
+
+    // Helper function to get base product status with same corrected priority
+    const getBaseProductStatus = () => {
+        if (!data.is_available) {
+            return 'notAvailable';
+        } else if (data.is_retired) {
+            return 'retired';
+        } else if (data.availableQty === 0) {
+            return 'outOfStock';
+        } else {
+            return 'available';
+        }
+    };
 
     const handleVariantChange = (variant) => {
         // Allow selection even if out of stock, but show a message
@@ -167,9 +198,14 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
     const handleAddToCart = () => {
         if (product.hasVariants && !selectedVariant) return;
-        if (selectedVariant && selectedVariant.availableQty === 0) {
-            // Show message that item is out of stock
-            console.log("Cannot add out of stock item to cart");
+
+        const currentStatus = product.hasVariants && selectedVariant
+            ? getVariantStatus(selectedVariant)
+            : getBaseProductStatus();
+
+        // Only allow adding to cart if available
+        if (currentStatus !== 'available') {
+            console.log("Cannot add item to cart - not available");
             return;
         }
 
@@ -209,6 +245,25 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         return LogoImage;
     };
 
+    // Get current status for display logic
+    const getCurrentStatus = () => {
+        if (product.hasVariants && selectedVariant) {
+            return getVariantStatus(selectedVariant);
+        }
+        return getBaseProductStatus();
+    };
+
+    // Get replacement item - check both base product and selected variant
+    const getReplacementItem = () => {
+        if (product.hasVariants && selectedVariant && selectedVariant.replacement_item) {
+            return selectedVariant.replacement_item;
+        }
+        return product.replacement_item;
+    };
+
+    const currentStatus = getCurrentStatus();
+    const replacementItem = getReplacementItem();
+
     return (
         <>
             {data.deleted_at == null ? (
@@ -247,13 +302,55 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     <ProductTitle>{product.title}</ProductTitle>
                                     {selectedVariant && (
                                         <Typography variant="h6" style={{ color: '#666', marginTop: '2px' }}>
-                                           ({selectedVariant.title})
+                                            ({selectedVariant.title})
                                         </Typography>
                                     )}
                                 </ProductTitlePriceWrapper>
 
+                                {/* Apply same corrected priority logic as product card */}
+                                {currentStatus === 'notAvailable' ? (
+                                    <div style={{
+                                        padding: '5px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        border: '1px solid #ffeaa7',
+                                        borderRadius: '8px',
+                                    }}>
+                                        <Typography variant="h6" style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
+                                            <FormattedMessage id="productNotAvailable" defaultMessage="This product option isn't available now" />
+                                        </Typography>
+                                    </div>
+                                ) : currentStatus === 'retired' ? (
+                                    <ReplacementWrapper>
+        <span style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
+            <FormattedMessage id='retired'
+                              defaultMessage="This product is retired now, "/>
+        </span>
+                                        {replacementItem ? (
+                                            <>
+                <span style={{color:'blue', fontWeight:'bold', fontSize:'14px'}}>
+                    <FormattedMessage id='replacementAvailable'
+                                      defaultMessage=" the replacement is :"/>
+                </span>
+                                                <ProductCardWrapper>
+                                                    <Fade
+                                                        duration={800}
+                                                        delay={10}
+                                                        style={{ height: '100%' }}
+                                                    >
+                                                        {renderReplacementCard(replacementItem)}
+                                                    </Fade>
+                                                </ProductCardWrapper>
+                                            </>
+                                        ) : (
 
-                                {!data.is_retired ? (
+                                            <span style={{color:'blue', fontWeight:'bold', fontSize:'14px'}}>
+                <FormattedMessage id='noReplacement'
+                                  defaultMessage=" and there is no replacement item."/>
+            </span>
+                                        )}
+                                    </ReplacementWrapper>
+                                ) : currentStatus === 'outOfStock' ? (
                                     <div>
                                         <ProductPriceWrapper>
                                             <ProductPrice>
@@ -269,11 +366,18 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         </ProductPriceWrapper>
 
                                         <ProductCartWrapper>
-                                            {displayProduct.availableQty ? (
-                                                <AddToCart data={product} variant={selectedVariant} />
-                                            ) : (
-                                                <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
-                                            )}
+                                            <div style={{
+                                                padding: '5px',
+                                                fontWeight: 'bold',
+                                                textAlign: 'center',
+                                                border: '1px solid #ffeaa7',
+                                                borderRadius: '8px',
+                                                width: '100%',
+                                            }}>
+                                                <Typography variant="h6" style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
+                                                    <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                                </Typography>
+                                            </div>
                                         </ProductCartWrapper>
 
                                         {hasAccess && (
@@ -289,26 +393,37 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         )}
                                     </div>
                                 ) : (
-                                    <ReplacementWrapper>
-                                        <span style={{color:'red'}}>
-                                            <FormattedMessage id='retired'
-                                                              defaultMessage="This product is retired now ,the replacement is :"/>
-                                        </span>
+                                    /* Available product/variant */
+                                    <div>
+                                        <ProductPriceWrapper>
+                                            <ProductPrice>
+                                                <MoneyFormat
+                                                    value={displayProduct.sale_price ? displayProduct.sale_price : displayProduct.price}
+                                                />
+                                                {displayProduct.sale_price ? (
+                                                    <SalePrice>
+                                                        <MoneyFormat value={displayProduct.price} />
+                                                    </SalePrice>
+                                                ) : null}
+                                            </ProductPrice>
+                                        </ProductPriceWrapper>
 
-                                        <ProductCardWrapper>
-                                            <Fade
-                                                duration={800}
-                                                delay={10}
-                                                style={{ height: '100%' }}
-                                            >
-                                                {product.replacement_item ?
-                                                    renderReplacementCard(product.replacement_item) :
-                                                    <FormattedMessage id='retired'
-                                                                      defaultMessage="There is no replacement item"/>
-                                                }
-                                            </Fade>
-                                        </ProductCardWrapper>
-                                    </ReplacementWrapper>
+                                        <ProductCartWrapper>
+                                            <AddToCart data={product} variant={selectedVariant} />
+                                        </ProductCartWrapper>
+
+                                        {hasAccess && (
+                                            <div className={'mt-1'} style={{ marginTop: 5 }}>
+                                                <Typography component="span" variant="body1" color="textPrimary"
+                                                            style={{ marginRight: 50 }}>
+                                                    Quantity: {displayProduct.availableQty}
+                                                </Typography>
+                                                <Typography component="span" variant="body1" color="textPrimary">
+                                                    Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}
+                                                </Typography>
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
 
                                 {/* Variant Selector - Only show if product has variants */}
@@ -319,24 +434,31 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         </Typography>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                                             {product.colors.map((variant) => {
-                                                const isOutOfStock = variant.availableQty === 0;
+                                                const variantStatus = getVariantStatus(variant);
+                                                const isOutOfStock = variantStatus === 'outOfStock';
+                                                const isRetired = variantStatus === 'retired';
+                                                const isNotAvailable = variantStatus === 'notAvailable';
                                                 const isSelected = selectedVariant?.id === variant.id;
 
                                                 return (
-
                                                     <VariantChip
                                                         data-selected={isSelected}
                                                         data-outofstock={isOutOfStock}
+                                                        data-retired={isRetired}
+                                                        data-notavailable={isNotAvailable}
                                                         onClick={() => handleVariantChange(variant)}
                                                         style={{
-                                                            opacity: isOutOfStock ? 0.7 : 1,
-                                                            position: 'relative'
+                                                            opacity: (isOutOfStock || isRetired || isNotAvailable) ? 0.7 : 1,
+                                                            position: 'relative',
+                                                            cursor: (isOutOfStock || isRetired || isNotAvailable) ? 'not-allowed' : 'pointer'
                                                         }}
                                                     >
                                                         <VariantImage
                                                             src={getVariantImage(variant)}
                                                             alt={variant.title}
-                                                            style={{ opacity: isOutOfStock ? 0.5 : 1 }}
+                                                            style={{
+                                                                opacity: (isOutOfStock || isRetired || isNotAvailable) ? 0.5 : 1
+                                                            }}
                                                         />
                                                         <span>{variant.title}</span>
                                                         {isSelected && (
@@ -344,13 +466,20 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                                 ✓
                                                             </SelectedVariantIndicator>
                                                         )}
-                                                        {isOutOfStock && (
-                                                            <OutOfStockOverlay>
-                                                                Out of Stock
+                                                        {(isOutOfStock || isRetired || isNotAvailable) && (
+                                                            <OutOfStockOverlay
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        isNotAvailable ? 'rgba(128, 128, 128, 0.8)' :
+                                                                            isRetired ? 'rgba(255, 165, 0, 0.8)' :
+                                                                                'rgba(255, 0, 0, 0.7)'
+                                                                }}
+                                                            >
+                                                                {isNotAvailable ? 'Not Available' :
+                                                                    isRetired ? 'Retired' : 'Out of Stock'}
                                                             </OutOfStockOverlay>
                                                         )}
                                                     </VariantChip>
-
                                                 );
                                             })}
                                         </div>

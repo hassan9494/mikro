@@ -39,34 +39,34 @@ export default function ExtendedApp({ Component, pageProps }) {
         }
     }, []);
 
-    useEffect(() => {
-        // Optimized script injection - use defer to prevent blocking
-        const headScripts = document.documentElement.getAttribute('data-head-scripts');
-        if (headScripts) {
-            const head = document.head;
-            const scriptElement = document.createElement('div');
-            scriptElement.innerHTML = headScripts;
-            Array.from(scriptElement.children).forEach((child) => {
-                const script = document.createElement('script');
-                script.innerHTML = child.innerHTML;
-                script.defer = true; // Critical performance fix
-                head.appendChild(script);
-            });
-        }
-
-        const bodyScripts = document.documentElement.getAttribute('data-body-scripts');
-        if (bodyScripts) {
-            const body = document.body;
-            const scriptElement = document.createElement('div');
-            scriptElement.innerHTML = bodyScripts;
-            Array.from(scriptElement.children).forEach((child) => {
-                const script = document.createElement('script');
-                script.innerHTML = child.innerHTML;
-                script.defer = true; // Critical performance fix
-                body.appendChild(script);
-            });
-        }
-    }, []);
+    // useEffect(() => {
+    //     // Optimized script injection - use defer to prevent blocking
+    //     const headScripts = document.documentElement.getAttribute('data-head-scripts');
+    //     if (headScripts) {
+    //         const head = document.head;
+    //         const scriptElement = document.createElement('div');
+    //         scriptElement.innerHTML = headScripts;
+    //         Array.from(scriptElement.children).forEach((child) => {
+    //             const script = document.createElement('script');
+    //             script.innerHTML = child.innerHTML;
+    //             script.defer = true; // Critical performance fix
+    //             head.appendChild(script);
+    //         });
+    //     }
+    //
+    //     const bodyScripts = document.documentElement.getAttribute('data-body-scripts');
+    //     if (bodyScripts) {
+    //         const body = document.body;
+    //         const scriptElement = document.createElement('div');
+    //         scriptElement.innerHTML = bodyScripts;
+    //         Array.from(scriptElement.children).forEach((child) => {
+    //             const script = document.createElement('script');
+    //             script.innerHTML = child.innerHTML;
+    //             script.defer = true; // Critical performance fix
+    //             body.appendChild(script);
+    //         });
+    //     }
+    // }, []);
 
     const { data: social } = useSocial();
     const { data: setting } = useSettings();
