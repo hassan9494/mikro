@@ -29,7 +29,12 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
                 <Head>
                     <meta name="theme-color" content={theme.palette.primary.main} />
                     <link rel="preconnect" href="https://fonts.gstatic.com" />
-
+                    {/* Load ShareThis script with defer */}
+                    <script
+                        type='text/javascript'
+                        src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons'
+                        defer
+                    />
                     {/* Optimized Font Loading */}
                     <link
                         rel="preload"
@@ -41,12 +46,7 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
                         rel="stylesheet"
                     />
 
-                    {/* Load ShareThis script with defer */}
-                    <script
-                        type='text/javascript'
-                        src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons'
-                        defer
-                    />
+
 
                     {/* Bootstrap Icons */}
                     <link
@@ -159,18 +159,6 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
 
                 </Head>
                 <body>
-                {/* Google Tag Manager (noscript) */}
-                {gtmId && (
-                    <noscript
-                        dangerouslySetInnerHTML={{
-                            __html: `
-                                    <iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
-                                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-                                `,
-                        }}
-                    />
-                )}
-                {/* End Google Tag Manager (noscript) */}
 
                 <div id="modal-root"></div>
                 <Main />
@@ -190,6 +178,18 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
                             `,
                     }}
                 />
+                {/* Google Tag Manager (noscript) */}
+                {gtmId && (
+                    <noscript
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                                    <iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
+                                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                                `,
+                        }}
+                    />
+                )}
+                {/* End Google Tag Manager (noscript) */}
                 </body>
             </Html>
         );

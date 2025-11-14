@@ -6,20 +6,19 @@ export const ProductDetailsWrapper = styled.div`
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
+  align-items: stretch; 
   box-sizing: border-box;
 
   * {
     box-sizing: border-box;
   }
 `;
-
 export const ProductPreview = styled.div`
   width: 50%;
-  padding: 60px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; 
   position: relative;
 
   img {
@@ -30,12 +29,11 @@ export const ProductPreview = styled.div`
   }
 
   @media (max-width: 990px) {
-    padding: 30px 40px 60px;
+    // padding: 30px 40px 60px;
   }
   @media (max-width: 767px) {
     flex: 0 0 100%;
     max-width: 100%;
-    padding: 30px 25px 60px;
     order: 0;
   }
 `;
@@ -69,6 +67,9 @@ export const ProductInfo = styled.div`
   width: 50%;
   border-left: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   padding: 55px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
 
   @media (max-width: 990px) {
     padding: 30px 40px;
@@ -81,7 +82,6 @@ export const ProductInfo = styled.div`
     order: 1;
   }
 `;
-
 export const SaleTag = styled.span`
   font-size: 12px;
   font-weight: 700;

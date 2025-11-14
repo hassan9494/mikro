@@ -76,7 +76,7 @@ export const ReplacementProductCard = ({ data }: Props) => {
                             alt={title}
                             width={100}
                             height={100}
-                            unoptimized={true}
+                            // unoptimized={true}
                         />
                     </ImageWrapper>
                 <Title>
