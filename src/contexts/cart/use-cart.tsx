@@ -1,6 +1,8 @@
 import React, { useReducer, useContext, createContext } from 'react';
 import { reducer, cartItemsTotalPrice } from './cart.reducer';
 import { useStorage } from 'utils/use-storage';
+import axiosInstance from "../../axiosInstance";
+import {userInfo} from "os";
 
 const CartContext = createContext({} as any);
 export const INITIAL_STATE = {
@@ -65,8 +67,61 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
         dispatch({ type: 'TOGGLE_CART' });
     };
 
-    const couponHandler = (coupon) => {
-        dispatch({ type: 'APPLY_COUPON', payload: coupon });
+    // In use-cart.js - keep only the backend validation approach
+
+    const couponHandler = async (couponCode) => {
+        const token = typeof window != "undefined" ? localStorage.getItem('access_token') : '';
+        try {
+            let response;
+            if (token){
+                response = await axiosInstance.post('/coupons/validate-for-cart', {
+                    coupon_code: couponCode.code || couponCode,
+                    items: state.items.map(item => ({
+                        id: item.baseProductId || item.id,
+                        brand_id: item.brand_id,
+                        price: item.price,
+                        quantity: item.quantity,
+                        name: item.name
+                    }))
+                });
+            }else{
+                response = await axiosInstance.post('/coupons/validate-for-cart-guest', {
+                    coupon_code: couponCode.code || couponCode,
+                    items: state.items.map(item => ({
+                        id: item.baseProductId || item.id,
+                        brand_id: item.brand_id,
+                        price: item.price,
+                        quantity: item.quantity,
+                        name: item.name
+                    }))
+                });
+            }
+
+
+            if (response.data.valid) {
+                dispatch({
+                    type: 'APPLY_COUPON',
+                    payload: {
+                        ...response.data.coupon,
+                        calculatedDiscount: response.data.discount,
+                        validationData: response.data
+                    }
+                });
+                return {
+                    success: true,
+                    coupon: response.data.coupon,
+                    validationData: response.data
+                };
+            } else {
+                return { success: false, message: response.data.message };
+            }
+        } catch (error) {
+            console.error('Coupon application error:', error);
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Failed to apply coupon'
+            };
+        }
     };
 
     const removeCouponHandler = () => {
@@ -99,20 +154,19 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
 
     const getCartItemsPrice = () => cartItemsTotalPrice(state.items).toFixed(2);
 
-    const getCartItemsTotalPrice = () =>
-        cartItemsTotalPrice(state.items, state.coupon).toFixed(2);
-
-    const getDiscount = () => {
+    const getCartItemsTotalPrice = () => {
         const total = cartItemsTotalPrice(state.items);
-        let discount = 0;
 
-        if (state.coupon) {
-            discount = state.coupon.is_percentage ?
-                total * Number(state.coupon.amount) / 100 :
-                state.coupon.amount;
+        if (state.coupon && state.coupon.calculatedDiscount) {
+            return (total - state.coupon.calculatedDiscount).toFixed(2);
         }
 
-        return discount.toFixed(2);
+        return total.toFixed(2);
+    };
+
+    const getDiscount = () => {
+        if (!state.coupon || !state.coupon.calculatedDiscount) return "0.00";
+        return state.coupon.calculatedDiscount.toFixed(2);
     };
 
     const getItemsCount = state.items?.reduce(

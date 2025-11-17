@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
     Avatar,
     Box,
@@ -27,6 +27,7 @@ import { useCart } from "../../contexts/cart/use-cart";
 import useTranslation from "../../utils/use-translation";
 import { CheckoutQuantityControl } from "./checkout-quantity-control";
 import Coupon from "../coupon/coupon";
+import CouponDisplay from "../../components/coupon-display/coupon-display"; // Add this import
 import { verifyCoupon } from "../../data/use-coupon";
 import Link from "next/link";
 import {useSettings} from "../../data/use-website";
@@ -126,7 +127,6 @@ const CheckoutCart = ({
         coupon,
     } = useCart();
     const { data: setting } = useSettings();
-    console.log(setting)
 
     const subtotal = calculateSubTotalPrice();
     const finalShippingCost = subtotal >= parseFloat(setting?.value) ? 0 : shippingCost;
@@ -134,14 +134,18 @@ const CheckoutCart = ({
     const showEncouragementMessage = subtotal > 0 && subtotal < parseFloat(setting?.value);
     const amountNeeded = (parseFloat(setting?.value) - subtotal).toFixed(2);
 
+    const check = useCallback(async (code) => {
+        try {
+            const data = await verifyCoupon(code);
+            applyCoupon({...data, code});
+        } catch (e) {
+            removeCoupon();
+        }
+    }, [applyCoupon, removeCoupon]);
 
-
+    // Only prepare order data - remove the automatic coupon validation that caused infinite loop
     useEffect(() => {
-        if (coupon) check(coupon.code);
-
         // Prepare order data for submission
-// In checkout-cart.tsx, update the products mapping:
-// In checkout components, ensure you're using baseProductId and variantId
         const products = items.map(item => ({
             id: item.baseProductId,
             variant_id: item.variantId || null,
@@ -154,16 +158,7 @@ const CheckoutCart = ({
                 coupon: coupon ? coupon.code : null
             });
         }
-    }, [items, coupon]);
-
-    const check = async (code) => {
-        try {
-            const data = await verifyCoupon(code);
-            applyCoupon({...data, code});
-        } catch (e) {
-            removeCoupon();
-        }
-    }
+    }, [items, coupon, onPrepareOrderData]);
 
     return (
         <Card variant="outlined" className={classes.margin}>
@@ -254,7 +249,7 @@ const CheckoutCart = ({
                                 />
                             </Text>
                             <Text>
-                                <MoneyFormat value={calculateDiscount()} />
+                                -<MoneyFormat value={calculateDiscount()} />
                             </Text>
                         </TextWrapper>
 
@@ -270,21 +265,22 @@ const CheckoutCart = ({
                             </Bold>
                         </TextWrapper>
 
-                        { coupon ? (
+                        {/* Enhanced Coupon Section */}
+                        {coupon ? (
                             <CouponBoxWrapper>
-                                <CouponCode>
-                                    <FormattedMessage id='couponApplied'/>
-                                    <span>{coupon.code}</span>
+                                <Box style={{ width: '100%' }}>
+                                    <CouponDisplay />
                                     <RemoveCoupon
                                         onClick={(e) => {
                                             e.preventDefault();
                                             removeCoupon();
                                             setHasCoupon(false);
                                         }}
+                                        style={{ marginTop: '10px', display: 'block', textAlign: 'center' }}
                                     >
-                                        <FormattedMessage id='removeCoupon'/>
+                                        <FormattedMessage id='removeCoupon' defaultMessage='Remove Coupon' />
                                     </RemoveCoupon>
-                                </CouponCode>
+                                </Box>
                             </CouponBoxWrapper>
                         ) : (
                             <CouponBoxWrapper>
@@ -296,11 +292,13 @@ const CheckoutCart = ({
                                         />
                                     </HaveCoupon>
                                 ) : (
-                                    <>
-                                        <CouponInputBox>
-                                            <Coupon errorMsgFixed={true} className='normalCoupon'/>
-                                        </CouponInputBox>
-                                    </>
+                                    <CouponInputBox>
+                                        <Coupon
+                                            errorMsgFixed={true}
+                                            className='normalCoupon'
+                                            style={{ marginBottom: '10px' }}
+                                        />
+                                    </CouponInputBox>
                                 )}
                             </CouponBoxWrapper>
                         )}
