@@ -79,7 +79,7 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
                     items: state.items.map(item => ({
                         id: item.baseProductId || item.id,
                         brand_id: item.brand_id,
-                        price: item.price,
+                        price: item.sale_price || item.price,
                         quantity: item.quantity,
                         name: item.name
                     }))
@@ -90,7 +90,7 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
                     items: state.items.map(item => ({
                         id: item.baseProductId || item.id,
                         brand_id: item.brand_id,
-                        price: item.price,
+                        price: item.sale_price || item.price,
                         quantity: item.quantity,
                         name: item.name
                     }))

@@ -21,11 +21,11 @@ const nextConfig = {
     compress: true,
     poweredByHeader: false,
     // Remove experimental.optimizeCss or set it to false
-    experimental: {
-        optimizeCss: false, // Disable this for now
-    },
+    // experimental: {
+    //     optimizeCss: false, // Disable this for now
+    // },
     // Enable Webpack 5
-    webpack5: true,
+    // webpack5: true,
 };
 
 module.exports = withPlugins([

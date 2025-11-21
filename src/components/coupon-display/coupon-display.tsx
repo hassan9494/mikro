@@ -35,27 +35,35 @@ const CouponDisplay: React.FC = () => {
     const excludedItems = calculation?.excluded_items || [];
     const eligibleItems = calculation?.eligible_items || [];
 
-    return (
-        <Box mt={2} p={2} border={1} borderColor="grey.300" borderRadius={4}>
-            <Typography variant="h6" gutterBottom>
-                <FormattedMessage id="couponApplied" defaultMessage="Coupon Applied" />
-                <Chip
-                    label={coupon.code}
-                    color="primary"
-                    size="small"
-                    style={{ marginLeft: '8px' }}
-                />
-            </Typography>
+    // Check if we're likely in a cart context (compact view)
+    const isCompactView = window.innerWidth < 768 || excludedItems.length > 0; // Mobile or has excluded items
 
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-                <FormattedMessage
-                    id="couponDiscount"
-                    defaultMessage="Discount: {discount}"
-                    values={{
-                        discount: `$${coupon.calculatedDiscount?.toFixed(2) || '0.00'}`
-                    }}
-                />
-            </Typography>
+    return (
+        <Box
+            mt={1}
+            p={isCompactView ? 1 : 2}
+            border={1}
+            borderColor="grey.300"
+            borderRadius={4}
+            style={{
+                maxWidth: '100%',
+                height: 'max-content'
+            }}
+        >
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant={isCompactView ? "body2" : "h6"} component="div">
+                    <FormattedMessage id="couponApplied" defaultMessage="Coupon Applied" />
+                    <Chip
+                        label={coupon.code}
+                        color="primary"
+                        size="small"
+                        style={{ marginLeft: '8px' }}
+                    />
+                </Typography>
+                <Typography variant={isCompactView ? "body2" : "body1"} component="div">
+                    -${coupon.calculatedDiscount?.toFixed(2) || '0.00'}
+                </Typography>
+            </Box>
 
             {coupon.is_percentage && excludedItems.length > 0 && (
                 <Box
@@ -66,27 +74,48 @@ const CouponDisplay: React.FC = () => {
                     border={1}
                     borderColor="info.main"
                 >
-                    <Typography variant="body2" gutterBottom>
+                    <Typography variant="body2" gutterBottom style={{ fontSize: isCompactView ? '12px' : '14px' }}>
                         <FormattedMessage
                             id="excludedProductsInfo"
-                            defaultMessage="The following products are excluded from this percentage discount:"
+                            defaultMessage="Excluded from discount:"
                         />
                     </Typography>
-                    <Box mt={1}>
-                        {excludedItems.map((item: CouponProduct) => (
+                    <Box mt={1} style={{ maxHeight: isCompactView ? '80px' : 'none', overflowY: 'auto' }}>
+                        {excludedItems.slice(0, isCompactView ? 3 : excludedItems.length).map((item: CouponProduct) => (
                             <Chip
                                 key={item.id}
-                                label={item.name}
+                                label={
+                                    <Box style={{
+                                        maxWidth: isCompactView ? '120px' : '200px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap'
+                                    }}>
+                                        {item.name}
+                                    </Box>
+                                }
                                 variant="outlined"
                                 size="small"
-                                style={{ margin: '2px' }}
+                                style={{
+                                    margin: '2px',
+                                    fontSize: isCompactView ? '10px' : '12px'
+                                }}
                             />
                         ))}
+                        {isCompactView && excludedItems.length > 3 && (
+                            <Typography variant="caption" color="textSecondary" style={{ marginLeft: '8px' }}>
+                                <FormattedMessage
+                                    id="andMoreItems"
+                                    defaultMessage="+{count} more"
+                                    values={{ count: excludedItems.length - 3 }}
+                                />
+                            </Typography>
+                        )}
                     </Box>
                 </Box>
             )}
 
-            {coupon.is_percentage && eligibleItems.length > 0 && (
+            {coupon.is_percentage && eligibleItems.length > 0 && !isCompactView && (
                 <Box mt={1}>
                     <Typography variant="body2" color="textSecondary">
                         <FormattedMessage
@@ -98,7 +127,7 @@ const CouponDisplay: React.FC = () => {
                 </Box>
             )}
 
-            {!coupon.is_percentage && (
+            {!coupon.is_percentage && !isCompactView && (
                 <Box
                     mt={1}
                     p={1}

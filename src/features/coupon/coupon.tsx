@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useCart } from 'contexts/cart/use-cart';
-import { TextField, Button, Box } from '@material-ui/core';
 import { toast } from 'react-toastify';
 import CouponDisplay from 'components/coupon-display/coupon-display';
 import { CouponBoxWrapper, Error } from './coupon.style';
+import { Input } from 'components/forms/input';
+import { Button } from 'components/button/button';
 import { verifyCoupon } from 'data/use-coupon';
 
 type CouponProps = {
@@ -22,23 +23,23 @@ const Coupon: React.FC<CouponProps> = ({
                                            ...props
                                        }) => {
     const intl = useIntl();
-    const [couponCode, setCouponCode] = useState('');
+    const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { applyCoupon, removeCoupon, coupon } = useCart();
 
     const handleApplyCoupon = async () => {
-        if (!couponCode.trim()) return;
+        if (!code.trim()) return;
 
         setLoading(true);
         setError(null);
         try {
-            const data = await verifyCoupon(couponCode);
-            const result = await applyCoupon({...data, code: couponCode});
+            const data = await verifyCoupon(code);
+            const result = await applyCoupon({...data, code});
 
             if (result.success) {
                 toast.success('Coupon applied successfully');
-                setCouponCode('');
+                setCode('');
             } else {
                 setError(result.message);
                 toast.error(result.message);
@@ -56,11 +57,11 @@ const Coupon: React.FC<CouponProps> = ({
         removeCoupon();
         setError(null);
         toast.info('Coupon removed');
-        setCouponCode('');
+        setCode('');
     };
 
     const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setCouponCode(e.currentTarget.value.toUpperCase());
+        setCode(e.currentTarget.value.toUpperCase());
         setError(null); // Clear error when user starts typing
     };
 
@@ -77,19 +78,18 @@ const Coupon: React.FC<CouponProps> = ({
                 className={className ? className : 'boxedCoupon'}
                 style={style}
             >
-                <Box style={{ width: '100%' }}>
+                <div style={{ width: '100%' }}>
                     <CouponDisplay />
                     <Button
-                        color="secondary"
+                        type='button'
                         onClick={handleRemoveCoupon}
-                        style={{ marginTop: '10px' }}
-                        fullWidth
-                        variant="outlined"
                         disabled={disabled}
+                        padding='0 30px'
+                        style={{ marginTop: '10px', width: '100%' }}
                     >
                         <FormattedMessage id='removeCoupon' defaultMessage='Remove Coupon' />
                     </Button>
-                </Box>
+                </div>
             </CouponBoxWrapper>
         );
     }
@@ -100,37 +100,30 @@ const Coupon: React.FC<CouponProps> = ({
                 className={className ? className : 'boxedCoupon'}
                 style={style}
             >
-                <Box style={{ width: '100%' }}>
-                    <TextField
-                        label={intl.formatMessage({
-                            id: 'couponPlaceholder',
-                            defaultMessage: 'Enter Coupon Here',
-                        })}
-                        variant="outlined"
-                        size="small"
-                        value={couponCode}
-                        onChange={handleOnChange}
-                        onKeyPress={handleKeyPress}
-                        disabled={disabled || loading}
-                        fullWidth
-                        style={{ marginBottom: '10px' }}
-                        error={!!error}
-                        {...props}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleApplyCoupon}
-                        disabled={disabled || loading || !couponCode.trim()}
-                        fullWidth
-                    >
-                        {loading ? (
-                            <FormattedMessage id='applying' defaultMessage='Applying...' />
-                        ) : (
-                            <FormattedMessage id='applyCoupon' defaultMessage='Apply Coupon' />
-                        )}
-                    </Button>
-                </Box>
+                <Input
+                    onChange={handleOnChange}
+                    onKeyPress={handleKeyPress}
+                    value={code}
+                    placeholder={intl.formatMessage({
+                        id: 'couponPlaceholder',
+                        defaultMessage: 'Enter Coupon Here',
+                    })}
+                    disabled={disabled || loading}
+                    {...props}
+                />
+                <Button
+                    type='button'
+                    onClick={handleApplyCoupon}
+                    disabled={disabled || loading || !code.trim()}
+                    padding='0 30px'
+                    loading={loading}
+                >
+                    {loading ? (
+                        <FormattedMessage id='applying' defaultMessage='Applying...' />
+                    ) : (
+                        <FormattedMessage id='voucherApply' defaultMessage='Apply'/>
+                    )}
+                </Button>
             </CouponBoxWrapper>
             {error && (
                 <Error errorMsgFixed={errorMsgFixed}>
