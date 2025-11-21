@@ -17,6 +17,35 @@ interface CustomDocumentInitialProps extends DocumentInitialProps {
 }
 
 export default class CustomDocument extends Document<CustomDocumentInitialProps> {
+    static async getInitialProps(ctx: DocumentContext): Promise<CustomDocumentInitialProps> {
+
+        const styledComponentsSheet = new ServerStyleSheet();
+        const materialUiSheets = new ServerStyleSheets();
+        const originalRenderPage = ctx.renderPage;
+
+        try {
+            ctx.renderPage = () =>
+                originalRenderPage({
+                    enhanceApp: (App) => (props: any) =>
+                        styledComponentsSheet.collectStyles(
+                            materialUiSheets.collect(<App {...props} />)
+                        ),
+                });
+
+            const initialProps = await Document.getInitialProps(ctx);
+            return {
+                bodyScripts: "", headScripts: "",
+                ...initialProps,
+                styles: [
+                    ...React.Children.toArray(initialProps.styles),
+                    materialUiSheets.getStyleElement(),
+                    styledComponentsSheet.getStyleElement(),
+                ]
+            };
+        } finally {
+            styledComponentsSheet.seal();
+        }
+    }
     render() {
         // Get environment variables
         const metaPixelId1 = process.env.NEXT_PUBLIC_META_PIXEL_ID_1;
@@ -29,11 +58,14 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
                 <Head>
                     <meta name="theme-color" content={theme.palette.primary.main} />
                     <link rel="preconnect" href="https://fonts.gstatic.com" />
-                    {/* Load ShareThis script with defer */}
+                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet" />
                     <script
                         type='text/javascript'
-                        src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons'
-                        defer
+                        src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons' async={true}/>
+
+                    <link
+                        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+                        rel="stylesheet"
                     />
                     {/* Optimized Font Loading */}
                     <link
@@ -48,25 +80,9 @@ export default class CustomDocument extends Document<CustomDocumentInitialProps>
 
 
 
-                    {/* Bootstrap Icons */}
-                    <link
-                        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-                        rel="stylesheet"
-                    />
 
-                    {/* Critical CSS for font loading optimization */}
-                    <style
-                        dangerouslySetInnerHTML={{
-                            __html: `
-                                /* Critical font loading styles */
-                                @font-face {
-                                    font-family: 'Cairo';
-                                    font-style: normal;
-                                    font-display: swap;
-                                }
-                            `,
-                        }}
-                    />
+
+
 
                     {/* Meta Pixel Code 1 */}
                     {metaPixelId1 && (
