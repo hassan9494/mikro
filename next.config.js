@@ -18,14 +18,14 @@ const nextConfig = {
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },
-    compress: true,
-    poweredByHeader: false,
+    // compress: true,
+    // poweredByHeader: false,
     // Remove experimental.optimizeCss or set it to false
-    experimental: {
-        optimizeCss: false, // Disable this for now
-    },
+    // experimental: {
+    //     optimizeCss: false, // Disable this for now
+    // },
     // Enable Webpack 5
-    webpack5: true,
+    // webpack5: true,
 };
 
 module.exports = withPlugins([

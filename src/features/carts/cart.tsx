@@ -27,6 +27,7 @@ import { Scrollbar } from 'components/scrollbar/scrollbar';
 import { useCart } from 'contexts/cart/use-cart';
 import { CartItem } from 'components/cart-item/cart-item';
 import Coupon from 'features/coupon/coupon';
+import CouponDisplay from 'components/coupon-display/coupon-display';
 
 type CartPropsType = {
     style?: any;
@@ -49,6 +50,7 @@ const Cart: React.FC<CartPropsType> = ({
         removeItemFromCart,
         cartItemsCount,
         calculatePrice,
+        removeCoupon,
     } = useCart();
     const [hasCoupon, setCoupon] = useState(false);
     const { isRtl } = useLocale();
@@ -76,7 +78,14 @@ const Cart: React.FC<CartPropsType> = ({
                 </CloseButton>
             </PopupHeader>
 
-            <Scrollbar className='cart-scrollbar'   style={{ minHeight: isEmpty ? '300px' : 'auto'}}>
+            <Scrollbar
+                className='cart-scrollbar'
+                style={{
+                    minHeight: isEmpty ? '300px' : 'auto',
+                    // Allow more space for coupon display
+                    maxHeight: coupon ? 'calc(100vh - 250px)' : 'calc(100vh - 200px)'
+                }}
+            >
                 <ItemWrapper className='items-wrapper'>
                     {!!cartItemsCount ? (
                         items.map((item) => (
@@ -99,25 +108,21 @@ const Cart: React.FC<CartPropsType> = ({
                             padding: '20px'
                         }}>
 
-                        <NoProductImg>
+                            <NoProductImg>
                                 <NoCartBag/>
                             </NoProductImg>
-                            {/* <NoProductMsg>
-                                <FormattedMessage
-                                    id='noProductFound'
-                                    defaultMessage='No products found'
-                                />
-                            </NoProductMsg> */}
-
-
                         </div>
                     )}
                 </ItemWrapper>
             </Scrollbar>
 
             <CheckoutButtonWrapper>
-                <PromoCode>
-                    {!coupon?.discountInPercent ? (
+                <PromoCode style={{
+                    minHeight: coupon ? 'auto' : 'auto',
+                    height: 'auto',
+                    maxHeight: 'none'
+                }}>
+                    {!coupon ? (
                         <>
                             {!hasCoupon ? (
                                 <button onClick={() => setCoupon((prev) => !prev)}>
@@ -127,7 +132,10 @@ const Cart: React.FC<CartPropsType> = ({
                                     />
                                 </button>
                             ) : (
-                                <CouponBoxWrapper>
+                                <CouponBoxWrapper style={{
+                                    height: 'auto',
+                                    minHeight: 'auto'
+                                }}>
                                     <Coupon
                                         disabled={!items.length}
                                         style={{
@@ -138,13 +146,43 @@ const Cart: React.FC<CartPropsType> = ({
                             )}
                         </>
                     ) : (
-                        <CouponCode>
-                            <FormattedMessage
-                                id='couponApplied'
-                                defaultMessage='Coupon Applied'
-                            />
-                            <span>{coupon.code}</span>
-                        </CouponCode>
+                        <CouponBoxWrapper style={{
+                            height: 'auto',
+                            minHeight: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}>
+                            {/* Use CouponDisplay directly with proper container */}
+                            <div style={{
+                                width: '100%',
+                                height: 'auto',
+                                minHeight: 'auto',
+                                maxHeight: 'none',
+                                overflow: 'visible'
+                            }}>
+                                <CouponDisplay />
+                            </div>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    removeCoupon();
+                                    setCoupon(false);
+                                }}
+                                style={{
+                                    marginTop: '10px',
+                                    padding: '8px 16px',
+                                    backgroundColor: 'transparent',
+                                    border: '1px solid #dc3545',
+                                    color: '#dc3545',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    width: '100%'
+                                }}
+                            >
+                                <FormattedMessage id='removeCoupon' defaultMessage='Remove Coupon' />
+                            </button>
+                        </CouponBoxWrapper>
                     )}
                 </PromoCode>
 

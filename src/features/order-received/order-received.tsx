@@ -70,7 +70,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             <Text bold className="title">
                                 <FormattedMessage id="totalText" defaultMessage="Total"/>
                             </Text>
-                            <Text><MoneyFormat value={received?.total - received?.coupon_discount}/></Text>
+                            <Text><MoneyFormat value={received?.total}/></Text>
                         </InfoBlock>
 
                         <InfoBlock>

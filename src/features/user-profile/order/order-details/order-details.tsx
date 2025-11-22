@@ -131,7 +131,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                             defaultMessage="Discount"
                         />
                         <Price>
-                            <MoneyFormat value={discount + coupon_discount} />
+                            <MoneyFormat value={discount} />
                         </Price>
                     </PriceRow>
                     <PriceRow>
@@ -153,7 +153,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                     <PriceRow className="grandTotal">
                         <FormattedMessage id="totalText" defaultMessage="Total"/>
                         <Price>
-                            <MoneyFormat value={total - coupon_discount} />
+                            <MoneyFormat value={total } />
                         </Price>
                     </PriceRow>
                 </CostCalculation>
