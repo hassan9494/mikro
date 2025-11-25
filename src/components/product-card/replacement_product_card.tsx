@@ -69,7 +69,7 @@ export const ReplacementProductCard = ({ data }: Props) => {
             <Link href="/product/[slug]" as={`/product/${slug}`}>
                 <a>
                     <ImageWrapper>
-                        {/*<img src={image} alt={title} width={200} height={200}/>*/}
+                        {/*<img src={image} alt={title} width={100} height={100}/>*/}
                         <Image
                             // loader={myLoader}
                             src={image}

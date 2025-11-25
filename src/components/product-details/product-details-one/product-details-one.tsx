@@ -56,6 +56,76 @@ const useStyles = makeStyles((theme) => ({
     arrow: {
         color: '#133595',
     },
+    tabs: {
+        minHeight: '48px',
+        '& .MuiTabs-indicator': {
+            backgroundColor: '#133595',
+            height: '2px',
+            borderRadius: '3px 3px 0 0'
+        },
+        // For screens between 600px and 850px
+        [theme.breakpoints.between(600, 850)]: {
+            minHeight: '42px',
+        },
+        // For screens smaller than 600px
+        [theme.breakpoints.down(600)]: {
+            minHeight: '38px',
+        }
+    },
+    tab: {
+        textTransform: 'none',
+        fontSize: '14px',
+        fontWeight: 500,
+        fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+        minWidth: 'auto',
+        padding: '12px 30px',
+        color: '#494747ff',
+        transition: 'all 0.2s ease-in-out',
+        flex: '1 1 auto',
+        maxWidth: 'none',
+        whiteSpace: 'nowrap',
+        margin:'0 20px 0 0',
+        '&:hover': {
+            color: '#133595',
+        },
+        '&.Mui-selected': {
+            color: '#133595',
+            fontWeight: 700,
+        },
+
+        [theme.breakpoints.between(700, 800)]: {
+            fontSize: '12px',
+            padding: '10px 20px',
+            flex: '1 1 auto',
+        },
+        // For screens smaller than 600px
+        [theme.breakpoints.down(700)]: {
+            fontSize: '11px',
+            padding: '8px 12px',
+            flex: '1 1 auto',
+        },
+        // For very small screens
+        [theme.breakpoints.down(550)]: {
+            fontSize: '11px',
+            padding: '6px 8px',
+            flex: '1 1 auto',
+            margin:' 0',
+
+        },
+        [theme.breakpoints.down(400)]: {
+            fontSize: '9px',
+            padding: '6px 8px',
+            flex: '1 1 auto',
+            margin:' 0',
+
+        },
+        [theme.breakpoints.down(340)]: {
+            fontSize: '7px',
+            padding: '6px 8px',
+            flex: '1 1 auto',
+            margin:' 0',
+        }
+    }
 }));
 
 type ProductDetailsProps = {
@@ -143,13 +213,15 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     const adminRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Admin cash'];
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
     const hasAdminAccess = user?.roles?.some(role => adminRoles.includes(role.name));
+    const hasVariants = product.hasVariants && product.colors && product.colors.length > 0;
 
+    const shouldShowProductStatus = !hasVariants || (product.hasVariants && selectedVariant);
     useEffect(() => {
-        if (product?.hasVariants && product?.colors?.length) {
-            // Select the first available variant, or the first one if none are available
-            const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
-            setSelectedVariant(availableVariant);
-        }
+        // if (product?.hasVariants && product?.colors?.length) {
+        //     // Select the first available variant, or the first one if none are available
+        //     const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
+        //     setSelectedVariant(availableVariant);
+        // }
         setTimeout(() => {
             window.scrollTo(0, 0);
         }, 500);
@@ -306,126 +378,145 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         </Typography>
                                     )}
                                 </ProductTitlePriceWrapper>
-
-                                {/* Apply same corrected priority logic as product card */}
-                                {currentStatus === 'notAvailable' ? (
-                                    <div style={{
-                                        padding: '5px',
-                                        fontWeight: 'bold',
-                                        textAlign: 'center',
-                                        border: '1px solid #ffeaa7',
-                                        borderRadius: '8px',
-                                    }}>
-                                        <Typography variant="h6" style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
-                                            <FormattedMessage id="productNotAvailable" defaultMessage="This product option isn't available now" />
-                                        </Typography>
-                                    </div>
-                                ) : currentStatus === 'retired' ? (
-                                    <ReplacementWrapper>
-        <span style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
-            <FormattedMessage id='retired'
-                              defaultMessage="This product is retired now, "/>
-        </span>
-                                        {replacementItem ? (
-                                            <>
-                <span style={{color:'blue', fontWeight:'bold', fontSize:'14px'}}>
-                    <FormattedMessage id='replacementAvailable'
-                                      defaultMessage=" the replacement is :"/>
-                </span>
-                                                <ProductCardWrapper>
-                                                    <Fade
-                                                        duration={800}
-                                                        delay={10}
-                                                        style={{ height: '100%' }}
-                                                    >
-                                                        {renderReplacementCard(replacementItem)}
-                                                    </Fade>
-                                                </ProductCardWrapper>
-                                            </>
-                                        ) : (
-
-                                            <span style={{color:'blue', fontWeight:'bold', fontSize:'14px'}}>
-                <FormattedMessage id='noReplacement'
-                                  defaultMessage=" and there is no replacement item."/>
-            </span>
-                                        )}
-                                    </ReplacementWrapper>
-                                ) : currentStatus === 'outOfStock' ? (
-                                    <div>
-                                        <ProductPriceWrapper>
-                                            <ProductPrice>
-                                                <MoneyFormat
-                                                    value={displayProduct.sale_price ? displayProduct.sale_price : displayProduct.price}
-                                                />
-                                                {displayProduct.sale_price ? (
-                                                    <SalePrice>
-                                                        <MoneyFormat value={displayProduct.price} />
-                                                    </SalePrice>
-                                                ) : null}
-                                            </ProductPrice>
-                                        </ProductPriceWrapper>
-
-                                        <ProductCartWrapper>
+                                {shouldShowProductStatus && (
+                                    <>
+                                        {/* Apply same corrected priority logic as product card */}
+                                        {currentStatus === 'notAvailable' ? (
                                             <div style={{
                                                 padding: '5px',
                                                 fontWeight: 'bold',
                                                 textAlign: 'center',
                                                 border: '1px solid #ffeaa7',
                                                 borderRadius: '8px',
-                                                width: '100%',
                                             }}>
                                                 <Typography variant="h6" style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
-                                                    <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                                    <FormattedMessage id="productNotAvailable" defaultMessage="This product option isn't available now" />
                                                 </Typography>
                                             </div>
-                                        </ProductCartWrapper>
+                                        ) : currentStatus === 'retired' ? (
+                                            <ReplacementWrapper>
+        <span style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
+            <FormattedMessage id='retired'
+                              defaultMessage="This product is retired now, "/>
+        </span>
+                                                {replacementItem ? (
+                                                    <>
+                <span style={{color:'blue', fontWeight:'bold', fontSize:'14px'}}>
+                    <FormattedMessage id='replacementAvailable'
+                                      defaultMessage=" the replacement is :"/>
+                </span>
+                                                        <ProductCardWrapper>
+                                                            <Fade
+                                                                duration={800}
+                                                                delay={10}
+                                                                style={{ height: '100%' }}
+                                                            >
+                                                                {renderReplacementCard(replacementItem)}
+                                                            </Fade>
+                                                        </ProductCardWrapper>
+                                                    </>
+                                                ) : (
 
-                                        {hasAccess && (
-                                            <div className={'mt-1'} style={{ marginTop: 5 }}>
-                                                <Typography component="span" variant="body1" color="textPrimary"
-                                                            style={{ marginRight: 50 }}>
-                                                    Quantity: {displayProduct.availableQty}
-                                                </Typography>
-                                                <Typography component="span" variant="body1" color="textPrimary">
-                                                    Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}
-                                                </Typography>
+                                                    <span style={{color:'blue', fontWeight:'bold', fontSize:'14px'}}>
+                <FormattedMessage id='noReplacement'
+                                  defaultMessage=" and there is no replacement item."/>
+            </span>
+                                                )}
+                                            </ReplacementWrapper>
+                                        ) : currentStatus === 'outOfStock' ? (
+                                            <div>
+                                                <ProductPriceWrapper>
+                                                    <ProductPrice>
+                                                        <MoneyFormat
+                                                            value={displayProduct.sale_price ? displayProduct.sale_price : displayProduct.price}
+                                                        />
+                                                        {displayProduct.sale_price ? (
+                                                            <SalePrice>
+                                                                <MoneyFormat value={displayProduct.price} />
+                                                            </SalePrice>
+                                                        ) : null}
+                                                    </ProductPrice>
+                                                </ProductPriceWrapper>
+
+                                                <ProductCartWrapper>
+                                                    <div style={{
+                                                        padding: '5px',
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                        border: '1px solid #ffeaa7',
+                                                        borderRadius: '8px',
+                                                        width: '100%',
+                                                    }}>
+                                                        <Typography variant="h6" style={{color:'red', fontWeight:'bold', fontSize:'14px'}}>
+                                                            <FormattedMessage id='outOfStock' defaultMessage='Out Of Stock' />
+                                                        </Typography>
+                                                    </div>
+                                                </ProductCartWrapper>
+
+                                                {hasAccess && (
+                                                    <div className={'mt-1'} style={{ marginTop: 5 }}>
+                                                        <Typography component="span" variant="body1" color="textPrimary"
+                                                                    style={{ marginRight: 50 }}>
+                                                            Quantity: {displayProduct.availableQty}
+                                                        </Typography>
+                                                        <Typography component="span" variant="body1" color="textPrimary">
+                                                            Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}
+                                                        </Typography>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            /* Available product/variant */
+                                            <div>
+                                                <ProductPriceWrapper>
+                                                    <ProductPrice>
+                                                        <MoneyFormat
+                                                            value={displayProduct.sale_price ? displayProduct.sale_price : displayProduct.price}
+                                                        />
+                                                        {displayProduct.sale_price ? (
+                                                            <SalePrice>
+                                                                <MoneyFormat value={displayProduct.price} />
+                                                            </SalePrice>
+                                                        ) : null}
+                                                    </ProductPrice>
+                                                </ProductPriceWrapper>
+
+                                                <ProductCartWrapper>
+                                                    <AddToCart data={product} variant={selectedVariant} />
+                                                </ProductCartWrapper>
+
+                                                {hasAccess && (
+                                                    <div className={'mt-1'} style={{ marginTop: 5 }}>
+                                                        <Typography component="span" variant="body1" color="textPrimary"
+                                                                    style={{ marginRight: 50 }}>
+                                                            Quantity: {displayProduct.availableQty}
+                                                        </Typography>
+                                                        <Typography component="span" variant="body1" color="textPrimary">
+                                                            Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}
+                                                        </Typography>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
-                                    </div>
-                                ) : (
-                                    /* Available product/variant */
-                                    <div>
-                                        <ProductPriceWrapper>
-                                            <ProductPrice>
-                                                <MoneyFormat
-                                                    value={displayProduct.sale_price ? displayProduct.sale_price : displayProduct.price}
-                                                />
-                                                {displayProduct.sale_price ? (
-                                                    <SalePrice>
-                                                        <MoneyFormat value={displayProduct.price} />
-                                                    </SalePrice>
-                                                ) : null}
-                                            </ProductPrice>
-                                        </ProductPriceWrapper>
-
-                                        <ProductCartWrapper>
-                                            <AddToCart data={product} variant={selectedVariant} />
-                                        </ProductCartWrapper>
-
-                                        {hasAccess && (
-                                            <div className={'mt-1'} style={{ marginTop: 5 }}>
-                                                <Typography component="span" variant="body1" color="textPrimary"
-                                                            style={{ marginRight: 50 }}>
-                                                    Quantity: {displayProduct.availableQty}
-                                                </Typography>
-                                                <Typography component="span" variant="body1" color="textPrimary">
-                                                    Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}
-                                                </Typography>
-                                            </div>
-                                        )}
-                                    </div>
+                                    </>
                                 )}
-
+                                {hasVariants && !selectedVariant ?(
+                                    <div style={{
+                                        padding: '15px',
+                                        backgroundColor: '#f8f9fa',
+                                        border: '1px solid #e9ecef',
+                                        borderRadius: '8px',
+                                        textAlign: 'center',
+                                        marginTop: '15px'
+                                    }}>
+                                        <Typography variant="body1" style={{ color: '#666', fontWeight: '500' }}>
+                                            <FormattedMessage
+                                                id="selectVariantMessage"
+                                                defaultMessage="Please select an option to see price and availability"
+                                            />
+                                        </Typography>
+                                    </div>
+                                ): null}
                                 {/* Variant Selector - Only show if product has variants */}
                                 {product.hasVariants && product.colors && product.colors.length > 0 ? (
                                     <VariantSelector>
@@ -551,13 +642,23 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                 )}
                             </ProductInfo>
 
-                            <div style={{flexGrow: 1}}>
-                                <Tabs value={value} onChange={(e, newValue) => setValue(newValue)} aria-label="product tabs">
-                                    <Tab label="Details" {...tabProps(0)} />
-                                    <Tab label="Features" {...tabProps(1)} />
-                                    <Tab label="Documents" {...tabProps(2)} />
-                                    <Tab label="Product Include" {...tabProps(3)} />
-                                </Tabs>
+                            <div>
+                                <div>
+                                    <Tabs
+                                        value={value}
+                                        onChange={(e, newValue) => setValue(newValue)}
+                                        aria-label="product tabs"
+                                        className={classes.tabs}
+                                        variant="fullWidth"
+                                        disableRipple
+                                    >
+                                        <Tab label="Details" {...tabProps(0)} className={classes.tab} disableRipple />
+                                        <Tab label="Features" {...tabProps(1)} className={classes.tab} disableRipple />
+                                        <Tab label="Documents" {...tabProps(2)} className={classes.tab} disableRipple />
+                                        <Tab label="Product Include" {...tabProps(3)} className={classes.tab} disableRipple />
+                                        <Tab label="Product Code" {...tabProps(4)} className={classes.tab} disableRipple />
+                                    </Tabs>
+                                </div>
                                 <Box p={1}>
                                     <TabPanel value={value} index={0}>
                                         <div dangerouslySetInnerHTML={{__html: displayProduct.description}} />
@@ -567,8 +668,13 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     </TabPanel>
                                     <TabPanel value={value} index={2}>
                                         {product.documents && (
-                                            <Typography variant="h6" gutterBottom style={{ fontWeight: 600, marginBottom: '16px' }}>
-                                                <FormattedMessage id="datasheets" defaultMessage="Documents" />
+                                            <Typography variant="h6" gutterBottom style={{
+                                                fontWeight: 600,
+                                                marginBottom: '5px',
+                                                color: '#333',
+                                                paddingBottom: '5px',
+                                                fontSize: '12px'
+                                            }}>                                                <FormattedMessage id="datasheets" defaultMessage="Documents" />
                                             </Typography>
                                         )}
 
@@ -590,7 +696,13 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         {/* Datasheets section */}
                                         {product.datasheets && product.datasheets.length > 0 && (
                                             <div style={{ marginTop: product.documents ? '24px' : '0' }}>
-                                                <Typography variant="h6" gutterBottom style={{ fontWeight: 600, marginBottom: '16px' }}>
+                                                <Typography variant="h6" gutterBottom style={{
+                                                    fontWeight: 600,
+                                                    marginBottom: '5px',
+                                                    color: '#333',
+                                                    paddingBottom: '5px',
+                                                    fontSize: '12px'
+                                                }}>
                                                     <FormattedMessage id="datasheets" defaultMessage="Datasheets & Files" />
                                                 </Typography>
 
@@ -606,8 +718,9 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                             style={{
                                                                 display: 'flex',
                                                                 alignItems: 'center',
-                                                                height: '60px',
-                                                                padding: '8px 12px',
+                                                                justifyContent: 'flex-start',
+                                                                height: '50px',
+                                                                padding: '8px 10px',
                                                                 border: '1px solid #e0e0e0',
                                                                 borderRadius: '6px',
                                                                 backgroundColor: '#fff',
@@ -689,8 +802,19 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                     </TabPanel>
 
                                     <TabPanel value={value} index={3}>
+                                        <Typography variant="h6" gutterBottom style={{
+                                            fontWeight: 600,
+                                            marginBottom: '5px',
+                                            color: '#333',
+                                            paddingBottom: '5px',
+                                            fontSize: '12px'
+                                        }}>
+                                            <FormattedMessage id="productInclude" defaultMessage="Product Include" />
+                                        </Typography>
+
                                         {/* Existing packageInclude content */}
                                         {product.packageInclude && (
+
                                             <div
                                                 style={{
                                                     marginBottom: product.kit?.length > 0 ? '24px' : '0',
@@ -699,8 +823,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                     borderRadius: '8px',
                                                     border: '1px solid #e9ecef'
                                                 }}
+
                                                 dangerouslySetInnerHTML={{ __html: product.packageInclude }}
                                             />
+
+
                                         )}
 
                                         {/* Kit Items Section - Improved Table Layout */}
@@ -837,7 +964,51 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                             </div>
                                         )}
                                     </TabPanel>
+                                    {/* Tab 4: Product Code - NEW TAB */}
+                                    <TabPanel value={value} index={4}>
+                                        {product.code && product.code.trim() !== "" &&
+                                        product.code !== "<p></p>" &&
+                                        product.code !== "<p><br></p>" &&
+                                        product.code !== "<p><br/></p>" ? (
+                                            <div>
+                                                <Typography variant="h6" gutterBottom style={{
+                                                    fontWeight: 600,
+                                                    marginBottom: '5px',
+                                                    color: '#333',
+                                                    paddingBottom: '5px',
+                                                    fontSize: '12px'
+                                                }}>
+                                                    <FormattedMessage id="productCode" defaultMessage="Product Code" />
+                                                </Typography>
 
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: product.code }}
+                                                    style={{
+                                                        lineHeight: '1.6',
+                                                        color: '#333',
+                                                        fontFamily: 'monospace, sans-serif',
+                                                        padding: '15px',
+                                                        backgroundColor: '#f8f9fa',
+                                                        borderRadius: '8px',
+                                                        border: '1px solid #e9ecef'
+                                                    }}
+
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div style={{
+                                                textAlign: 'center',
+                                                padding: '40px 20px',
+                                                border: '1px dashed #e0e0e0',
+                                                borderRadius: '8px',
+                                                backgroundColor: '#fafafa'
+                                            }}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontStyle: 'italic' }}>
+                                                    <FormattedMessage id="noProductCode" defaultMessage="No product code available." />
+                                                </Typography>
+                                            </div>
+                                        )}
+                                    </TabPanel>
 
 
                                 </Box>

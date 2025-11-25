@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { themeGet } from '@styled-system/theme-get';
-import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 
 // Styled Components
@@ -25,23 +24,59 @@ const CarouselAlignmentWrapper = styled.div`
   }
 `;
 
-const SingleItem = styled.li`
-  border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
+const ScrollableGallery = styled.div<{ isScrollable: boolean }>`
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  width: 100%;
+  gap: 10px;
+  // margin-top: -50px;
+  padding-bottom: 10px ;
+  scrollbar-width: thin;
+  scrollbar-color: ${themeGet('colors.primary.regular', '#009E7F')} transparent;
+  
+  /* Center content when not scrollable */
+  justify-content: ${props => props.isScrollable ? 'flex-start' : 'center'};
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${themeGet('colors.primary.regular', '#009E7F')};
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: ${themeGet('colors.primary.dark', '#007a63')};
+  }
+`;
+
+const GalleryItem = styled.div<{ isActive: boolean }>`
+  flex: 0 0 auto;
+  width: 50px;
+  height: 50px;
+  border: 2px solid ${props => props.isActive ? themeGet('colors.primary.regular', '#009E7F') : themeGet('colors.gray.500', '#f1f1f1')};
   border-radius: ${themeGet('radii.base', '6px')};
-  margin-right: 20px;
-  padding: 0;
-  outline: none;
-  width: 70px;
-  height: auto;
+  cursor: pointer;
   overflow: hidden;
+  transition: all 0.3s ease;
 
-  &:last-child {
-    margin-right: 0;
+  &:hover {
+    border-color: ${themeGet('colors.primary.regular', '#009E7F')};
+    transform: scale(1.05);
   }
+`;
 
-  &.custom-dot--active {
-    border: 2px solid ${themeGet('colors.primary.regular', '#009E7F')};
-  }
+const GalleryImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ZoomContainer = styled.div`
@@ -50,26 +85,25 @@ const ZoomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top:20px;
+  padding-top: 100px;
   width: 100%;
-  height: 625px;
+  height: fit-content;
 
-  @media (max-width: 1224px) {
-    height: 570px;
-  }
-     @media (max-width: 1114px) {
-    height: 510px;
-  }
-     @media (max-width: 770px) {
-    height: 620px;
-  }
-           @media (max-width: 600px) {
-    height: 610px;
-  }
-         @media (max-width: 400px) {
-    height: 500px;
-  }
-
+  // @media (max-width: 1224px) {
+  //   height: 570px;
+  // }
+  // @media (max-width: 1114px) {
+  //   height: 510px;
+  // }
+  // @media (max-width: 770px) {
+  //   height: 620px;
+  // }
+  // @media (max-width: 600px) {
+  //   height: 610px;
+  // }
+  // @media (max-width: 400px) {
+  //   height: 500px;
+  // }
 `;
 
 const ZoomableImage = styled.img`
@@ -78,24 +112,6 @@ const ZoomableImage = styled.img`
   object-fit: contain;
   cursor: zoom-in;
 `;
-
-// const ZoomOverlay = styled.div<{ show: boolean; position: { x: number; y: number } }>`
-//   position: fixed;
-//   display: ${({ show }) => (show ? 'block' : 'none')};
-//   width: 200px;
-//   height: 200px;
-//   border: 1px solid #ddd;
-//   border-radius: 4px;
-//   background-repeat: no-repeat;
-//   background-color: white;
-//   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-//   z-index: 1000;
-//   pointer-events: none;
-//   left: ${({ position }) => position.x}px;
-//   top: ${({ position }) => position.y}px;
-//   transform: translate(-50%, -50%);
-//   background-size: 400% 400%;
-// `;
 
 const ImagePopup = styled.div<{ show: boolean }>`
   position: fixed;
@@ -165,7 +181,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const NavigationButton = styled.button<{ position: 'left' | 'right' }>`
+const PopupNavigationButton  = styled.button<{ position: 'left' | 'right' }>`
   position: absolute;
   top: 50%;
   ${({ position }) => position}: 20px;
@@ -173,14 +189,14 @@ const NavigationButton = styled.button<{ position: 'left' | 'right' }>`
   color: white;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2001;
+  // z-index: 1001;
   transform: translateY(-50%);
 
   &:hover {
@@ -257,61 +273,56 @@ const ImageCounter = styled.div`
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.5);
   color: white;
-  // padding: 5px 15px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
+  font-weight: 500;
   z-index: 2001;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
-// Carousel responsive settings
-const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 200 },
-    items: 1,
-  },
-};
+const ScrollButtons = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+  width: 100%;
+`;
 
-interface CustomDotProps {
-  index: number;
-  onClick: () => void;
-  active: boolean;
-  imageUrl: string;
-  title: string;
-}
+const ScrollButton = styled.button`
+  background: ${themeGet('colors.primary.regular', '#009E7F')};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 80px;
 
-const CustomDot: React.FC<CustomDotProps> = ({
-                                               index,
-                                               onClick,
-                                               active,
-                                               imageUrl,
-                                               title
-                                             }) => {
-  return (
-      <SingleItem
-          data-index={index}
-          onClick={onClick}
-          className={`custom-dot ${active ? 'custom-dot--active' : ''}`}
-      >
-        <img
-            src={imageUrl}
-            alt={`${title} - Thumbnail ${index + 1}`}
-            style={{ width: '100%', height: '100%', position: 'relative', cursor: 'pointer' }}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/default-product.png';
-            }}
-        />
-      </SingleItem>
-  );
-};
+  &:hover {
+    background: ${themeGet('colors.primary.dark', '#007a63')};
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    background: ${themeGet('colors.gray.400', '#ccc')};
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const MainImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+`;
 
 interface CarouselWithCustomDotsProps {
   items: Array<{ url: string; id?: number; name?: string; size?: number }>;
@@ -327,26 +338,20 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
                                                                          selectedColor,
                                                                          ...rest
                                                                        }) => {
-  const [zoom, setZoom] = useState({
-    active: false,
-    img: '',
-    position: { x: 0, y: 0 },
-    backgroundPosition: '0% 0%'
-  });
-
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [popup, setPopup] = useState({
     show: false,
     currentIndex: 0,
-    scale: 1.2, // Increased default scale to make image larger initially
+    scale: 1.2,
     translateX: 0,
     translateY: 0,
     isDragging: false,
     startX: 0,
     startY: 0,
   });
+  const [isGalleryScrollable, setIsGalleryScrollable] = useState(false);
 
-  const imageRef = useRef<HTMLImageElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const galleryScrollRef = useRef<HTMLDivElement>(null);
   const lastTouchDistance = useRef<number>(0);
 
   // Get the correct set of images to display
@@ -358,23 +363,57 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
 
   const imageUrls = displayItems.map(item => item.url);
 
-  // Handle mouse movement for zoom effect
-  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>, imgUrl: string) => {
-    if (!zoom.active) return;
+  // Check if gallery is scrollable
+  const checkIfGalleryIsScrollable = () => {
+    if (galleryScrollRef.current) {
+      const { scrollWidth, clientWidth } = galleryScrollRef.current;
+      setIsGalleryScrollable(scrollWidth > clientWidth);
+    }
+  };
 
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - left;
-    const y = e.clientY - top;
+  // Check scrollability on mount and when items change
+  useEffect(() => {
+    checkIfGalleryIsScrollable();
 
-    const bgX = (x / width) * 100;
-    const bgY = (y / height) * 100;
+    // Also check after a small delay to ensure DOM is fully rendered
+    const timeoutId = setTimeout(checkIfGalleryIsScrollable, 100);
 
-    setZoom(prev => ({
-      ...prev,
-      img: imgUrl,
-      position: { x: e.clientX, y: e.clientY },
-      backgroundPosition: `${bgX}% ${bgY}%`
-    }));
+    return () => clearTimeout(timeoutId);
+  }, [displayItems]);
+
+  // Check scrollability on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      checkIfGalleryIsScrollable();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Scroll gallery functions
+  const scrollGallery = (direction: 'left' | 'right') => {
+    if (!galleryScrollRef.current) return;
+
+    const scrollAmount = 150;
+    const newScrollLeft = galleryScrollRef.current.scrollLeft +
+        (direction === 'right' ? scrollAmount : -scrollAmount);
+
+    galleryScrollRef.current.scrollTo({
+      left: newScrollLeft,
+      behavior: 'smooth'
+    });
+  };
+
+  const canScrollLeft = () => {
+    if (!galleryScrollRef.current) return false;
+    return galleryScrollRef.current.scrollLeft > 0;
+  };
+
+  const canScrollRight = () => {
+    if (!galleryScrollRef.current) return false;
+    return galleryScrollRef.current.scrollLeft <
+        (galleryScrollRef.current.scrollWidth - galleryScrollRef.current.clientWidth);
   };
 
   // Handle opening popup
@@ -382,7 +421,7 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     setPopup({
       show: true,
       currentIndex: index,
-      scale: 1.2, // Start with a slightly zoomed-in view
+      scale: 1.2,
       translateX: 0,
       translateY: 0,
       isDragging: false,
@@ -391,7 +430,43 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     });
   };
 
-  // Handle closing popup
+  // Handle main image click
+  const handleMainImageClick = () => {
+    handleThumbnailClick(currentImageIndex);
+  };
+
+  // Navigate to next image in main view
+  const nextImage = () => {
+    setCurrentImageIndex(prev => (prev + 1) % displayItems.length);
+  };
+
+  // Navigate to previous image in main view
+  const prevImage = () => {
+    setCurrentImageIndex(prev => (prev - 1 + displayItems.length) % displayItems.length);
+  };
+
+  // Popup navigation
+  const nextImagePopup = () => {
+    setPopup(prev => ({
+      ...prev,
+      currentIndex: (prev.currentIndex + 1) % displayItems.length,
+      scale: 1.2,
+      translateX: 0,
+      translateY: 0
+    }));
+  };
+
+  const prevImagePopup = () => {
+    setPopup(prev => ({
+      ...prev,
+      currentIndex: (prev.currentIndex - 1 + displayItems.length) % displayItems.length,
+      scale: 1.2,
+      translateX: 0,
+      translateY: 0
+    }));
+  };
+
+  // Close popup
   const closePopup = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setPopup(prev => ({
@@ -400,49 +475,26 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     }));
   };
 
-  // Navigate to next image
-  const nextImage = () => {
-    setPopup(prev => ({
-      ...prev,
-      currentIndex: (prev.currentIndex + 1) % displayItems.length,
-      scale: 1.2, // Reset to slightly zoomed-in view when changing images
-      translateX: 0,
-      translateY: 0
-    }));
-  };
-
-  // Navigate to previous image
-  const prevImage = () => {
-    setPopup(prev => ({
-      ...prev,
-      currentIndex: (prev.currentIndex - 1 + displayItems.length) % displayItems.length,
-      scale: 1.2, // Reset to slightly zoomed-in view when changing images
-      translateX: 0,
-      translateY: 0
-    }));
-  };
-
-  // Zoom in/out
+  // Zoom functions
   const zoomImage = (factor: number) => {
     setPopup(prev => ({
       ...prev,
-      scale: Math.max(0.8, Math.min(8, prev.scale + factor)), // Increased max zoom to 8x
+      scale: Math.max(0.8, Math.min(8, prev.scale + factor)),
       translateX: 0,
       translateY: 0
     }));
   };
 
-  // Reset zoom
   const resetZoom = () => {
     setPopup(prev => ({
       ...prev,
-      scale: 1.2, // Reset to slightly zoomed-in view instead of 1:1
+      scale: 1.2,
       translateX: 0,
       translateY: 0
     }));
   };
 
-  // Handle mouse down for dragging
+  // Dragging functions for popup
   const handleMouseDown = (e: React.MouseEvent) => {
     if (popup.scale <= 1.2) return;
 
@@ -454,7 +506,6 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     }));
   };
 
-  // Handle mouse move for dragging
   const handleMouseMovePopup = (e: React.MouseEvent) => {
     if (!popup.isDragging || popup.scale <= 1.2) return;
 
@@ -463,8 +514,7 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     const translateX = e.clientX - popup.startX;
     const translateY = e.clientY - popup.startY;
 
-    // Calculate maximum translation based on zoom level
-    const maxTranslate = (popup.scale - 1) * 300; // Increased panning range
+    const maxTranslate = (popup.scale - 1) * 300;
 
     setPopup(prev => ({
       ...prev,
@@ -473,7 +523,6 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     }));
   };
 
-  // Handle mouse up for dragging
   const handleMouseUp = () => {
     setPopup(prev => ({
       ...prev,
@@ -481,7 +530,7 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     }));
   };
 
-  // Handle touch events for pinch-to-zoom
+  // Touch events for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 2) {
       e.preventDefault();
@@ -495,7 +544,6 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
 
       lastTouchDistance.current = distance;
     } else if (e.touches.length === 1 && popup.scale > 1.2) {
-      // Single touch for panning
       const touch = e.touches[0];
       setPopup(prev => ({
         ...prev,
@@ -530,15 +578,13 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
         lastTouchDistance.current = distance;
       }
     } else if (e.touches.length === 1 && popup.isDragging && popup.scale > 1.2) {
-      // Single touch drag when zoomed
       e.preventDefault();
       const touch = e.touches[0];
 
       const translateX = touch.clientX - popup.startX;
       const translateY = touch.clientY - popup.startY;
 
-      // Calculate maximum translation based on zoom level
-      const maxTranslate = (popup.scale - 1) * 300; // Increased panning range
+      const maxTranslate = (popup.scale - 1) * 300;
 
       setPopup(prev => ({
         ...prev,
@@ -561,15 +607,13 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     }
   };
 
-  // Handle wheel event for zooming with mouse wheel
+  // Wheel event for zooming
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
 
     if (e.deltaY < 0) {
-      // Zoom in
       zoomImage(0.3);
     } else {
-      // Zoom out
       zoomImage(-0.3);
     }
   };
@@ -577,30 +621,43 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!popup.show) return;
-
-      switch(e.key) {
-        case 'Escape':
-          closePopup();
-          break;
-        case 'ArrowRight':
-          nextImage();
-          break;
-        case 'ArrowLeft':
-          prevImage();
-          break;
-        case '+':
-        case '=':
-          zoomImage(0.5);
-          break;
-        case '-':
-          zoomImage(-0.5);
-          break;
-        case '0':
-          resetZoom();
-          break;
-        default:
-          break;
+      if (popup.show) {
+        // Popup keyboard controls
+        switch(e.key) {
+          case 'Escape':
+            closePopup();
+            break;
+          case 'ArrowRight':
+            nextImagePopup();
+            break;
+          case 'ArrowLeft':
+            prevImagePopup();
+            break;
+          case '+':
+          case '=':
+            zoomImage(0.5);
+            break;
+          case '-':
+            zoomImage(-0.5);
+            break;
+          case '0':
+            resetZoom();
+            break;
+          default:
+            break;
+        }
+      } else {
+        // Main view keyboard controls
+        switch(e.key) {
+          case 'ArrowRight':
+            nextImage();
+            break;
+          case 'ArrowLeft':
+            prevImage();
+            break;
+          default:
+            break;
+        }
       }
     };
 
@@ -621,77 +678,71 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
     };
   }, [popup.show]);
 
-  // Main carousel slides
-  const children = displayItems.slice(0, 6).map((item: any, index: number) => (
-      <ZoomContainer
-          key={index}
-          onMouseEnter={() => setZoom(prev => ({ ...prev, active: true, img: item.url }))}
-          onMouseLeave={() => setZoom(prev => ({ ...prev, active: false }))}
-      >
-        <ZoomableImage
-            src={item.url}
-            alt={title}
-            onMouseMove={(e) => handleMouseMove(e, item.url)}
-            onClick={() => handleThumbnailClick(index)}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/default-product.png';
-            }}
-        />
-      </ZoomContainer>
-  ));
-
-  // Create a wrapper component for custom dots
-  const CustomDotWrapper = (props: any) => (
-      <CustomDot
-          {...props}
-          imageUrl={imageUrls[props.index] || '/default-product.png'}
-          title={title}
-      />
-  );
-
-  // Determine device type
-  const deviceType = mobile ? 'mobile' : tablet ? 'tablet' : 'desktop';
-
   return (
       <>
         <CarouselAlignmentWrapper>
-          <Carousel
-              showDots
-              ssr
-              infinite={true}
-              slidesToSlide={1}
-              containerClass='carousel-with-custom-dots'
-              responsive={responsive}
-              deviceType={deviceType}
-              autoPlay={false}
-              arrows={false}
-              customDot={<CustomDotWrapper />}
-              {...rest}
-          >
-            {children.length > 0 ? children : (
-                <ZoomContainer>
-                  <ZoomableImage
-                      src="/default-product.png"
-                      alt="Default product image"
-                  />
-                </ZoomContainer>
-            )}
-          </Carousel>
+          {/* Main Image Display */}
+          <MainImageContainer>
+            <ZoomContainer>
+              <ZoomableImage
+                  src={displayItems[currentImageIndex]?.url || '/default-product.png'}
+                  alt={title}
+                  onClick={handleMainImageClick}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/default-product.png';
+                  }}
+              />
+            </ZoomContainer>
+
+            {/* Navigation Arrows for Main Image */}
+            {/* {displayItems.length > 1 && (
+            <>
+              <NavigationButton
+                position="left"
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              >
+                &#10094;
+              </NavigationButton>
+              <NavigationButton
+                position="right"
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              >
+                &#10095;
+              </NavigationButton>
+            </>
+          )} */}
+          </MainImageContainer>
+
+          {/* Scrollable Gallery */}
+          <div style={{ width: '100%' }}>
+            <ScrollableGallery
+                ref={galleryScrollRef}
+                isScrollable={isGalleryScrollable}
+                onScroll={checkIfGalleryIsScrollable}
+            >
+              {displayItems.map((item, index) => (
+                  <GalleryItem
+                      key={index}
+                      isActive={index === currentImageIndex}
+                      onClick={() => setCurrentImageIndex(index)}
+                  >
+                    <GalleryImage
+                        src={item.url}
+                        alt={`${title} - Thumbnail ${index + 1}`}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/default-product.png';
+                        }}
+                    />
+                  </GalleryItem>
+              ))}
+            </ScrollableGallery>
+
+          </div>
         </CarouselAlignmentWrapper>
 
-
-        {/* Zoom overlay */}
-        {/* <ZoomOverlay
-        show={zoom.active}
-        position={zoom.position}
-        style={{
-          backgroundImage: `url(${zoom.img})`,
-          backgroundPosition: zoom.backgroundPosition
-        }}
-      /> */}
-
-        {/* Image popup */}
+        {/* Image Popup */}
         <ImagePopup show={popup.show} onClick={closePopup}>
           <CloseButton onClick={(e) => {
             e.stopPropagation();
@@ -706,12 +757,12 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
 
           {displayItems.length > 1 && (
               <>
-                <NavigationButton position="left" onClick={(e) => { e.stopPropagation(); prevImage(); }}>
+                <PopupNavigationButton  position="left" onClick={(e) => { e.stopPropagation(); prevImagePopup(); }}>
                   &#10094;
-                </NavigationButton>
-                <NavigationButton position="right" onClick={(e) => { e.stopPropagation(); nextImage(); }}>
+                </PopupNavigationButton>
+                <PopupNavigationButton  position="right" onClick={(e) => { e.stopPropagation(); nextImagePopup(); }}>
                   &#10095;
-                </NavigationButton>
+                </PopupNavigationButton>
               </>
           )}
 
@@ -729,7 +780,6 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
 
           <PopupImageContainer>
             <PopupImageWrapper
-                ref={wrapperRef}
                 scale={popup.scale}
                 translateX={popup.translateX}
                 translateY={popup.translateY}
@@ -746,7 +796,6 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
                 }}
             >
               <PopupImage
-                  ref={imageRef}
                   src={displayItems[popup.currentIndex]?.url || '/default-product.png'}
                   alt={title}
                   onError={(e) => {
