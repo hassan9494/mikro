@@ -29,16 +29,26 @@ export const CartItem: React.FC<Props> = ({
                                               onIncrement,
                                               onRemove,
                                           }) => {
-    const {baseProductId, title, image, price, sale_price, unit, quantity, variantTitle, variantId } = data;
+    const { baseProductId, title, image, price, sale_price, unit, quantity, variantTitle, variantId, availableQty } = data;
     const displayPrice = sale_price || price;
+
+    const canAddMore = quantity < availableQty;
+
+    const handleIncrement = () => {
+        if (canAddMore) {
+            onIncrement();
+        }
+    };
+
 
     return (
         <ItemBox>
             <Counter
                 value={quantity}
                 onDecrement={onDecrement}
-                onIncrement={onIncrement}
+                onIncrement={handleIncrement}
                 variant="lightVertical"
+                maxValue={availableQty} // Pass available quantity to counter
             />
             <Image src={image || '/default-product.png'}/>
             <Information>

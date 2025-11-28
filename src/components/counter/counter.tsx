@@ -8,6 +8,7 @@ interface Props {
     value: number;
     variant?: string;
     className?: string;
+    maxValue?: number;
 }
 
 export const Counter: React.FC<Props> = ({
@@ -16,7 +17,11 @@ export const Counter: React.FC<Props> = ({
                                              value,
                                              variant,
                                              className,
+                                             maxValue,
                                          }) => {
+    const canIncrement = maxValue ? value < maxValue : true;
+    const canDecrement = value > 1;
+
     return (
         <CounterBox variant={variant} className={className}>
             <CounterButton onClick={onDecrement} variant={variant}>

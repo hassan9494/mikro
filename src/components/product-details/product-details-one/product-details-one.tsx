@@ -63,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
             height: '2px',
             borderRadius: '3px 3px 0 0'
         },
+        // Remove flex properties and set fixed behavior
+        flexShrink: 0,
         // For screens between 600px and 850px
         [theme.breakpoints.between(600, 850)]: {
             minHeight: '42px',
@@ -81,10 +83,10 @@ const useStyles = makeStyles((theme) => ({
         padding: '12px 30px',
         color: '#494747ff',
         transition: 'all 0.2s ease-in-out',
-        flex: '1 1 auto',
+        flex: 'none',
         maxWidth: 'none',
         whiteSpace: 'nowrap',
-        margin:'0 20px 0 0',
+        margin:'0 8px 0 0',
         '&:hover': {
             color: '#133595',
         },
@@ -96,33 +98,28 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.between(700, 800)]: {
             fontSize: '12px',
             padding: '10px 20px',
-            flex: '1 1 auto',
         },
         // For screens smaller than 600px
         [theme.breakpoints.down(700)]: {
             fontSize: '11px',
             padding: '8px 12px',
-            flex: '1 1 auto',
         },
         // For very small screens
         [theme.breakpoints.down(550)]: {
             fontSize: '11px',
             padding: '6px 8px',
-            flex: '1 1 auto',
             margin:' 0',
 
         },
         [theme.breakpoints.down(400)]: {
             fontSize: '9px',
             padding: '6px 8px',
-            flex: '1 1 auto',
             margin:' 0',
 
         },
         [theme.breakpoints.down(340)]: {
             fontSize: '7px',
             padding: '6px 8px',
-            flex: '1 1 auto',
             margin:' 0',
         }
     }
@@ -216,12 +213,21 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     const hasVariants = product.hasVariants && product.colors && product.colors.length > 0;
 
     const shouldShowProductStatus = !hasVariants || (product.hasVariants && selectedVariant);
+    const hasProductCode = product.code &&
+        product.code.trim() !== "" &&
+        product.code !== "<p></p>" &&
+        product.code !== "<p><br></p>" &&
+        product.code !== "<p><br/></p>";
+
     useEffect(() => {
         // if (product?.hasVariants && product?.colors?.length) {
         //     // Select the first available variant, or the first one if none are available
         //     const availableVariant = product.colors.find(v => v.availableQty > 0) || product.colors[0];
         //     setSelectedVariant(availableVariant);
         // }
+
+
+
         setTimeout(() => {
             window.scrollTo(0, 0);
         }, 500);
@@ -333,9 +339,23 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         return product.replacement_item;
     };
 
+    // Get casher note - check both base product and selected variant
+    const getCasherNote = () => {
+        if (product.hasVariants && selectedVariant && selectedVariant.casher_note) {
+            return selectedVariant.casher_note;
+        }
+        return product.casher_note;
+    }
     const currentStatus = getCurrentStatus();
     const replacementItem = getReplacementItem();
+    const casherNote = getCasherNote();
 
+    // Check if casher note has meaningful content
+    const hasCasherNote = casherNote &&
+        casherNote.trim() !== "" &&
+        casherNote !== "<p></p>" &&
+        casherNote !== "<p><br></p>" &&
+        casherNote !== "<p><br/></p>";
     return (
         <>
             {data.deleted_at == null ? (
@@ -464,6 +484,29 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         </Typography>
                                                     </div>
                                                 )}
+                                                <br/>
+                                                {/* Show casher note for main product even before variant selection */}
+                                                {hasAccess && hasCasherNote && (
+                                                    <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                                                        <Typography variant="h6" style={{
+                                                            fontWeight: 'bold',
+                                                            marginBottom: '1px',
+                                                            color: '#fe5e00',
+                                                            fontSize: '15px'
+                                                        }}>
+                                                            <FormattedMessage id="casherNote" defaultMessage="Casher Note" />
+                                                        </Typography>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{ __html: casherNote }}
+                                                            style={{
+                                                                lineHeight: '1.6',
+                                                                fontSize: '14px',
+                                                                color: '#fe5e00',
+                                                                fontFeatureSettings: '"liga", "kern"'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                         ) : (
                                             /* Available product/variant */
@@ -496,25 +539,72 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         </Typography>
                                                     </div>
                                                 )}
+                                                {/* Show casher note for main product even before variant selection */}
+                                                {hasAccess && hasCasherNote && (
+                                                    <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                                                        <Typography variant="h6" style={{
+                                                            fontWeight: 'bold',
+                                                            marginBottom: '1px',
+                                                            color: '#fe5e00',
+                                                            fontSize: '15px'
+                                                        }}>
+                                                            <FormattedMessage id="casherNote" defaultMessage="Casher Note" />
+                                                        </Typography>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{ __html: casherNote }}
+                                                            style={{
+                                                                lineHeight: '1.6',
+                                                                fontSize: '14px',
+                                                                color: '#fe5e00',
+                                                                fontFeatureSettings: '"liga", "kern"'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </>
                                 )}
                                 {hasVariants && !selectedVariant ?(
-                                    <div style={{
-                                        padding: '15px',
-                                        backgroundColor: '#f8f9fa',
-                                        border: '1px solid #e9ecef',
-                                        borderRadius: '8px',
-                                        textAlign: 'center',
-                                        marginTop: '15px'
-                                    }}>
-                                        <Typography variant="body1" style={{ color: '#666', fontWeight: '500' }}>
-                                            <FormattedMessage
-                                                id="selectVariantMessage"
-                                                defaultMessage="Please select an option to see price and availability"
-                                            />
-                                        </Typography>
+                                    <div>
+                                        <div style={{
+                                            padding: '15px',
+                                            backgroundColor: '#f8f9fa',
+                                            border: '1px solid #e9ecef',
+                                            borderRadius: '8px',
+                                            textAlign: 'center',
+                                            marginTop: '15px'
+                                        }}>
+                                            <Typography variant="body1" style={{ color: '#666', fontWeight: '500' }}>
+                                                <FormattedMessage
+                                                    id="selectVariantMessage"
+                                                    defaultMessage="Please select an option to see price and availability"
+                                                />
+                                            </Typography>
+                                        </div>
+                                        <br/>
+                                        {/* Show casher note for main product even before variant selection */}
+                                        {hasAccess && hasCasherNote && (
+                                            <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                                                <Typography variant="h6" style={{
+                                                    fontWeight: 'bold',
+                                                    marginBottom: '1px',
+                                                    color: '#fe5e00',
+                                                    fontSize: '15px'
+                                                }}>
+                                                    <FormattedMessage id="casherNote" defaultMessage="Casher Note" />
+                                                </Typography>
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: casherNote }}
+                                                    style={{
+                                                        lineHeight: '1.6',
+                                                        fontSize: '14px',
+                                                        color: '#fe5e00',
+                                                        fontFeatureSettings: '"liga", "kern"'
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 ): null}
                                 {/* Variant Selector - Only show if product has variants */}
@@ -643,20 +733,29 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                             </ProductInfo>
 
                             <div>
-                                <div>
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    borderBottom: '1px solid #fff',
+                                    overflowX: 'auto',
+                                    overflowY: 'hidden'
+                                }}>
                                     <Tabs
                                         value={value}
                                         onChange={(e, newValue) => setValue(newValue)}
                                         aria-label="product tabs"
                                         className={classes.tabs}
-                                        variant="fullWidth"
+                                        variant="scrollable"
+                                        scrollButtons="auto"
                                         disableRipple
                                     >
                                         <Tab label="Details" {...tabProps(0)} className={classes.tab} disableRipple />
                                         <Tab label="Features" {...tabProps(1)} className={classes.tab} disableRipple />
                                         <Tab label="Documents" {...tabProps(2)} className={classes.tab} disableRipple />
                                         <Tab label="Product Include" {...tabProps(3)} className={classes.tab} disableRipple />
-                                        <Tab label="Product Code" {...tabProps(4)} className={classes.tab} disableRipple />
+                                        {hasProductCode && (
+                                            <Tab label="Product Code" {...tabProps(4)} className={classes.tab} disableRipple />
+                                        )}
                                     </Tabs>
                                 </div>
                                 <Box p={1}>
@@ -965,51 +1064,52 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         )}
                                     </TabPanel>
                                     {/* Tab 4: Product Code - NEW TAB */}
-                                    <TabPanel value={value} index={4}>
-                                        {product.code && product.code.trim() !== "" &&
-                                        product.code !== "<p></p>" &&
-                                        product.code !== "<p><br></p>" &&
-                                        product.code !== "<p><br/></p>" ? (
-                                            <div>
-                                                <Typography variant="h6" gutterBottom style={{
-                                                    fontWeight: 600,
-                                                    marginBottom: '5px',
-                                                    color: '#333',
-                                                    paddingBottom: '5px',
-                                                    fontSize: '12px'
-                                                }}>
-                                                    <FormattedMessage id="productCode" defaultMessage="Product Code" />
-                                                </Typography>
-
-                                                <div
-                                                    dangerouslySetInnerHTML={{ __html: product.code }}
-                                                    style={{
-                                                        lineHeight: '1.6',
+                                    {hasProductCode && (
+                                        <TabPanel value={value} index={4}>
+                                            {product.code && product.code.trim() !== "" &&
+                                            product.code !== "<p></p>" &&
+                                            product.code !== "<p><br></p>" &&
+                                            product.code !== "<p><br/></p>" ? (
+                                                <div>
+                                                    <Typography variant="h6" gutterBottom style={{
+                                                        fontWeight: 600,
+                                                        marginBottom: '5px',
                                                         color: '#333',
-                                                        fontFamily: 'monospace, sans-serif',
-                                                        padding: '15px',
-                                                        backgroundColor: '#f8f9fa',
-                                                        borderRadius: '8px',
-                                                        border: '1px solid #e9ecef'
-                                                    }}
+                                                        paddingBottom: '5px',
+                                                        fontSize: '12px'
+                                                    }}>
+                                                        <FormattedMessage id="productCode" defaultMessage="Product Code" />
+                                                    </Typography>
 
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div style={{
-                                                textAlign: 'center',
-                                                padding: '40px 20px',
-                                                border: '1px dashed #e0e0e0',
-                                                borderRadius: '8px',
-                                                backgroundColor: '#fafafa'
-                                            }}>
-                                                <Typography variant="body2" color="textSecondary" style={{ fontStyle: 'italic' }}>
-                                                    <FormattedMessage id="noProductCode" defaultMessage="No product code available." />
-                                                </Typography>
-                                            </div>
-                                        )}
-                                    </TabPanel>
+                                                    <div
+                                                        dangerouslySetInnerHTML={{ __html: product.code }}
+                                                        style={{
+                                                            lineHeight: '1.6',
+                                                            color: '#333',
+                                                            fontFamily: 'monospace, sans-serif',
+                                                            padding: '15px',
+                                                            backgroundColor: '#f8f9fa',
+                                                            borderRadius: '8px',
+                                                            border: '1px solid #e9ecef'
+                                                        }}
 
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div style={{
+                                                    textAlign: 'center',
+                                                    padding: '40px 20px',
+                                                    border: '1px dashed #e0e0e0',
+                                                    borderRadius: '8px',
+                                                    backgroundColor: '#fafafa'
+                                                }}>
+                                                    <Typography variant="body2" color="textSecondary" style={{ fontStyle: 'italic' }}>
+                                                        <FormattedMessage id="noProductCode" defaultMessage="No product code available." />
+                                                    </Typography>
+                                                </div>
+                                            )}
+                                        </TabPanel>
+                                    )}
 
                                 </Box>
                             </div>
