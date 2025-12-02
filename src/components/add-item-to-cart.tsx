@@ -36,6 +36,17 @@ const Button = styled.button<any>(
             borderColor: 'primary.regular',
             color: '#fff',
         },
+        ':disabled': {
+            backgroundColor: '#f5f5f5',
+            borderColor: '#e0e0e0',
+            color: '#bdbdbd',
+            cursor: 'not-allowed',
+            ':hover': {
+                backgroundColor: '#f5f5f5',
+                borderColor: '#e0e0e0',
+                color: '#bdbdbd',
+            },
+        },
     }),
     _variant({
         variants: {
@@ -54,6 +65,18 @@ const Button = styled.button<any>(
                     [Icon]: {
                         backgroundColor: 'primary.regular',
                         color: '#fff',
+                    },
+                },
+                ':disabled': {
+                    backgroundColor: '#f5f5f5',
+                    color: '#bdbdbd',
+                    cursor: 'not-allowed',
+                    ':hover': {
+                        backgroundColor: '#f5f5f5',
+                        [Icon]: {
+                            backgroundColor: '#e6e6e6',
+                            color: '#bdbdbd',
+                        },
                     },
                 },
             },
@@ -79,9 +102,40 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
     const itemInCart = isInCart(data.baseProductId || data.id, data.variantId || null);
     const cartItem = itemInCart ? getItem(data.baseProductId || data.id, data.variantId || null) : null;
 
+    // Get available quantity from the product/variant data
+    const getAvailableQuantity = () => {
+        return data.availableQty || 0;
+    };
+
+    const availableQty = getAvailableQuantity();
+    const currentCartQty = cartItem?.quantity || 0;
+
+    // Check if we can add more items
+    const canAddMore = () => {
+        return currentCartQty < availableQty;
+    };
+
+    // Check if the product is out of stock
+    const isOutOfStock = () => {
+        return availableQty === 0;
+    };
+
     const handleAddClick = (e) => {
-        console.log(data)
         e.stopPropagation();
+
+        // Check if we can add more items
+        if (!canAddMore()) {
+            console.log("Cannot add more items - reached available quantity limit");
+            return;
+        }
+
+        // Check if product is out of stock
+        if (isOutOfStock()) {
+            console.log("Cannot add item - product is out of stock");
+            return;
+        }
+
+        console.log(data);
         addItem(data);
     };
 
@@ -92,6 +146,13 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
 
     const handleIncrement = (e) => {
         e.stopPropagation();
+
+        // Check if we can add more items
+        if (!canAddMore()) {
+            console.log("Cannot add more items - reached available quantity limit");
+            return;
+        }
+
         addItem(data);
     };
 
@@ -100,11 +161,38 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
         removeItem(data, 1);
     };
 
+    // If product is out of stock, show disabled state
+    if (isOutOfStock()) {
+        return (
+            <Button
+                aria-label="out of stock"
+                disabled={true}
+                variant={variant}
+            >
+                {!!buttonText && <Box flexGrow={1}>Out of Stock</Box>}
+                <Icon variant={variant}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                    >
+                        <path
+                            d="M5 0C2.24 0 0 2.24 0 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 6.06L6.06 7.5 5 6.44 3.94 7.5 2.5 6.06 3.56 5 2.5 3.94 3.94 2.5 5 3.56 6.06 2.5 7.5 3.94 6.44 5 7.5 6.06z"
+                            fill="currentColor"
+                        />
+                    </svg>
+                </Icon>
+            </Button>
+        );
+    }
+
     return !itemInCart ? (
         <Button
             aria-label="add item to cart"
             onClick={handleAddClick}
             variant={variant}
+            disabled={!canAddMore()} // Disable if cannot add more
         >
             {!!buttonText && <Box flexGrow={1}>{buttonText}</Box>}
             <Icon variant={variant}>
@@ -130,6 +218,8 @@ export const AddItemToCart = ({ data, variant, buttonText }: Props) => {
             onIncrement={handleIncrement}
             className="card-counter"
             variant={variant || 'altHorizontal'}
+            // Pass max value to counter if it supports it
+            maxValue={availableQty}
         />
     );
 };
