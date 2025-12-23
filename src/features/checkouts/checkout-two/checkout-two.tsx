@@ -16,16 +16,8 @@ import CheckoutWrapper, {
 import { FormattedMessage } from 'react-intl';
 import { useCart } from 'contexts/cart/use-cart';
 import Coupon from 'features/coupon/coupon';
-import {
-    Card,
-    CardContent,
-    FormControl,
-    TextField,
-    CardHeader,
-    Divider,
-    makeStyles,
-    Button
-} from "@material-ui/core";
+import { Card, CardContent, FormControl, TextField, CardHeader, Divider, Button } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { order } from 'data/use-orders';
 import useTranslation from 'utils/use-translation';
 import { toast } from "react-toastify";

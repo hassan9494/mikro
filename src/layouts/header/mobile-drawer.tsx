@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { openModal } from '@redq/reuse-modal';
+import { openModal } from 'components/modal/modal-provider';
 import Router from 'next/router';
 import { FormattedMessage } from 'react-intl';
 import { Scrollbar } from 'components/scrollbar/scrollbar';
@@ -24,7 +24,7 @@ import {
     UserOptionMenu,
 } from './header.style';
 import UserImage from 'assets/images/user.jpg';
-import {Button as BTN} from "@material-ui/core";
+import {Button as BTN} from "@mui/material";
 import {
     MOBILE_DRAWER_MENU,
     PROFILE_PAGE,
@@ -37,8 +37,8 @@ import {
 } from 'site-settings/site-navigation';
 import { useAppState, useAppDispatch } from 'contexts/app/app.provider';
 import useUser from "../../data/use-user";
-import {Person, ExitToApp, ExpandMore, ChevronRight} from "@material-ui/icons";
-import {Avatar} from "@material-ui/core";
+import {Person, ExitToApp, ExpandMore, ChevronRight} from "@mui/icons-material";
+import {Avatar} from "@mui/material";
 import Link from "next/link";
 import {RequestMedicine} from "../sidebar/sidebar.style";
 import {TreeMenu} from "../../components/tree-menu/tree-menu";
@@ -59,7 +59,7 @@ import {
     LocalOffer,
     Help,
     ContactMail
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { background } from 'styled-system';
 
 // Styled components for better organization
@@ -246,28 +246,27 @@ const SecondaryMenuSection = styled.div(
 // Custom NavLink wrapper to handle styling
 const StyledNavLink = ({ href, onClick, children, className = '' }) => {
     return (
-        <Link href={href} passHref>
-            <a
-                onClick={onClick}
-                className={`drawer_menu_item ${className}`}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    fontSize: '15px',
-                    fontWeight: '500',
-                    color: '#555',
-                    transition: 'color 0.3s ease',
-                    textDecoration: 'none',
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#fe5e00';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#555';
-                }}
-            >
-                {children}
-            </a>
+        <Link
+            href={href}
+            className={`drawer_menu_item ${className}`}
+            onClick={onClick}
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '15px',
+                fontWeight: '500',
+                color: '#555',
+                transition: 'color 0.3s ease',
+                textDecoration: 'none',
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#fe5e00';
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#555';
+            }}
+        >
+            {children}
         </Link>
     );
 };

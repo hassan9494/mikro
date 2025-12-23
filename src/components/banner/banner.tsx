@@ -9,7 +9,7 @@ import {
     SearchWrapper,
 } from './banner.style';
 
-import { Waypoint } from 'react-waypoint';
+import { IntersectionTrigger } from 'components/intersection-trigger/intersection-trigger';
 import { useAppDispatch } from 'contexts/app/app.provider';
 import Search from 'features/search/search';
 
@@ -33,11 +33,6 @@ export const Banner: React.FC<Props> = ({
     const removeSticky = useCallback(() => dispatch({ type: 'REMOVE_STICKY' }), [
         dispatch,
     ]);
-    const onWaypointPositionChange = ({ currentPosition }) => {
-        if (!currentPosition || currentPosition === 'above') {
-            setSticky();
-        }
-    };
     return (
         <Box display={['none', 'none', 'flex']} style={style}>
             <Image backgroundImage={`url(${imageUrl})`}/>
@@ -45,14 +40,14 @@ export const Banner: React.FC<Props> = ({
                 <Title>
                     <FormattedMessage
                         id={intlTitleId}
-                        defaultMessage='Set Your Title Through Language File'
+                        defaultMessage="Set Your Title Through Language File"
                         values={{ minute: 90 }}
                     />
                 </Title>
                 <Description>
                     <FormattedMessage
                         id={intlDescriptionId}
-                        defaultMessage='Set Your Description Through Language File'
+                        defaultMessage="Set Your Description Through Language File"
                     />
                 </Description>
                 <SearchWrapper>
@@ -61,10 +56,9 @@ export const Banner: React.FC<Props> = ({
                         shadow='0 21px 36px rgba(0,0,0,0.05)'
                     />
                 </SearchWrapper>
-                <Waypoint
+                <IntersectionTrigger
                     onEnter={removeSticky}
                     onLeave={setSticky}
-                    onPositionChange={onWaypointPositionChange}
                 />
             </Content>
         </Box>

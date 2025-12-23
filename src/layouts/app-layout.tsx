@@ -1,12 +1,12 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import Sticky from 'react-stickynode';
+import Sticky from 'components/sticky/sticky';
 import { useAppState } from 'contexts/app/app.provider';
 import Header from './header/header';
 import { LayoutWrapper } from './layout.style';
 import { isCategoryPage } from './is-home-page';
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 import Footer from "./footer";
 import {  Whatsapp } from "components/whatsapp/whatsapp";
 import {useSocial} from "../data/use-website";

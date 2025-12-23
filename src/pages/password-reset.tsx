@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {SEO} from "../components/seo";
 import {PageWrapper} from "../features/user-profile/user-profile.style";
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
 import {
     Box,
     Button,
@@ -9,18 +9,21 @@ import {
     CardContent,
     Container,
     CssBaseline,
-    FormControl, FormControlLabel, Grid, Link,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    Link,
     TextField,
     Typography,
-    makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {useAppDispatch} from "../contexts/app/app.provider";
 import useTranslation from "../utils/use-translation";
 import {AuthContext} from "../contexts/auth/auth.context";
 import useAuth from "../data/use-auth";
 import {useRouter} from "next/router";
 import {FormattedMessage} from "react-intl";
-import {Alert} from "@material-ui/lab";
+import { Alert } from '@mui/material';
 import useUser from "../data/use-user";
 
 

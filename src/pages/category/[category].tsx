@@ -2,7 +2,8 @@ import React from 'react';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
+
 const Products = dynamic(() =>
     import('components/product-grid/product-list/product-list')
 );
@@ -18,7 +19,7 @@ import { useRefScroll } from 'utils/use-ref-scroll';
 import { ModalProvider } from 'contexts/modal/modal.provider';
 import Footer from "../../layouts/footer";
 import { useSocial } from "../../data/use-website";
-import { Backdrop, CircularProgress } from "@material-ui/core";
+import { Backdrop, CircularProgress } from "@mui/material";
 import { getAllCategories, getCategoryBySlug } from 'utils/api/category';
 
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));

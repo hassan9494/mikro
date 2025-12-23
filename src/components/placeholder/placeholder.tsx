@@ -9,7 +9,7 @@ const PostLoader = (props) => (
         backgroundColor="#f3f3f3"
         foregroundColor="#ecebeb"
         {...props}
-        // uniqueKey="my-product-loader"
+        uniqueKey={props.uniqueKey ?? 'post-loader'}
     >
         <rect x="2" y="2" rx="0" ry="0" width="240" height="197"/>
         <rect x="15" y="220" rx="0" ry="0" width="140" height="25"/>
@@ -18,14 +18,15 @@ const PostLoader = (props) => (
         <rect x="170" y="300" rx="0" ry="0" width="60" height="20"/>
     </ContentLoader>
 );
-export const SidebarMobileLoader = () => (
+export const SidebarMobileLoader = (props) => (
     <ContentLoader
         height={46}
         width={400}
         speed={2}
         backgroundColor="#f3f3f3"
         foregroundColor="#ecebeb"
-        // uniqueKey="my-mobile-sidebar-loader"
+        uniqueKey={props.uniqueKey ?? 'sidebar-mobile-loader'}
+        {...props}
     >
         <rect x="58" y="10" rx="0" ry="0" width="287" height="26"/>
         <rect x="364" y="10" rx="0" ry="0" width="26" height="26"/>
@@ -40,8 +41,8 @@ export const SidebarLoader = (props) => (
         speed={2}
         backgroundColor="#f3f3f3"
         foregroundColor="#ecebeb"
+        uniqueKey={props.uniqueKey ?? 'sidebar-loader'}
         {...props}
-        // uniqueKey="my-sidebar-loader"
     >
         <rect x="376" y="22" rx="0" ry="0" width="0" height="0"/>
         <rect x="27" y="50" rx="0" ry="0" width="24" height="24"/>

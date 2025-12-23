@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import css from '@styled-system/css';
-import { animated } from 'react-spring';
+import { motion } from 'framer-motion';
 
 export const Header = styled.header<any>(
     (props) =>
@@ -78,7 +78,7 @@ export const Title = styled.span({
     width:'60%'
 });
 
-export const Content = styled(animated.div)({
+export const Content = styled(motion.div)({
     willChange: 'transform, opacity, height',
     borderLeft: 0,
     overflow: 'hidden',

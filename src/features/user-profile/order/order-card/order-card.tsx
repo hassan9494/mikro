@@ -12,7 +12,7 @@ import {
 } from './order-card.style';
 import { FormattedMessage } from 'react-intl';
 import MoneyFormat from "../../../../components/money-format/money-format";
-import moment from "moment";
+import dayjs from "dayjs";
 
 type OrderCardProps = {
     order?: any;
@@ -71,7 +71,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                             id="intlOrderCardDateText"
                             defaultMessage="Order Date"
                         />
-                        : <span>{moment(order.date).format('Y/MM/DD')}</span>
+                        : <span>{dayjs(order.date).format('YYYY/MM/DD')}</span>
                     </Meta>
 
                     {order?.items && order.items.length > 0 && (

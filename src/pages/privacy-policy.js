@@ -83,7 +83,7 @@ const PrivacyPolicy = () => {
             </div>
             <p>We may update our Privacy Policy periodically. When we make changes:</p>
             <ul className="policy-list">
-              <li>We will update the "Last updated" date at the top of this policy</li>
+              <li>We will update the &quot;Last updated&quot; date at the top of this policy</li>
               <li>For significant changes, we may provide additional notice (such as email notification)</li>
               <li>Your continued use of our services after changes constitutes acceptance</li>
             </ul>

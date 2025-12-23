@@ -1,6 +1,7 @@
 // product card for furniture
 import dynamic from 'next/dynamic';
 import React from 'react';
+import NextImage from 'next/image';
 import Image from 'components/image/image';
 import {
     ProductName,
@@ -80,11 +81,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
             className="furniture-card"
         >
             <ProductImageWrapper>
-                <Image
-                    url={data.image}
-                    className="product-image"
-                    style={{ position: 'relative' }}
+                <NextImage
+                    src={data.image as any}
                     alt={data.title}
+                    width={300}
+                    height={240}
+                    style={{ position: 'relative', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
                 {/*{discountInPercent ? (*/}
                 {/*    <DiscountPercent>{discountInPercent}%</DiscountPercent>*/}

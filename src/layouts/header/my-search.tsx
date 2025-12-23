@@ -9,10 +9,10 @@ import {
     ListItemAvatar,
     ListItemText,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import { autocomplete } from "../../data/use-products"; // ADD THIS IMPORT
 
-const formatOptionLabel = ({ item }, onClick, hasAccess) => {
+const renderOptionLabel = ({ item }, onClick, hasAccess) => {
     return (
         <div style={{ position: 'relative' }}>
             <div
@@ -41,45 +41,50 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                 component="div"
             >
                 <ListItemAvatar>
-                    <Avatar alt={item.title} src={item.image} />
+                    {/* Resolve imported image objects to their .src to avoid [object Object] */}
+                    <Avatar alt={item.title} src={(typeof item.image === 'object' && item.image?.src) ? item.image.src : item.image} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={
-                        <Box display="flex">
-                            <Box flexGrow={3} className={'d-flex justify-content-between'}>
-                                <Typography component="p" variant="body2" color="textPrimary">
-                                    {item.title}
-                                </Typography>
-                                <Typography component="span" variant="body2" color="textSecondary" style={{marginRight:50}}>
+                        <Box display="flex" flexDirection="column" width="100%">
+                            {/* Top row: title + action */}
+                            <Box display="flex" alignItems="center" justifyContent="space-between" minWidth={0}>
+                                <Box minWidth={0} style={{ paddingRight: 12 }}>
+                                    <Typography component="p" variant="body2" color="textPrimary" noWrap style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {item.title}
+                                    </Typography>
+                                </Box>
+
+                                <Box style={{ pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
+                                    {
+                                        item.colors && item.colors.length > 0 && item.hasVariants ?
+                                            'Select Options' :
+                                            item.availableQty ? (
+                                                <AddItemToCart data={item} variant={'full'} />
+                                            ) : (
+                                                'Out Of Stock'
+                                            )
+                                    }
+                                </Box>
+                            </Box>
+
+                            {/* Bottom row: price + optional quantity & location */}
+                            <Box display="flex" alignItems="center" style={{ gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
+                                <Typography component="span" variant="body2" color="textSecondary">
                                     <Chip label={'JD ' + (item.sale_price || item.price)} size="small" color='secondary' />
                                 </Typography>
+
                                 {hasAccess && (
-                                    <>
-                                        <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
-                                            Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
-                                        </Typography>
-                                        <Typography component="span" variant="body2" color="textSecondary">
-                                            Location: {item?.location} / {item.stock_location ?? '----'}
-                                        </Typography>
-                                    </>
+                                    <Typography component="span" variant="body1" color="textPrimary">
+                                        Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
+                                    </Typography>
                                 )}
-                            </Box>
-                            <Box
-                                style={{
-                                    pointerEvents: 'auto',
-                                    position: 'relative',
-                                    zIndex: 2
-                                }}
-                            >
-                                {
-                                    item.colors.length > 0 && item.hasVariants ?
-                                        'Select Options' :
-                                        item.availableQty ? (
-                                            <AddItemToCart data={item} variant={'full'} />
-                                        ) : (
-                                            'Out Of Stock'
-                                        )
-                                }
+
+                                {hasAccess && (
+                                    <Typography component="span" variant="body2" color="textSecondary">
+                                        Location: {item?.location ?? '----'}
+                                    </Typography>
+                                )}
                             </Box>
                         </Box>
                     }
@@ -150,24 +155,41 @@ export default function MySearch({ onSubmit }) {
         }
     };
 
-
-
     const handleInputChange = (newValue, action) => {
         if (action.action !== "input-blur" && action.action !== "menu-close") {
             setSearch(newValue);
         }
     };
 
+    // Ensure the react-select menu renders above header elements and is not clipped
+    const selectStyles = {
+        control: (provided) => ({ ...provided, minHeight: 40 }),
+        menu: (provided) => ({ ...provided, zIndex: 9999 }),
+        menuPortal: (provided) => ({ ...provided, zIndex: 9999 }),
+        option: (provided) => ({ ...provided, padding: '8px 12px' }),
+        container: (provided) => ({ ...provided, position: 'relative' })
+    };
+
+    const menuPortalTarget = (typeof document !== 'undefined') ? document.body : undefined;
+
     return (
         <div style={{ width: '100%', marginRight: '20px', marginLeft: '20px' }} onKeyDown={onKeydown}>
             <AsyncSelect
                 cacheOptions
+                instanceId="header-search" /* stable id to avoid hydration mismatch */
                 defaultOptions={defaultOptions || true}
                 value={null}
                 inputValue={search}
-                getOptionLabel={(data) => formatOptionLabel(data, onChange, hasAccess)}
+                getOptionLabel={(data) => data.label}
+                formatOptionLabel={(data) => renderOptionLabel(data, onChange, hasAccess)}
                 loadOptions={promiseOptions}
                 onInputChange={handleInputChange}
+                styles={selectStyles}
+                menuPortalTarget={menuPortalTarget}
+                menuPosition="absolute"
+                menuPlacement="auto"
+                menuShouldBlockScroll={true}
+                classNamePrefix="select"
                 placeholder={
                     search.length === 1 ?
                         'Type at least 2 characters...' :
@@ -190,7 +212,7 @@ export default function MySearch({ onSubmit }) {
 //     ListItemAvatar,
 //     ListItemText,
 //     Typography
-// } from "@material-ui/core";
+// } from "@mui/material";
 // import { AddItemToCart } from "../../components/add-item-to-cart";
 // import { useRouter } from "next/router";
 // import useUser from "data/use-user";

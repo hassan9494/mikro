@@ -132,13 +132,8 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                         <MetaTitle>Tags:</MetaTitle>
                         <MetaSingle>
                             {product?.categories?.map((item: any) => (
-                                <Link
-                                    href={`/${product.type.toLowerCase()}?category=${item.slug}`}
-                                    key={`link-${item.id}`}
-                                >
-                                    <a>
-                                        <MetaItem>{item.title}</MetaItem>
-                                    </a>
+                                <Link href={`/${product.type.toLowerCase()}?category=${item.slug}`} key={`link-${item.id}`}>
+                                    <MetaItem>{item.title}</MetaItem>
                                 </Link>
                             ))}
                         </MetaSingle>

@@ -47,7 +47,7 @@ const CategoryMenu = (props: any) => {
 };
 
 type Props = {
-    logo: string;
+    logo: any;
 };
 
 export const LeftMenu: React.FC<Props> = ({ logo }) => {
@@ -59,10 +59,13 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
         initialMenu ?? CATEGORY_MENU_ITEMS[0]
     );
 
+    // Ensure we pass a string URL to Logo even if the import is an object
+    const logoSrc = typeof logo === 'string' ? logo : (logo && (logo.src || (logo.default && (typeof logo.default === 'string' ? logo.default : logo.default.src))) ) || '';
+
     return (
         <LeftMenuBox>
             <Logo
-                imageUrl={logo}
+                imageUrl={logoSrc}
                 alt={'Shop Logo'}
                 onClick={() => setActiveMenu(CATEGORY_MENU_ITEMS[0])}
             />

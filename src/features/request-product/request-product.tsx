@@ -62,7 +62,7 @@ const Checkout: React.FC<any> = () => {
                     </NoteText>
 
                     <Row>
-                        <Col xs={12} sm={6} md={6} lg={6}>
+                        <Col>
                             <Label>
                                 <FormattedMessage id="rmMedicineName"/>
                             </Label>
@@ -79,7 +79,7 @@ const Checkout: React.FC<any> = () => {
                             />
                         </Col>
 
-                        <Col xs={12} sm={6} md={6} lg={6}>
+                        <Col>
                             <Label>
                                 <FormattedMessage id="rmMedicineQuantity"/>
                             </Label>
@@ -98,7 +98,7 @@ const Checkout: React.FC<any> = () => {
                     </Row>
 
                     <Row>
-                        <Col xs={12} sm={6} md={6} lg={6}>
+                        <Col>
                             <Label>
                                 <FormattedMessage id="rmMedicineName"/>
                             </Label>
@@ -115,7 +115,7 @@ const Checkout: React.FC<any> = () => {
                             />
                         </Col>
 
-                        <Col xs={12} sm={6} md={6} lg={6}>
+                        <Col>
                             <Label>
                                 <FormattedMessage id="rmMedicineQuantity"/>
                             </Label>
@@ -134,7 +134,7 @@ const Checkout: React.FC<any> = () => {
                     </Row>
 
                     <Row>
-                        <Col xs={12} sm={12} md={12} lg={12}>
+                        <Col>
                             <Heading>
                                 <FormattedMessage
                                     id="rmPrescripttionUpload"
@@ -142,7 +142,7 @@ const Checkout: React.FC<any> = () => {
                                 />
                             </Heading>
                         </Col>
-                        <Col xs={12} sm={12} md={12} lg={12}>
+                        <Col>
                             <Uploader onChange="" intlUploadText="rmUploadText"/>
                         </Col>
                     </Row>
@@ -177,3 +177,4 @@ const Checkout: React.FC<any> = () => {
 };
 
 export default Checkout;
+

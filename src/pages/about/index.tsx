@@ -1,21 +1,21 @@
 import React from "react";
 import Footer from '../../layouts/footer';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Head from 'next/head';
+import Image from 'next/image';
 import aboutUsImage from './about.png';
 
 const AboutUs = () => {
   return (
     <div className="about-page">
       <Head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+        />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
         />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com"  />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Head>
 
       {/* Hero Section */}
@@ -43,11 +43,12 @@ const AboutUs = () => {
               <div className="position-relative animate__animated animate__fadeInRight animate__delay-0-5s">
                 <div className="floating-shape shape-1"></div>
                 <div className="floating-shape shape-2"></div>
-                <img 
+                <Image
                   src={aboutUsImage}
-                  alt="Electronics workshop" 
+                  alt="Electronics workshop"
                   className="img-fluid rounded-4 shadow-lg position-relative floating-image border border-4 border-white"
                   style={{ transform: 'perspective(1000px) rotateY(-10deg)' }}
+                  priority
                 />
               </div>
             </div>

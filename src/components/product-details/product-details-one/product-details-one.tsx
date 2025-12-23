@@ -28,19 +28,21 @@ import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
 import {FormattedMessage} from 'react-intl';
 import {useLocale} from 'contexts/language/language.provider';
 import RelatedProducts from "../../product-grid/related-list/related-list";
-import {Box, Button, Chip, Tab, Tabs, Typography} from "@material-ui/core";
-import {ArrowBack} from "@material-ui/icons";
+import {Box, Button, Chip, Tab, Tabs, Typography} from "@mui/material";
+import {ArrowBack} from "@mui/icons-material";
 import MoneyFormat from "../../money-format/money-format";
 import {AddToCart} from "./add-to-cart";
 import {ProductCardWrapper, ProductsCol, ProductsRow} from "../../product-grid/related-list/related-list.style";
-import Fade from "react-reveal/Fade";
+import { motion } from 'framer-motion';
+import Image from 'components/image/image';
+
 import {ProductCard} from "../../product-card/product-card-six";
 import {ReplacementProductCard} from "../../product-card/replacement_product_card";
 import useUser from "data/use-user";
 import LogoImage from 'assets/images/default/default.png';
 import { useCart } from 'contexts/cart/use-cart';
-import Tooltip from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@mui/material/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
 
 // Add tooltip styles
 const useStyles = makeStyles((theme) => ({
@@ -173,19 +175,14 @@ function ProductCategories({categories = []}) {
             <MetaSingle>
                 {categories.map((item: any) => (
                     <Box m={0.3} key={item.id}>
-                        <Link
-                            href={`/?category=${item.slug}`}
-                            key={`link-${item.id}`}
-                        >
-                            <a>
-                                <Chip
-                                    label={item.title}
-                                    onClick={() => {
-                                    }}
-                                    variant="outlined"
-                                    color={"secondary"}
-                                />
-                            </a>
+                        <Link href={`/?category=${item.slug}`} key={`link-${item.id}`}>
+                            <Chip
+                                label={item.title}
+                                onClick={() => {
+                                }}
+                                variant="outlined"
+                                color={"secondary"}
+                            />
                         </Link>
                     </Box>
                 ))}
@@ -426,13 +423,14 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                       defaultMessage=" the replacement is :"/>
                 </span>
                                                         <ProductCardWrapper>
-                                                            <Fade
-                                                                duration={800}
-                                                                delay={10}
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 16 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{ duration: 0.4, delay: 0.1 }}
                                                                 style={{ height: '100%' }}
                                                             >
                                                                 {renderReplacementCard(replacementItem)}
-                                                            </Fade>
+                                                            </motion.div>
                                                         </ProductCardWrapper>
                                                     </>
                                                 ) : (
@@ -510,7 +508,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                             </div>
                                         ) : (
                                             /* Available product/variant */
-                                            <div>
+                                            (<div>
                                                 <ProductPriceWrapper>
                                                     <ProductPrice>
                                                         <MoneyFormat
@@ -523,11 +521,9 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         ) : null}
                                                     </ProductPrice>
                                                 </ProductPriceWrapper>
-
                                                 <ProductCartWrapper>
                                                     <AddToCart data={product} variant={selectedVariant} />
                                                 </ProductCartWrapper>
-
                                                 {hasAccess && (
                                                     <div className={'mt-1'} style={{ marginTop: 5 }}>
                                                         <Typography component="span" variant="body1" color="textPrimary"
@@ -561,7 +557,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         />
                                                     </div>
                                                 )}
-                                            </div>
+                                            </div>)
                                         )}
                                     </>
                                 )}
@@ -623,6 +619,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
                                                 return (
                                                     <VariantChip
+                                                        key={variant.id ?? variant.title}
                                                         data-selected={isSelected}
                                                         data-outofstock={isOutOfStock}
                                                         data-retired={isRetired}
@@ -747,12 +744,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                         className={classes.tabs}
                                         variant="scrollable"
                                         scrollButtons="auto"
-                                        disableRipple
                                     >
-                                        <Tab label="Details" {...tabProps(0)} className={classes.tab} disableRipple />
-                                        <Tab label="Features" {...tabProps(1)} className={classes.tab} disableRipple />
-                                        <Tab label="Documents" {...tabProps(2)} className={classes.tab} disableRipple />
-                                        <Tab label="Product Include" {...tabProps(3)} className={classes.tab} disableRipple />
+                                        <Tab label="Details" {...tabProps(0)} className={classes.tab} />
+                                        <Tab label="Features" {...tabProps(1)} className={classes.tab} />
+                                        <Tab label="Documents" {...tabProps(2)} className={classes.tab} />
+                                        <Tab label="Product Include" {...tabProps(3)} className={classes.tab} />
                                         {hasProductCode && (
                                             <Tab label="Product Code" {...tabProps(4)} className={classes.tab} disableRipple />
                                         )}
@@ -990,9 +986,11 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         >
                                                             {/* Product Image */}
                                                             <div>
-                                                                <img
-                                                                    src={kitItem.image || LogoImage}
+                                                                <Image
+                                                                    url={kitItem.image || LogoImage}
                                                                     alt={kitItem.name}
+                                                                    width={60}
+                                                                    height={50}
                                                                     style={{
                                                                         width: '60px',
                                                                         height: '50px',

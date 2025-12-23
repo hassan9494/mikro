@@ -17,10 +17,10 @@ import {
   MobileFilterSection,
 } from './product-list.style';
 import Placeholder from 'components/placeholder/placeholder';
-import Fade from 'react-reveal/Fade';
+import { motion } from 'framer-motion';
 import NoResultFound from 'components/no-result/no-result';
 import useProducts from 'data/use-products';
-import { Pagination } from "@material-ui/lab";
+import Pagination from '@mui/material/Pagination';
 import {
   Box,
   Select,
@@ -38,12 +38,12 @@ import {
   Divider,
   IconButton,
   Chip
-} from "@material-ui/core";
-import { useTheme } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TuneIcon from '@material-ui/icons/Tune';
-import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TuneIcon from '@mui/icons-material/Tune';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 
 const ErrorMessage = dynamic(() =>
     import('components/error-message/error-message')
@@ -445,9 +445,14 @@ export const Products: React.FC<ProductsProps> = ({
           {data.map((item: any, index: number) => (
               <ProductsCol key={index} style={type === 'book' ? { paddingLeft: 0, paddingRight: 1 } : {}}>
                 <ProductCardWrapper>
-                  <Fade duration={800} delay={index * 10} style={{ height: '100%' }}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    style={{ height: '100%' }}
+                  >
                     {renderCard(type, item)}
-                  </Fade>
+                  </motion.div>
                 </ProductCardWrapper>
               </ProductsCol>
           ))}

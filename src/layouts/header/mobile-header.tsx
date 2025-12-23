@@ -1,6 +1,6 @@
 import React from 'react';
 import Router, { useRouter } from 'next/router';
-import { openModal, closeModal } from '@redq/reuse-modal';
+import { openModal, closeModal } from 'components/modal/modal-provider';
 import MobileDrawer from './mobile-drawer';
 import {
     MobileHeaderWrapper,
@@ -24,7 +24,7 @@ import AuthMenu from "./menu/auth-menu";
 import AuthenticationForm from "../../features/authentication-form";
 import { AuthContext } from "../../contexts/auth/auth.context";
 import styled from "styled-components";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import MySearch from "./my-search";
 
@@ -61,6 +61,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
     const handleSearchModal = () => {
         openModal({
             show: true,
+            overlayClassName: 'search-modal-mobile-overlay',
             config: {
                 enableResizing: false,
                 disableDragging: true,
@@ -70,7 +71,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
             },
             closeOnClickOutside: false,
             component: (props) => (
-                <SearchModal {...props} onSubmit={handleClose} /> // Pass handleClose as onSubmit
+                (<SearchModal {...props} onSubmit={handleClose} />) // Pass handleClose as onSubmit
             ),
             closeComponent: () => <div />,
         });

@@ -9,7 +9,7 @@ import {
     TotalItems,
 } from './whatsapp.style';
 import { ShoppingBag } from 'assets/icons/ShoppingBag';
-import { WhatsApp } from "@material-ui/icons";
+import { WhatsApp } from "@mui/icons-material";
 
 type CartButtonProps = {
     style?: React.CSSProperties;

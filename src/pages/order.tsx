@@ -7,7 +7,7 @@ import {
     SidebarSection,
 } from 'features/user-profile/user-profile.style';
 import Sidebar from 'features/user-profile/sidebar/sidebar';
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
 import Router from "next/router";
 import useUser from "../data/use-user";
 

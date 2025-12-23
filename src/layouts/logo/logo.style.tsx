@@ -19,5 +19,15 @@ export const LogoImage = styled.img({
     display: 'block',
     backfaceVisibility: 'hidden',
     maxWidth: 200,
-    width:200
+    width: 'auto',
+    height: 40,
+    maxHeight: 40,
+    minWidth: 40,
+
+    '@media (max-width: 575px)': {
+        maxWidth: 140,
+        height: 32,
+        maxHeight: 32,
+        width: 'auto',
+    }
 });

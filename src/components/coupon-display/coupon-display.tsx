@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCart } from 'contexts/cart/use-cart';
-import { Box, Typography, Chip, Divider } from '@material-ui/core';
+import { Box, Typography, Chip, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 // Define types for the coupon data
@@ -44,7 +44,7 @@ const CouponDisplay: React.FC = () => {
             p={isCompactView ? 1 : 2}
             border={1}
             borderColor="grey.300"
-            borderRadius={4}
+            borderRadius="4px"
             style={{
                 maxWidth: '100%',
                 height: 'max-content'
@@ -64,13 +64,12 @@ const CouponDisplay: React.FC = () => {
                     -${coupon.calculatedDiscount?.toFixed(2) || '0.00'}
                 </Typography>
             </Box>
-
             {coupon.is_percentage && excludedItems.length > 0 && (
                 <Box
                     mt={1}
                     p={1}
                     bgcolor="info.light"
-                    borderRadius={1}
+                    borderRadius="1px"
                     border={1}
                     borderColor="info.main"
                 >
@@ -114,7 +113,6 @@ const CouponDisplay: React.FC = () => {
                     </Box>
                 </Box>
             )}
-
             {coupon.is_percentage && eligibleItems.length > 0 && !isCompactView && (
                 <Box mt={1}>
                     <Typography variant="body2" color="textSecondary">
@@ -126,13 +124,12 @@ const CouponDisplay: React.FC = () => {
                     </Typography>
                 </Box>
             )}
-
             {!coupon.is_percentage && !isCompactView && (
                 <Box
                     mt={1}
                     p={1}
                     bgcolor="success.light"
-                    borderRadius={1}
+                    borderRadius="1px"
                     border={1}
                     borderColor="success.main"
                 >

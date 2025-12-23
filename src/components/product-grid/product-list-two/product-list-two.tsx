@@ -11,7 +11,7 @@ import {
 } from '../product-list/product-list.style';
 import { Button } from 'components/button/button';
 import Placeholder from 'components/placeholder/placeholder';
-import Fade from 'react-reveal/Fade';
+import { motion } from 'framer-motion';
 import NoResultFound from 'components/no-result/no-result';
 
 import { customerDistance } from 'utils/customerDistance';
@@ -78,9 +78,10 @@ export const Products: React.FC<ProductsProps> = ({
                 {data?.map((item: any, index: number) => (
                     <ProductsCol key={index} className="food-col">
                         <ProductCardWrapper>
-                            <Fade
-                                duration={800}
-                                delay={index * 10}
+                            <motion.div
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: index * 0.05 }}
                                 style={{ height: '100%' }}
                             >
                                 <FoodCard
@@ -99,7 +100,7 @@ export const Products: React.FC<ProductsProps> = ({
                                         )
                                     }
                                 />
-                            </Fade>
+                            </motion.div>
                         </ProductCardWrapper>
                     </ProductsCol>
                 ))}

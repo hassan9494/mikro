@@ -1,15 +1,12 @@
-export { HomeOutlined as Home  } from '@material-ui/icons';
-export { BookOutlined as Course  } from '@material-ui/icons';
-export { ContactSupportOutlined as Service  } from '@material-ui/icons';
-export { YouTube as Tutorial  } from '@material-ui/icons';
-export { InfoOutlined as About } from '@material-ui/icons';
-export { FruitsVegetable } from 'assets/icons/FruitsVegetable';
-export { FacialCare } from 'assets/icons/FacialCare';
-export { Handbag } from 'assets/icons/Handbag';
-export { DressIcon } from 'assets/icons/DressIcon';
-export { FurnitureIcon } from 'assets/icons/FurnitureIcon';
-export { BookIcon } from 'assets/icons/BookIcon';
-export { MedicineIcon } from 'assets/icons/MedicineIcon';
-export { Restaurant } from 'assets/icons/Restaurant';
-export { Bakery } from 'assets/icons/Bakery';
+// Central map of icons used in category/menu and language menus
+// Use clearer semantic icons to match header expectations
+export { CategoryIcon as Home } from './CategoryIcon';
+export { BookIcon as Course } from './BookIcon';
+export { ProductIcon as Service } from './ProductIcon';
+export { InkPen as Tutorial } from './InkPen';
+export { SiteSettings as About } from './SiteSettings';
+
+// Flags used for language menu
+export { SAFlag } from './SAFlag';
+export { USFlag } from './USFlag';
 

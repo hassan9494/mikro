@@ -10,11 +10,11 @@ import {
 } from './product-color-list.style';
 import { CURRENCY } from 'utils/constant';
 import Placeholder from 'components/placeholder/placeholder';
-import Fade from 'react-reveal/Fade';
+import { motion } from 'framer-motion';
 import NoResultFound from 'components/no-result/no-result';
 import useProducts from 'data/use-products';
-import { Pagination } from "@material-ui/lab";
-import {Box, Select, MenuItem, FormControl, InputLabel, FormControlLabel, Checkbox} from "@material-ui/core";
+import { Pagination } from '@mui/material';
+import {Box, Select, MenuItem, FormControl, InputLabel, FormControlLabel, Checkbox} from "@mui/material";
 
 const ErrorMessage = dynamic(() =>
     import('components/error-message/error-message')
@@ -120,13 +120,14 @@ export const ProductColors: React.FC<ProductsProps> = ({
                         style={type === 'book' ? { paddingLeft: 0, paddingRight: 1 } : {}}
                     >
                         <ProductCardWrapper>
-                            <Fade
-                                duration={800}
-                                delay={index * 10}
+                            <motion.div
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: index * 0.05 }}
                                 style={{ height: '100%' }}
                             >
                                 {renderCard(type, item)}
-                            </Fade>
+                            </motion.div>
                         </ProductCardWrapper>
                     </ProductsCol>
                 ))}

@@ -50,6 +50,17 @@ const Drawer: React.FunctionComponent<DrawerProps> = ({
 
                 {children}
             </RcDrawer>
+
+            {/* custom mask when drawer is open (rc-drawer mask isn't always present in our usage) */}
+            {open && (
+                <div
+                    className="rc-drawer-mask"
+                    aria-hidden
+                    onClick={toggleHandler}
+                    style={{ cursor: 'pointer' }}
+                />
+            )}
+
             <div
                 className="drawer__handler"
                 style={{ display: 'inline-block' }}

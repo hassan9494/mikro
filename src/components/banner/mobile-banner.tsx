@@ -10,10 +10,10 @@ import {
     SearchWrapper,
 } from './banner.style';
 import dynamic from 'next/dynamic';
-import { Waypoint } from 'react-waypoint';
-import { Button } from 'components/button/button';
+import styled from 'styled-components';
 import { useAppDispatch } from 'contexts/app/app.provider';
 import Search from 'features/search/search';
+import { IntersectionTrigger } from 'components/intersection-trigger/intersection-trigger';
 
 const CategoryIconNav = dynamic(() => import('components/type-nav/type-nav'));
 const SpringModal = dynamic(() =>
@@ -34,10 +34,12 @@ export const MobileBanner: React.FC<Props> = ({ type, intlTitleId }) => {
     const removeSticky = useCallback(() => dispatch({ type: 'REMOVE_STICKY' }), [
         dispatch,
     ]);
-    const onWaypointPositionChange = ({ currentPosition }) => {
-        if (!currentPosition || currentPosition === 'above') {
-            setSticky();
-        }
+    const handleEnter = () => {
+        removeSticky();
+    };
+
+    const handleLeave = () => {
+        setSticky();
     };
     return (
         <Box display={['flex', 'flex', 'none']}>
@@ -47,26 +49,35 @@ export const MobileBanner: React.FC<Props> = ({ type, intlTitleId }) => {
                         <FormattedMessage
                             id={intlTitleId}
                             defaultMessage="Set Your Title Through Language File"
-                            values={{ minute: 90 }}
                         />
                     </Description>
 
-                    <Button
-                        variant="text"
+                    <button
+                        type="button"
                         onClick={() => setOpen(true)}
-                        style={{ textTransform: 'capitalize' }}
+                        style={{
+                            textTransform: 'capitalize',
+                            background: 'transparent',
+                            color: '#133695',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                        }}
                     >
-                        {type}
-                    </Button>
+                        {type ? (
+                            type
+                        ) : (
+                            <FormattedMessage id="mobileBanner.browse" defaultMessage="Browse" />
+                        )}
+                    </button>
                 </ContentRow>
 
                 <SearchWrapper>
                     <Search minimal={true}/>
                 </SearchWrapper>
-                <Waypoint
-                    onEnter={removeSticky}
-                    onLeave={setSticky}
-                    onPositionChange={onWaypointPositionChange}
+                <IntersectionTrigger
+                    onEnter={handleEnter}
+                    onLeave={handleLeave}
                 />
             </Content>
             <SpringModal isOpen={isOpen} onRequestClose={() => setOpen(false)}>

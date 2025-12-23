@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { closeModal } from '@redq/reuse-modal';
+import { closeModal } from 'components/modal/modal-provider';
 import MaskedInput from 'react-text-mask';
 import { FormattedMessage } from 'react-intl';
 import { getCookie, setCookie } from 'utils/session';
@@ -54,11 +54,12 @@ export default function LocationModal() {
                     render={(ref, props) => <Input ref={ref} {...props} />}
                 />
                 <Button
-                    fullwidth
-                    // radius={100}
-                    title={'Continue'}
+                    type="button"
                     onClick={handleZipCode}
-                />
+                    style={{ width: '100%', borderRadius: '30px', marginTop: '16px' }}
+                >
+                    <FormattedMessage id="continue" defaultMessage="Continue" />
+                </Button>
             </Container>
             <OfferSection>
                 <GiftBox/>

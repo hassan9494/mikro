@@ -1,4 +1,4 @@
-import { openModal } from '@redq/reuse-modal';
+import { openModal } from 'components/modal/modal-provider';
 
 // Add or edit modal
 export const handleModal = (

@@ -72,11 +72,11 @@ export default function useProducts(variables: Props) {
 }
 
 
-export function useProduct(slug) {
+export function useProduct(slug?: string | string[]) {
+    const key = slug ? `product/${slug}` : null;
+    const { data, error } = useSWR(key, productFetcher);
 
-    const { data, error } = useSWR(`product/${slug}`, productFetcher);
-
-    const loading = !data && !error;
+    const loading = Boolean(key) && !data && !error;
 
     return {
         loading,

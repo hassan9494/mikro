@@ -10,22 +10,14 @@ import CheckoutWrapper, {
 } from './checkout-guest.style';
 import { FormattedMessage } from 'react-intl';
 import { useCart } from 'contexts/cart/use-cart';
-import {
-    Card,
-    CardContent,
-    FormControl,
-    TextField,
-    CardHeader,
-    Divider,
-    makeStyles,
-    Button,
-} from "@material-ui/core";
+import { Card, CardContent, FormControl, TextField, CardHeader, Divider, Button } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { order } from 'data/use-orders';
 import useTranslation from 'utils/use-translation';
 import { toast } from "react-toastify";
 import { useAppDispatch } from "contexts/app/app.provider";
 import useCities from "data/use-city";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import CheckoutCart from "../checkout-cart";
 
 // The type of props Checkout Form receives

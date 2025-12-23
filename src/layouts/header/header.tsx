@@ -1,6 +1,6 @@
 import React from 'react';
 import Router, { useRouter } from 'next/router';
-import { openModal } from '@redq/reuse-modal';
+import { openModal } from 'components/modal/modal-provider';
 import { AuthContext } from 'contexts/auth/auth.context';
 import AuthenticationForm from 'features/authentication-form';
 import { RightMenu } from './menu/right-menu/right-menu';
@@ -11,7 +11,7 @@ import LogoImage from 'assets/images/logo_mikro.svg';
 import UserImage from 'assets/images/user.jpg';
 import { isCategoryPage } from '../is-home-page';
 import Search from 'features/search/search';
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 import dynamic from "next/dynamic";
 type Props = {
     className?: string;

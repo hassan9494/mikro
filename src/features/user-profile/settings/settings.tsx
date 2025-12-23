@@ -72,7 +72,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                     </Title>
                 </HeadingSection>
                 <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
-                    <Col xs={12} sm={5} md={5} lg={5}>
+                    <Col>
                         <Label>
                             <FormattedMessage
                                 id='profileNameField'
@@ -90,7 +90,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                         />
                     </Col>
 
-                    <Col xs={12} sm={5} md={5} lg={5}>
+                    <Col>
                         <Label>
                             <FormattedMessage
                                 id='profileEmailField'
@@ -107,14 +107,14 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                         />
                     </Col>
 
-                    <Col xs={12} sm={2} md={2} lg={2}>
+                    <Col>
                         <Button size='big' style={{ width: '100%' }} onClick={handleSave}>
                             <FormattedMessage id='profileSaveBtn' defaultMessage='Save'/>
                         </Button>
                     </Col>
                 </Row>
                 <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
-                    <Col xs={12} sm={5} md={5} lg={5}>
+                    <Col>
                         <Label>
                             <FormattedMessage
                                 id='profileCurrentPasswordField'
@@ -132,7 +132,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                         />
                     </Col>
 
-                    <Col xs={12} sm={5} md={5} lg={5}>
+                    <Col>
                         <Label>
                             <FormattedMessage
                                 id='profileNewPasswordField'
@@ -149,14 +149,14 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                         />
                     </Col>
 
-                    <Col xs={12} sm={2} md={2} lg={2}>
+                    <Col>
                         <Button size='big' style={{ width: '100%' }} onClick={handleChangePassword}>
                             <FormattedMessage id='profileChangePasswordBtn' defaultMessage='Change Password'/>
                         </Button>
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} sm={12} md={12} lg={12} style={{ position: 'relative' }}>
+                    <Col style={{ position: 'relative' }}>
                         <SettingsFormContent>
                             <Address/>
                         </SettingsFormContent>
@@ -168,3 +168,4 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
 };
 
 export default SettingsContent;
+

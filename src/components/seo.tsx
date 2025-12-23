@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import Script from 'next/script';
 import { siteMetadata } from "../site-settings/site-metadata";
 
 
@@ -14,7 +15,7 @@ type SeoProps = {
     css?: string;
     js?: string;
     image?: string;
-    jsonLd?: object; // <-- Add this line
+    jsonLd?: object; 
 };
 
 export const SEO: React.FC<SeoProps> = ({
@@ -27,7 +28,7 @@ export const SEO: React.FC<SeoProps> = ({
                                             css,
                                             js,
                                             image,
-                                            jsonLd, // <-- Add this here
+                                            jsonLd, 
                                         }) => {
     const data = { ...siteMetadata, title, description,itemTitle,itemDescription, keywords, canonical, css, js, image, jsonLd };
     const itemMainTitle = data?.itemTitle ? data?.itemTitle : data?.title;
@@ -54,7 +55,9 @@ export const SEO: React.FC<SeoProps> = ({
             <meta name="twitter:description" content={itemMainDescription} />
             {data?.image && <meta name="twitter:image" content={`${data?.image}`}/>}
             {data?.canonical && <link rel="canonical" href={`${data?.canonical}`}/>}
-            {data?.js && <script type="text/javascript" src={`${data?.js}`}></script>}
+            {data?.js && (
+                <Script src={`${data.js}`} strategy="afterInteractive" />
+            )}
             {data?.keywords && <meta name="keywords" content={data.keywords} />}
             {data?.jsonLd && (
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data.jsonLd) }} />

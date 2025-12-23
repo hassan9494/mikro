@@ -1,14 +1,14 @@
-import { createTheme  } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import { red } from '@mui/material/colors';
 
-// Create a theme instance.
-const theme = createTheme ({
+// Create a theme instance. (adaptV4Theme deprecated — supply theme object directly)
+const theme = createTheme({
     typography: {
-        "fontFamily": `"Cairo", sans-serif`,
-        "fontSize": 14,
-        "fontWeightLight": 400,
-        "fontWeightRegular": 500,
-        "fontWeightMedium": 600
+        fontFamily: `"Cairo", sans-serif`,
+        fontSize: 14,
+        fontWeightLight: 400,
+        fontWeightRegular: 500,
+        fontWeightMedium: 600,
     },
     palette: {
         primary: {

@@ -128,15 +128,7 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 },
             },
 
-            '.search-modal-mobile': {
-                transform: 'none!important',
-                maxWidth: 'none!important',
-                maxHeight: 'none!important',
-                top: '0!important',
-                left: '0!important',
-                background: 'transparent!important',
-                borderRadius: '0!important',
-            },
+
 
             '.reuseModalCloseBtn': {
                 right: '10px!important',
@@ -195,10 +187,62 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 position: 'relative',
             },
 
-            '.drawer': {
+            '.rc-drawer, .drawer': {
                 outline: 0,
                 boxShadow: 'none',
+                zIndex: 999999,
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                // Ensure drawer content is opaque and visible
+                '& .rc-drawer-content, & .rc-drawer-body, & .drawer-content': {
+                    background: '#ffffff',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                    display: 'block',
+                    height: '100%',
+                },
             },
+
+            // Backdrop/mask for rc-drawer
+            '.rc-drawer-mask': {
+                backgroundColor: 'rgba(0,0,0,0.45)',
+                // Keep mask underneath header but above page content when present
+                zIndex: 99998,
+            },
+
+            // When modal overlay is used for mobile search, align to top instead of centered
+            '.search-modal-mobile-overlay': {
+                alignItems: 'flex-start !important',
+                justifyContent: 'flex-start !important',
+                paddingTop: '60px !important',
+            },
+
+            '.search-modal-mobile': {
+                transform: 'none!important',
+                maxWidth: 'none!important',
+                maxHeight: 'none!important',
+                top: '0!important',
+                left: '0!important',
+                background: '#ffffff !important',
+                borderRadius: '0!important',
+                width: '100% !important',
+                height: 'auto !important',
+            },
+
+            // Ensure modal overlay aligns to top on small screens (for mobile search)
+            '@media (max-width: 990px)': {
+                '.modal-overlay.search-modal-mobile-overlay': {
+                    alignItems: 'flex-start !important',
+                    justifyContent: 'flex-start !important',
+                    paddingTop: '60px !important',
+                },
+                '.drawer__handler': {
+                    zIndex: 100000,
+                    position: 'relative',
+                },
+            },
+
+
             '.srOnly': {
                 border: '0 !important',
                 clip: 'rect(1px, 1px, 1px, 1px) !important',
@@ -211,6 +255,7 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 width: '1px !important',
                 whiteSpace: 'nowrap !important',
             },
+            
             '.footer-logo': {
                 maxWidth: '200px',
                 height: 'auto',
@@ -222,6 +267,19 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
             '@media (min-width: 990px) and (max-width: 1115px)': {
                 '.footer-logo': {
                     maxWidth: '160px',
+                },
+            },
+
+            // Ensure header logo has explicit size to avoid collapsing to 0x0
+            "img[alt='Shop Logo'], img[alt='shop logo']": {
+                display: 'block',
+                width: 'auto',
+                height: 40,
+                maxHeight: 40,
+                minWidth: 40,
+                '@media (max-width: 575px)': {
+                    height: 32,
+                    maxHeight: 32,
                 },
             },
 

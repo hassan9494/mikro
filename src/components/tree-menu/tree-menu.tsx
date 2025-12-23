@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { usePrevious, useMeasure } from 'utils/hooks';
-import { useSpring, animated } from 'react-spring';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Frame, Title, Content, Header, IconWrapper } from './tree-menu.style';
 import { Button } from 'components/button/button';
 import { ArrowNext } from 'assets/icons/ArrowNext';
 import css from '@styled-system/css';
 import * as icons from 'assets/icons/category-icons';
-import { DoubleArrow, RadioButtonUncheckedOutlined } from "@material-ui/icons";
+import { DoubleArrow, RadioButtonUncheckedOutlined } from "@mui/icons-material";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -29,20 +28,19 @@ const ImageWrapper = styled.div(
     })
 );
 
-const Tree = React.memo(
-    ({
-         children,
-         name,
-         icon,
-         onClick,
-         dropdown,
-         onToggleBtnClick,
-         depth,
-         image,
-         defaultOpen = false,
-         isOpen, // New prop to control open state
-         onToggle, // New prop to handle toggle
-     }: any) => {
+const TreeComponent = ({
+                           children,
+                           name,
+                           icon,
+                           onClick,
+                           dropdown,
+                           onToggleBtnClick,
+                           depth,
+                           image,
+                           defaultOpen = false,
+                           isOpen,
+                           onToggle,
+                       }: any) => {
         const [internalOpen, setInternalOpen] = useState(defaultOpen);
         const isControlled = isOpen !== undefined;
         const open = isControlled ? isOpen : internalOpen;
@@ -53,16 +51,15 @@ const Tree = React.memo(
             }
         }, [defaultOpen, isControlled]);
 
-        const previous = usePrevious(open);
-        const [bind, { height: viewHeight }] = useMeasure();
-        const { height, opacity, transform } = useSpring<any>({
-            from: { height: 0, opacity: 0, transform: 'translate3d(20px,0,0)' },
-            to: {
-                height: open ? viewHeight : 0,
-                opacity: open ? 1 : 0,
-                transform: `translate3d(${open ? 0 : 20}px,0,0)`,
-            },
-        });
+        const contentVariants = {
+            open: { height: 'auto', opacity: 1 },
+            collapsed: { height: 0, opacity: 0 },
+        };
+
+        const listVariants = {
+            open: { opacity: 1, x: 0 },
+            collapsed: { opacity: 0, x: 20 },
+        };
 
         const handleToggle = (e) => {
             e.stopPropagation();
@@ -124,18 +121,31 @@ const Tree = React.memo(
                         </Button>
                     )}
                 </Header>
-                <Content
-                    style={{
-                        opacity,
-                        height: open && previous === open ? 'auto' : height,
-                    }}
-                >
-                    <animated.div style={{ transform }} {...bind} children={children}/>
-                </Content>
+                <AnimatePresence initial={false}>
+                    {open && (
+                        <Content
+                            key="tree-content"
+                            initial="collapsed"
+                            animate="open"
+                            exit="collapsed"
+                            variants={contentVariants}
+                            transition={{ duration: 0.25, ease: 'easeOut' }}
+                        >
+                            <motion.div
+                                variants={listVariants}
+                                transition={{ duration: 0.25, ease: 'easeOut' }}
+                            >
+                                {children}
+                            </motion.div>
+                        </Content>
+                    )}
+                </AnimatePresence>
             </Frame>
         );
-    }
-);
+    };
+
+const Tree = React.memo(TreeComponent);
+Tree.displayName = 'TreeMenuNode';
 
 type Props = {
     className?: any;

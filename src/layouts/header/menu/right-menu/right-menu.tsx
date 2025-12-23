@@ -4,8 +4,8 @@ import NavLink from 'components/nav-link/nav-link';
 import {OFFER_MENU_ITEM, HELP_MENU_ITEM} from 'site-settings/site-navigation';
 import LanguageSwitcher from '../language-switcher/language-switcher';
 import {RightMenuBox} from './right-menu.style';
-import {Phone, WhatsApp} from "@material-ui/icons";
-import {Typography} from "@material-ui/core";
+import {Phone, WhatsApp} from "@mui/icons-material";
+import {Typography} from "@mui/material";
 
 const AuthMenu = dynamic(() => import('../auth-menu'), {ssr: false});
 

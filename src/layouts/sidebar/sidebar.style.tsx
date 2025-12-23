@@ -125,9 +125,9 @@ export const Loading = styled.div`
   font-size: calc(${themeGet('fontSizes.base', '15px')} - 1px);
   color: ${themeGet('colors.text.bold', '#0D1136')};
 `;
-import { Button, Grid } from "@material-ui/core";
-import { NewReleases, FlightLand } from '@material-ui/icons';
-// import styled from '@material-ui/styles/styled';
+import { Button, Grid } from "@mui/material";
+import { NewReleases, FlightLand } from '@mui/icons-material';
+// import styled from '@mui/styles/styled';
 export const NewProductButton = styled(Button)`
   && {
     background: linear-gradient(135deg, #fe5e00 0%, #fe5e00 100%);

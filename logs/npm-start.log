@@ -1,0 +1,10 @@
+
+> @pick-bazar/shop-rest@5.0.2 start
+> next start -p 3004
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3004
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+Terminate batch job (Y/N)? 

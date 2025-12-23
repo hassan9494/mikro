@@ -1,6 +1,6 @@
-import React from 'react';
-import { useTransition, animated } from 'react-spring';
-import { BaseModal } from 'react-spring-modal';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 // import { useAppState, useAppDispatch } from 'contexts/app/app.provider';
 import { Scrollbar } from 'components/scrollbar/scrollbar';
@@ -9,7 +9,7 @@ type SpringModalProps = {
     isOpen: boolean;
     onRequestClose: () => void;
     children: React.ReactNode;
-    style?: any;
+    style?: React.CSSProperties;
 };
 
 const SpringModal: React.FC<SpringModalProps> = ({
@@ -18,88 +18,111 @@ const SpringModal: React.FC<SpringModalProps> = ({
                                                      children,
                                                      style = {},
                                                  }) => {
-    // const dispatch = useAppDispatch();
-    // const isModalOpen = useAppState('isModalOpen');
+    const [mounted, setMounted] = useState(false);
+    const portalNode = useRef<HTMLElement | null>(null);
 
-    // const onClose = () => {
-    //   dispatch({
-    //     type: 'TOGGLE_MODAL',
-    //   });
-    // };
+    useEffect(() => {
+        if (typeof document === 'undefined') return;
+        if (!portalNode.current) {
+            portalNode.current = document.createElement('div');
+            portalNode.current.className = 'modal-root spring-modal-root';
+        }
+        const node = portalNode.current;
+        document.body.appendChild(node);
+        setMounted(true);
+        return () => {
+            if (node.parentElement) {
+                node.parentElement.removeChild(node);
+            }
+        };
+    }, []);
 
-    const transition = useTransition(isOpen, null, {
-        from: { transform: 'translateY(100%) translateY(55px) translateX(-50%)' },
-        enter: { transform: 'translateY(0%) translateY(0) translateX(-50%)' },
-        leave: { transform: 'translateY(100%) translateY(55px) translateX(-50%)' },
-    });
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onRequestClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = originalOverflow;
+        };
+    }, [isOpen, onRequestClose]);
 
-    const staticStyles = {
-        position: 'absolute',
-        bottom: 0,
-        left: '50%',
-        padding: '0',
-        width: 'calc(100% + 1px)',
-        height: '100%',
-        maxHeight: '70vh',
-        backgroundColor: '#ffffff',
-        borderRadius: '0px',
-        borderTopLeftRadius: '20px',
-        borderTopRightRadius: '20px',
-        zIndex: 99999,
-    };
+    const scrollbarStyle = useMemo(
+        () => ({
+            height: '100%',
+            width: '100%',
+        }),
+        []
+    );
 
-    const buttonStyle = {
-        width: 40,
-        height: 40,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#ffffff',
-        color: '#0D1136',
-        border: 0,
-        outline: 0,
-        boxShadow: 'none',
-        borderRadius: '50%',
-        position: 'absolute' as 'absolute',
-        top: -55,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        cursor: 'pointer',
+    if (!mounted || !portalNode.current) {
+        return null;
+    }
 
-        ':focus': {
-            outline: 0,
-            boxShadow: 'none',
-        },
-    };
-
-    const scrollbarStyle = {
-        height: '100%',
-        maxHeight: '100%',
-    };
-
-    return (
-        <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
-            {transition.map(
-                ({ item, key, props: transitionStyles }) =>
-                    item && (
-                        <animated.div
-                            key={key}
-                            style={{ ...transitionStyles, ...staticStyles, ...style }}
-                        >
-                            <button
-                                type='button'
-                                onClick={onRequestClose}
-                                style={{ ...buttonStyle }}
-                            >
-                                <CloseIcon style={{ width: 12, height: 12 }}/>
-                            </button>
-                            <Scrollbar style={{ ...scrollbarStyle }}>
-                                <div style={{ padding: '30px' }}>{children}</div>
-                            </Scrollbar>
-                        </animated.div>
-                    )
+    return createPortal(
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    key="spring-modal"
+                    initial={{ y: '100%', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: '100%', opacity: 0 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    style={{
+                        position: 'fixed',
+                        left: '50%',
+                        bottom: 0,
+                        transform: 'translateX(-50%)',
+                        width: '100%',
+                        maxWidth: 'calc(100% - 10px)',
+                        maxHeight: '70vh',
+                        backgroundColor: '#ffffff',
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        boxShadow: '0 -18px 40px rgba(0,0,0,0.12)',
+                        zIndex: 1350,
+                        paddingBottom: 10,
+                        overflow: 'hidden',
+                        ...style,
+                    }}
+                >
+                    <button
+                        type="button"
+                        onClick={onRequestClose}
+                        style={{
+                            position: 'absolute',
+                            top: -55,
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            border: 'none',
+                            backgroundColor: '#ffffff',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            color: '#0D1136',
+                        }}
+                        aria-label="Close modal"
+                    >
+                        <CloseIcon style={{ width: 12, height: 12 }} />
+                    </button>
+                    <Scrollbar style={scrollbarStyle}>
+                        <div style={{ padding: 30 }}>{children}</div>
+                    </Scrollbar>
+                </motion.div>
             )}
-        </BaseModal>
+        </AnimatePresence>,
+        portalNode.current
     );
 };
 

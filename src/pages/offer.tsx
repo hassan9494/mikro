@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { SEO } from 'components/seo';
 import CartPopUp from 'features/carts/cart-popup';
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
 import GiftCard from 'components/gift-card/gift-card';
 import Footer from 'layouts/footer';
 import useCoupon from 'data/use-coupon';

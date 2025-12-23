@@ -1,213 +1,120 @@
 import Document, {
-    Html,
-    Head,
-    Main,
-    NextScript,
-    DocumentContext,
-    DocumentInitialProps,
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
 } from 'next/document';
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
-import { ServerStyleSheets } from '@material-ui/core/styles';
+import createEmotionServer from '@emotion/server/create-instance';
+
 import theme from 'theme';
+import createEmotionCache from 'utils/createEmotionCache';
 
-interface CustomDocumentInitialProps extends DocumentInitialProps {
-    headScripts: string;
-    bodyScripts: string;
-}
+export default class CustomDocument extends Document {
+  static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
+    const styledComponentsSheet = new ServerStyleSheet();
+    const originalRenderPage = ctx.renderPage;
 
-export default class CustomDocument extends Document<CustomDocumentInitialProps> {
-    static async getInitialProps(ctx: DocumentContext): Promise<CustomDocumentInitialProps> {
+    const emotionCache = createEmotionCache();
+    const { extractCriticalToChunks } = createEmotionServer(emotionCache);
 
-        const styledComponentsSheet = new ServerStyleSheet();
-        const materialUiSheets = new ServerStyleSheets();
-        const originalRenderPage = ctx.renderPage;
+    try {
+      const enhanceApp = (App: any) =>
+        function EnhanceApp(props: any) {
+          return styledComponentsSheet.collectStyles(
+            <App emotionCache={emotionCache} {...props} />
+          ) as any;
+        };
 
-        try {
-            ctx.renderPage = () =>
-                originalRenderPage({
-                    enhanceApp: (App) => (props: any) =>
-                        styledComponentsSheet.collectStyles(
-                            materialUiSheets.collect(<App {...props} />)
-                        ),
-                });
+      ctx.renderPage = () => (originalRenderPage as any)({ enhanceApp });
 
-            const initialProps = await Document.getInitialProps(ctx);
-            return {
-                bodyScripts: "", headScripts: "",
-                ...initialProps,
-                styles: [
-                    ...React.Children.toArray(initialProps.styles),
-                    materialUiSheets.getStyleElement(),
-                    styledComponentsSheet.getStyleElement(),
-                ]
-            };
-        } finally {
-            styledComponentsSheet.seal();
-        }
+      const initialProps = await Document.getInitialProps(ctx);
+
+      const emotionStyles = extractCriticalToChunks(initialProps.html);
+      const emotionStyleTags = emotionStyles.styles.map((style) => (
+        <style
+          data-emotion={`${style.key} ${style.ids.join(' ')}`}
+          key={style.key}
+          dangerouslySetInnerHTML={{ __html: style.css }}
+        />
+      ));
+
+      return {
+        ...initialProps,
+        styles: (
+          <>
+            {React.Children.toArray(initialProps.styles)}
+            {styledComponentsSheet.getStyleElement()}
+            {emotionStyleTags}
+          </>
+        ),
+      };
+    } finally {
+      styledComponentsSheet.seal();
     }
-    render() {
-        // Get environment variables
-        const metaPixelId1 = process.env.NEXT_PUBLIC_META_PIXEL_ID_1;
-        const metaPixelId2 = process.env.NEXT_PUBLIC_META_PIXEL_ID_2;
-        const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
-        const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  }
 
-        return (
-            <Html lang="en">
-                <Head>
-                    <meta name="theme-color" content={theme.palette.primary.main} />
-                    <link rel="preconnect" href="https://fonts.gstatic.com" />
-                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet" />
-                    <script
-                        type='text/javascript'
-                        src='https://platform-api.sharethis.com/js/sharethis.js#property=611a67ca030dfe001340392c&product=sticky-share-buttons' async={true}/>
+  render() {
+    // Get environment variables
+    const metaPixelId1 = process.env.NEXT_PUBLIC_META_PIXEL_ID_1;
+    const metaPixelId2 = process.env.NEXT_PUBLIC_META_PIXEL_ID_2;
+    const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
-                    <link
-                        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-                        rel="stylesheet"
-                    />
-                    {/* Optimized Font Loading */}
-                    <link
-                        rel="preload"
-                        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
-                        as="style"
-                    />
-                    <link
-                        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
-                        rel="stylesheet"
-                    />
+    return (
+      <Html lang="en">
+        <Head>
+          <meta name="emotion-insertion-point" content="" />
+          <meta name="theme-color" content={theme.palette.primary.main} />
 
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
+            rel="stylesheet"
+          />
 
-
-
-
-
-
-                    {/* Meta Pixel Code 1 */}
-                    {metaPixelId1 && (
-                        <>
-                            <script
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                        !function(f,b,e,v,n,t,s)
-                                        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                                        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                                        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                                        n.queue=[];t=b.createElement(e);t.async=!0;
-                                        t.src=v;s=b.getElementsByTagName(e)[0];
-                                        s.parentNode.insertBefore(t,s)}(window, document,'script',
-                                        'https://connect.facebook.net/en_US/fbevents.js');
-                                        fbq('init', '${metaPixelId1}');
-                                        fbq('track', 'PageView');
-                                    `,
-                                }}
-                            />
-                            <noscript>
-                                <img height="1" width="1" style={{display:'none'}}
-                                     src={`https://www.facebook.com/tr?id=${metaPixelId1}&ev=PageView&noscript=1`}
-                                />
-                            </noscript>
-                        </>
-                    )}
-                    {/* End Meta Pixel Code */}
-
-                    {/* Google Tag Manager */}
-                    {gtmId && (
-                        <script
-                            dangerouslySetInnerHTML={{
-                                __html: `
-                                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                                    })(window,document,'script','dataLayer','${gtmId}');
-                                `,
-                            }}
-                        />
-                    )}
-                    {/* End Google Tag Manager */}
-
-                    {/* Meta Pixel Code 2 */}
-                    {metaPixelId2 && (
-                        <>
-                            <script
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                        !function(f,b,e,v,n,t,s)
-                                        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                                        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                                        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                                        n.queue=[];t=b.createElement(e);t.async=!0;
-                                        t.src=v;s=b.getElementsByTagName(e)[0];
-                                        s.parentNode.insertBefore(t,s)}(window, document,'script',
-                                        'https://connect.facebook.net/en_US/fbevents.js');
-                                        fbq('init', '${metaPixelId2}');
-                                        fbq('track', 'PageView');
-                                    `,
-                                }}
-                            />
-                            <noscript>
-                                <img height="1" width="1" style={{display:'none'}}
-                                     src={`https://www.facebook.com/tr?id=${metaPixelId2}&ev=PageView&noscript=1`}
-                                />
-                            </noscript>
-                        </>
-                    )}
-                    {/* End Meta Pixel Code */}
-
-                    {/* Google tag (gtag.js) */}
-                    {gaId && (
-                        <>
-                            <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
-                            <script
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                        window.dataLayer = window.dataLayer || [];
-                                        function gtag(){dataLayer.push(arguments);}
-                                        gtag('js', new Date());
-                                        gtag('config', '${gaId}');
-                                    `,
-                                }}
-                            />
-                        </>
-                    )}
-
-                </Head>
-                <body>
-
-                <div id="modal-root"></div>
-                <Main />
-                <NextScript />
-
-                {/* Font loading optimization script */}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-                                // Optimize font loading
-                                const fontLink = document.querySelector('link[href*="fonts.googleapis.com/css2"]');
-                                if (fontLink) {
-                                    fontLink.onload = function() {
-                                        this.media = 'all';
-                                    };
-                                }
-                            `,
-                    }}
-                />
-                {/* Google Tag Manager (noscript) */}
-                {gtmId && (
-                    <noscript
-                        dangerouslySetInnerHTML={{
-                            __html: `
-                                    <iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
-                                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-                                `,
-                        }}
-                    />
-                )}
-                {/* End Google Tag Manager (noscript) */}
-                </body>
-            </Html>
-        );
-    }
+          {metaPixelId1 && (
+            <noscript>
+              <img
+                height="1"
+                width="1"
+                style={{ display: 'none' }}
+                src={`https://www.facebook.com/tr?id=${metaPixelId1}&ev=PageView&noscript=1`}
+                alt=""
+              />
+            </noscript>
+          )}
+          {metaPixelId2 && (
+            <noscript>
+              <img
+                height="1"
+                width="1"
+                style={{ display: 'none' }}
+                src={`https://www.facebook.com/tr?id=${metaPixelId2}&ev=PageView&noscript=1`}
+                alt=""
+              />
+            </noscript>
+          )}
+        </Head>
+        <body>
+          <div id="modal-root" />
+          <Main />
+          <NextScript />
+          {gtmId && (
+            <noscript
+              dangerouslySetInnerHTML={{
+                __html: `
+                  <iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                `,
+              }}
+            />
+          )}
+        </body>
+      </Html>
+    );
+  }
 }

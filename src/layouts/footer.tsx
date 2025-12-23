@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Link from 'next/link';
 import logofooter from './logofooter.png';
 import LocationImage from '../assets/location-image.png';
@@ -23,6 +23,9 @@ export function Footer({ social }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const whatsappTsNumber = '+962795909648';
 
+  const logofooterSrc = typeof logofooter === 'string' ? logofooter : logofooter.src;
+  const locationImageSrc = typeof LocationImage === 'string' ? LocationImage : LocationImage.src;
+
   const services = [
     "Electronics Repair",
     "Component Sales",
@@ -39,26 +42,6 @@ export function Footer({ social }: FooterProps) {
     { name: "Services", path: "/services" },
     { name: "About Us", path: "/about" },
   ];
-  useEffect(() => {
-    // Create a style element with Bootstrap CSS
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .footerBootstrapScope {
-        ${require('!raw-loader!bootstrap/dist/css/bootstrap.min.css').default}
-      }
-      .footerBootstrapScope body {
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      // Clean up on unmount
-      document.head.removeChild(style);
-    };
-  }, []);
-
   const legalLinks = [
     { name: "Privacy Policy", path: "/privacy-policy" },
     { name: "Terms of Service", path: "/terms-of-service" },
@@ -73,17 +56,7 @@ export function Footer({ social }: FooterProps) {
               {/* Company Info */}
               <div className="col-12 col-md-6 col-lg-3 pb-0 mb-0">
                 <div className="mb-4">
-                  <img
-                      src={logofooter}
-                      alt="Mikroelectron Logo"
-                      className="footer-logo"
-                      style={{
-                        // filter: 'brightness(0) invert(1)',
-                        maxWidth: '180px',
-                        height: 'auto',
-                        marginBottom: '1rem'
-                      }}
-                  />
+                  <Image src={logofooter} alt="Mikroelectron Logo" width={180} height={60} className="footer-logo" style={{ height: 'auto' }} />
 
                   {/*<Image*/}
                   {/*    src={logofooter}*/}
@@ -224,13 +197,11 @@ export function Footer({ social }: FooterProps) {
                 }}>
                   Quick Links
                 </h5>
-                <ul className="list-unstyled">
+                <ul className="list-unstyled mk-quick-links">
                   {quickLinks.map(({ name, path }, idx) => (
                       <li key={idx} className="mb-3">
-                        <Link href={path} passHref>
-                          <a className="footer-link">
-                            {name}
-                          </a>
+                        <Link href={path} className="mk-footer-link" style={{ color: '#ffffff', textDecoration: 'none' }}>
+                          {name}
                         </Link>
                       </li>
                   ))}
@@ -320,12 +291,11 @@ export function Footer({ social }: FooterProps) {
                     {/*    alt="Location"*/}
                     {/*    className="location-image"*/}
                     {/*/>*/}
-                    <Image
-                        src={LocationImage}
+                    <img
+                        src={locationImageSrc}
                         alt="Location"
-                        width={200}
-                        height={150}
                         className="location-image"
+                        style={{ width: '200px', height: '150px', objectFit: 'cover' }}
                     />
                     <div className="location-overlay">
                       View on Map
@@ -346,10 +316,10 @@ export function Footer({ social }: FooterProps) {
               <div className="copyright">
                 &copy; {currentYear} Mikroelectron. All rights reserved.
               </div>
-              <div className="footer-links">
+              <div className="mk-footer-links">
                 {legalLinks.map((link, idx) => (
-                    <Link key={idx} href={link.path} passHref>
-                      <a className="footer-link">{link.name}</a>
+                    <Link key={idx} href={link.path} className="mk-footer-link" style={{ color: '#ffffff', textDecoration: 'none' }}>
+                      {link.name}
                     </Link>
                 ))}
               </div>
@@ -387,17 +357,29 @@ export function Footer({ social }: FooterProps) {
         }
         
         /* Links */
-        .footer-link {
-          color: white;
-          text-decoration: none;
+        /* Footer links - force white across states to avoid global CSS overrides */
+        .mk-footer-link,
+        .mk-footer-link:link,
+        .mk-footer-link:visited,
+        .mk-footer-link:active,
+        .mk-footer-link:hover,
+        .mk-quick-links a,
+        .mk-quick-links a:link,
+        .mk-quick-links a:visited,
+        .mk-quick-links a:active,
+        .mk-quick-links a:hover {
+          display: inline-block;
+          color: #ffffff !important;
+          text-decoration: none !important;
           font-size: 0.9rem;
           opacity: 0.9;
           transition: opacity 0.2s ease;
         }
         
-        .footer-link:hover {
+        .mk-footer-link:hover,
+        .mk-quick-links a:hover {
           opacity: 1;
-          text-decoration: underline;
+          text-decoration: underline !important;
         }
         
        .contact-item {
@@ -548,14 +530,14 @@ export function Footer({ social }: FooterProps) {
           }
         }
         
-        .footer-links {
+        .mk-footer-links {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
           gap: 0.75rem;
         }
         
-        .footer-links a {
+        .mk-footer-links a {
           color: white;
           text-decoration: none;
           font-size: 0.8rem;
@@ -563,7 +545,7 @@ export function Footer({ social }: FooterProps) {
           transition: opacity 0.2s ease;
         }
         
-        .footer-links a:hover {
+        .mk-footer-links a:hover {
           opacity: 1;
           text-decoration: underline;
         }

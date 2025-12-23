@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import Sticky from 'react-stickynode';
+import Sticky from 'components/sticky/sticky';
 import {
     StyledContainer,
     StyledContent,

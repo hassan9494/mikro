@@ -3,7 +3,7 @@ import { CardMenu } from 'components/card-menu';
 import { useRouter } from 'next/router';
 import ErrorMessage from 'components/error-message/error-message';
 import styled from 'styled-components';
-import Sticky from 'react-stickynode';
+import Sticky from 'components/sticky/sticky';
 import { Scrollbar } from 'components/scrollbar/scrollbar';
 import CategoryWalker from 'components/category-walker/category-walker';
 import useCategory from 'data/use-category';

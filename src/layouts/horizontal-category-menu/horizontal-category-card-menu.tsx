@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import ErrorMessage from 'components/error-message/error-message';
 import SwiperCore, { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.min.css';
+import 'swiper/components/navigation/navigation.min.css';
 import Image from 'components/image/image';
 import { ArrowNext } from 'assets/icons/ArrowNext';
 import { ArrowPrev } from 'assets/icons/ArrowPrev';

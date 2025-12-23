@@ -32,10 +32,12 @@ import { CURRENCY } from 'utils/constant';
 import FixedCart from 'features/carts/fixed-cart';
 import FixedCartPopup from 'features/carts/fixed-cart-popup';
 import { FormattedMessage } from 'react-intl';
-import Sticky from 'react-stickynode';
+import Sticky from 'components/sticky/sticky';
 import { groupBy } from 'utils/groupBy';
 import { useCart } from 'contexts/cart/use-cart';
+import NextImage from 'next/image';
 import { PlusOutline } from 'assets/icons/PlusOutline';
+import Image from 'components/image/image';
 
 type ProductDetailsProps = {
     product: any;
@@ -73,7 +75,13 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         <>
             <ProductDetailsWrapper>
                 <ProductPreview>
-                    <img src={data.previewUrl} alt={data.name}/>
+                    <NextImage
+                        src={data.previewUrl}
+                        alt={data.name}
+                        width={900}
+                        height={600}
+                        priority
+                    />
                 </ProductPreview>
                 <div id="cart-sticky">
                     <RestaurantMeta id="restaurantMeta">

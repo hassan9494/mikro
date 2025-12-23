@@ -1,42 +1,66 @@
-import { NextPage } from 'next';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { GetServerSideProps, NextPage } from 'next';
+
+import { Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
+
 import {
   StyledContent,
   StyledLeftContent,
 } from 'features/terms-and-services/terms-and-services';
 import { SEO } from 'components/seo';
-import { 
-  Typography, 
-  Box, 
-  Chip, 
-  Button, 
+import {
+  Typography,
+  Box,
+  Chip,
+  Button,
   IconButton,
-  Avatar,
-  Grid
-} from "@material-ui/core";
-import Skeleton from '@material-ui/lab/Skeleton';
-import { useArticles, useArticle, getArticle } from "../../data/use-website";
-import Sticky from "react-stickynode";
-import { useMedia } from "../../utils/use-media";
-import { useRouter } from "next/router";
+  Skeleton,
+} from '@mui/material';
+
+import { useState, useEffect, ReactNode } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 import css from '@styled-system/css';
-import styled from "styled-components";
-import Link from "next/link";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ShareIcon from '@material-ui/icons/Share';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import SchoolIcon from '@material-ui/icons/School';
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseIcon from '@material-ui/icons/Close';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { useState, useEffect } from 'react';
+import styled from 'styled-components';
+
+import { useArticles, useArticle, getArticle } from '../../data/use-website';
+import { useMedia } from '../../utils/use-media';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ShareIcon from '@mui/icons-material/Share';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import SchoolIcon from '@mui/icons-material/School';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 // Brand colors
 const primaryColor = '#fe5e00'; // Orange
 const secondaryColor = '#133695'; // Dark Blue
 const tertiaryColor = '#0ea5e9'; // Sky Blue
+
+const formatDate = (dateString?: string) => {
+  if (!dateString) return '';
+
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return dateString;
+  }
+};
+
+type Props = {
+  data: any;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -396,7 +420,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ArticleLink = styled("a")(
+const ArticleLink = styled("div")(
   css({
     '&.active': {
       color: 'white !important',
@@ -604,37 +628,25 @@ const MobileActionBar = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
-  border-top:none;
+  border-top: none;
   margin: 0 !important;
 `;
 
-const formatDate = (dateString: string) => {
-  if (!dateString) return '';
-  
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  } catch {
-    return dateString;
-  }
-};
-
-type Props = {
-  data: any;
-};
+const SidebarSticky = styled.div<{ $top?: number; $zIndex?: number }>`
+  position: sticky;
+  top: ${({ $top }) => ($top ?? 0)}px;
+  z-index: ${({ $zIndex }) => ($zIndex ?? 1)};
+`;
 
 const CoursePage: NextPage<Props> = ({ data }) => {
   const classes = useStyles();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [rating, setRating] = useState(4.7);
+  const [rating] = useState(4.7);
   const { data: items, loading: isCoursesLoading } = useArticles('COURSE');
   const { data: item, loading: isCourseLoading } = useArticle(data?.id);
   const mobile = useMedia('(max-width: 900px)');
   const router = useRouter();
+  const courseList = Array.isArray(items) ? items : [];
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -646,102 +658,91 @@ const CoursePage: NextPage<Props> = ({ data }) => {
     } else {
       document.body.style.overflow = 'auto';
     }
-    
+
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, [sidebarOpen, mobile]);
 
   const renderStars = () => {
-    const stars = [];
+    const stars: ReactNode[] = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-    
+
     for (let i = 0; i < fullStars; i++) {
       stars.push(<StarIcon key={`full-${i}`} className={classes.starIcon} />);
     }
-    
+
     if (hasHalfStar) {
       stars.push(<StarBorderIcon key="half" className={classes.starIcon} />);
     }
-    
+
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
       stars.push(<StarBorderIcon key={`empty-${i}`} className={classes.starIcon} />);
     }
-    
+
     return stars;
   };
+
+  const formattedDate = formatDate(item?.published_at);
 
   return (
     <>
       <SEO title={item?.title || 'Course'} description={item?.excerpt || ''} />
-      
+
       <StyledContainer>
-        {/* Mobile Header */}
         {mobile && (
           <MobileHeader>
-            <IconButton onClick={() => router.back()}>
+            <IconButton onClick={() => router.back()} size="large">
               <ArrowBackIcon style={{ color: secondaryColor }} />
             </IconButton>
-            <MobileTitle>
-              {item?.title || 'Course Detail'}
-            </MobileTitle>
+            <MobileTitle>{item?.title || 'Course Detail'}</MobileTitle>
           </MobileHeader>
         )}
 
-        {/* Desktop Breadcrumbs */}
         {!mobile && (
           <CourseBreadcrumb>
-            <Link href="/">
-              <a>
-                <ArrowBackIcon style={{ fontSize: 18, marginRight: 8 }} /> 
-                Home
-              </a>
+            <Link href="/" className="breadcrumb-link">
+              <ArrowBackIcon style={{ fontSize: 18, marginRight: 8 }} />
+              Home
             </Link>
             <span>›</span>
-            <Link href="/courses">
-              <a>Courses</a>
-            </Link>
+            <Link href="/courses" className="breadcrumb-link">Courses</Link>
             <span>›</span>
             <span>{item?.title || 'Course Detail'}</span>
           </CourseBreadcrumb>
         )}
 
-        {/* Mobile Sidebar Toggle */}
         {mobile && (
-          <SidebarToggleButton 
+          <SidebarToggleButton
             variant="outlined"
             onClick={() => setSidebarOpen(true)}
             startIcon={<MenuIcon />}
             fullWidth
-            style={{ 
-              // marginTop: '70px', 
+            style={{
               marginBottom: '20px',
               borderRadius: '12px',
               padding: '10px',
-              fontSize: '1rem'
+              fontSize: '1rem',
             }}
           >
             Browse Course Catalog
           </SidebarToggleButton>
         )}
 
-        {/* Mobile Sidebar */}
         {mobile && (
           <>
-          
-        <MobileActionBar>
-            <Button
-                      variant="contained"
-                      className={classes.mobileEnrollButton}
-                      startIcon={<PlayCircleOutlineIcon />}
-                      onClick={() => window.open('https://wa.me/962790062196', '_blank')}
-                    >
-                      Request to Reopen
-                    </Button>
-                    
-                  </MobileActionBar>
+            <MobileActionBar>
+              <Button
+                variant="contained"
+                className={classes.mobileEnrollButton}
+                startIcon={<PlayCircleOutlineIcon />}
+                onClick={() => window.open('https://wa.me/962790062196', '_blank')}
+              >
+                Request to Reopen
+              </Button>
+            </MobileActionBar>
             <MobileSidebarContainer $isOpen={sidebarOpen}>
               <CloseButton onClick={() => setSidebarOpen(false)}>
                 <CloseIcon />
@@ -757,26 +758,24 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                     </Box>
                   ))
                 ) : (
-                  items.map((course) => (
-                    <Link href={`/courses/${course.id}`} passHref key={course.id}>
-                      <ArticleLink 
-                        className={router.query.id === course.id ? 'active' : ''}
-                      >
+                  courseList.map((course) => (
+                    <Link href={`/courses/${course.id}`} key={course.id}>
+                      <ArticleLink className={router.query.id === course.id ? 'active' : ''}>
                         <span style={{ color: secondaryColor }}>{course.title}</span>
 
                         {router.query.id === course.id && (
-                          <Chip 
-                            label="Current" 
-                            size="small" 
-                            style={{ 
-                              position: 'absolute', 
+                          <Chip
+                            label="Current"
+                            size="small"
+                            style={{
+                              position: 'absolute',
                               right: 20,
                               top: '50%',
                               transform: 'translateY(-50%)',
                               fontWeight: 700,
                               fontSize: '0.8rem',
                               backgroundColor: primaryColor,
-                              color: 'white'
+                              color: 'white',
                             }}
                           />
                         )}
@@ -786,19 +785,15 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                 )}
               </StyledLeftInnerContent>
             </MobileSidebarContainer>
-            <Overlay 
-              $isOpen={sidebarOpen} 
-              onClick={() => setSidebarOpen(false)} 
-            />
+            <Overlay $isOpen={sidebarOpen} onClick={() => setSidebarOpen(false)} />
           </>
         )}
 
         <StyledContent>
-          {/* Desktop Sidebar */}
           {!mobile && (
             <StyledLeftContent>
               <div className={classes.sidebarContainer}>
-                <Sticky top={100} innerZ="1">
+                <SidebarSticky $top={100} $zIndex={1}>
                   <div>
                     <Typography variant="h5" component="h2" className={classes.sidebarTitle}>
                       Course Catalog
@@ -811,26 +806,24 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                           </Box>
                         ))
                       ) : (
-                        items.map((course) => (
-                          <Link href={`/courses/${course.id}`} passHref key={course.id}>
-                            <ArticleLink 
-                              className={router.query.id === course.id ? 'active' : ''}
-                            >
+                        courseList.map((course) => (
+                          <Link href={`/courses/${course.id}`} key={course.id}>
+                            <ArticleLink className={router.query.id === course.id ? 'active' : ''}>
                               <span style={{ color: secondaryColor }}>{course.title}</span>
 
                               {router.query.id === course.id && (
-                                <Chip 
-                                  label="Current" 
-                                  size="small" 
-                                  style={{ 
-                                    position: 'absolute', 
+                                <Chip
+                                  label="Current"
+                                  size="small"
+                                  style={{
+                                    position: 'absolute',
                                     right: 20,
                                     top: '50%',
                                     transform: 'translateY(-50%)',
                                     fontWeight: 700,
                                     fontSize: '0.8rem',
                                     backgroundColor: primaryColor,
-                                    color: 'white'
+                                    color: 'white',
                                   }}
                                 />
                               )}
@@ -840,16 +833,16 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                       )}
                     </StyledLeftInnerContent>
                   </div>
-                </Sticky>
+                </SidebarSticky>
               </div>
             </StyledLeftContent>
           )}
-          
+
           <Box flex={1} pl={mobile ? 0 : 4} pt={mobile ? 8 : 0}>
             {isCourseLoading ? (
               <Box>
-                <Skeleton variant="rect" height={60} width="80%" style={{ marginBottom: 30, borderRadius: 16 }} />
-                <Skeleton variant="rect" height={400} style={{ marginBottom: 40, borderRadius: 16 }} />
+                <Skeleton variant="rectangular" height={60} width="80%" style={{ marginBottom: 30, borderRadius: 16 }} />
+                <Skeleton variant="rectangular" height={400} style={{ marginBottom: 40, borderRadius: 16 }} />
                 <Skeleton variant="text" height={50} width="70%" style={{ marginBottom: 20 }} />
                 <Skeleton variant="text" height={30} width="90%" style={{ marginBottom: 10 }} />
                 <Skeleton variant="text" height={30} width="85%" style={{ marginBottom: 10 }} />
@@ -857,7 +850,6 @@ const CoursePage: NextPage<Props> = ({ data }) => {
               </Box>
             ) : item ? (
               <>
-                {/* Desktop Action Container */}
                 {!mobile && (
                   <div className={classes.actionContainer}>
                     <IconButton
@@ -867,13 +859,14 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                         if (navigator.share) {
                           navigator.share({
                             title: document.title,
-                            url: window.location.href
+                            url: window.location.href,
                           });
                         } else {
                           navigator.clipboard.writeText(window.location.href);
                           alert('Link copied to clipboard!');
                         }
                       }}
+                      size="large"
                     >
                       <ShareIcon />
                     </IconButton>
@@ -888,7 +881,6 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                   </div>
                 )}
 
-                {/* Hero Section */}
                 {!mobile && (
                   <div className={classes.hero}>
                     <div className={classes.heroContent}>
@@ -901,21 +893,20 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                     </div>
                   </div>
                 )}
-                
-                {/* Meta Information */}
+
                 <Box className={mobile ? classes.mobileMetaContainer : classes.metaContainer}>
                   <Box className={mobile ? classes.mobileMetaItem : classes.metaItem}>
                     <SchoolIcon className={classes.metaIcon} />
                     <Typography variant="body2">
-                      <strong>Level:</strong> 
+                      <strong>Level:</strong>
                     </Typography>
-                    <Chip 
-                      label={item.difficulty || 'All Levels'} 
+                    <Chip
+                      label={item.difficulty || 'All Levels'}
                       className={classes.difficultyChip}
                       style={{ marginLeft: mobile ? 0 : 8 }}
                     />
                   </Box>
-                 
+
                   <Box className={mobile ? classes.mobileMetaItem : classes.metaItem}>
                     <AccessTimeIcon className={classes.metaIcon} />
                     <Typography variant="body2">
@@ -937,67 +928,75 @@ const CoursePage: NextPage<Props> = ({ data }) => {
                     </Typography>
                   </Box>
 
-                  {(
-                    <Box className={classes.metaItem}>
-                      <StarIcon className={classes.metaIcon} />
-                      <Typography variant="body2">
-                        <strong>Rating:</strong> {rating} / 5
-                      </Typography>
-                    </Box>
-                  )}
+                  <Box className={classes.metaItem}>
+                    <StarIcon className={classes.metaIcon} />
+                    <Typography variant="body2">
+                      <strong>Rating:</strong> {rating} / 5
+                    </Typography>
+                    <Box className={classes.ratingContainer}>{renderStars()}</Box>
+                  </Box>
                 </Box>
-                
-                {/* Video Player */}
+
+                {formattedDate && (
+                  <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>
+                    Published on {formattedDate}
+                  </Typography>
+                )}
+
                 {item.video_url && (
                   <VideoContainer style={{ marginTop: mobile ? 0 : 20 }}>
                     <iframe
-                      width="100%" 
-                      height="400" 
+                      width="100%"
+                      height="400"
                       src={item.video_url.replace('watch?v=', 'embed/')}
-                      title="YouTube video player" 
+                      title="YouTube video player"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     />
                   </VideoContainer>
                 )}
-                
-                {/* Content Card */}
-                <Box className={classes.contentCard} style={{ 
-                  padding: mobile ? '20px' : '40px',
-                  borderRadius: mobile ? '16px' : '20px',
-                  marginBottom: mobile ? '80px' : '40px'
-                }}>
-                  <div 
+
+                <Box
+                  className={classes.contentCard}
+                  style={{
+                    padding: mobile ? '20px' : '40px',
+                    borderRadius: mobile ? '16px' : '20px',
+                    marginBottom: mobile ? '80px' : '40px',
+                  }}
+                >
+                  <div
                     className={classes.contentContainer}
                     style={{
                       fontSize: mobile ? '1rem' : '1.1rem',
-                      lineHeight: mobile ? '1.6' : '1.8'
+                      lineHeight: mobile ? '1.6' : '1.8',
                     }}
-                    dangerouslySetInnerHTML={{__html: item.content}} 
+                    dangerouslySetInnerHTML={{ __html: item.content }}
                   />
                 </Box>
-
               </>
             ) : (
               <Box textAlign="center" py={10}>
-                <img 
-                  src="/course-not-found.svg" 
-                  alt="Course not found" 
-                  style={{ width: 200, margin: '0 auto 30px' }} 
+                <img
+                  src="/course-not-found.svg"
+                  alt="Course not found"
+                  style={{
+                    width: 200,
+                    margin: '0 auto 30px',
+                  }}
                 />
                 <Typography variant="h5" color="textSecondary" style={{ marginBottom: 20 }}>
                   Course not found. Please try another course.
                 </Typography>
-                <Button 
-                  variant="contained" 
-                  style={{ 
+                <Button
+                  variant="contained"
+                  style={{
                     marginTop: 20,
                     background: `linear-gradient(45deg, ${primaryColor} 0%, #ff8c00 100%)`,
                     color: 'white',
                     fontWeight: 700,
                     padding: '12px 32px',
-                    borderRadius: 30
+                    borderRadius: 30,
                   }}
                   onClick={() => router.push('/courses')}
                 >
@@ -1012,21 +1011,30 @@ const CoursePage: NextPage<Props> = ({ data }) => {
   );
 };
 
-export async function getStaticProps({ params }) {
-  const data = await getArticle(params.id);
-  return {
-    props: {
-      data,
-    },
-    revalidate: 60,
-  };
-}
+export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
+  const idParam = params?.id;
 
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-}
+  if (!idParam || Array.isArray(idParam)) {
+    return { notFound: true };
+  }
+
+  try {
+    const data = await getArticle(idParam);
+
+    if (!data) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        data,
+      },
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
+};
 
 export default CoursePage;

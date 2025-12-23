@@ -23,10 +23,11 @@ import {
 } from './order-card.style';
 
 import { CURRENCY } from 'utils/constant';
-import moment from "moment";
+import dayjs from "dayjs";
 import MoneyFormat from "../../../../components/money-format/money-format";
 import { FormattedMessage } from "react-intl";
 import { ImageWrapper, ItemDetails, ItemName, ItemPrice, ItemWrapper } from "../order.style";
+import Image from 'components/image/image';
 
 type MobileOrderCardProps = {
     orderId?: any;
@@ -46,10 +47,6 @@ type MobileOrderCardProps = {
     deliveryFee?: number;
     grandTotal?: number;
     orders?: any;
-};
-
-const components = {
-    table: OrderTable,
 };
 
 const OrderCard: React.FC<MobileOrderCardProps> = ({
@@ -76,7 +73,7 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
 
                                 <OrderMeta>
                                     <Meta>
-                                        Order Date: <span>{moment(order.date).format('Y/MM/DD')}</span>
+                                        Order Date: <span>{dayjs(order.date).format('YYYY/MM/DD')}</span>
                                     </Meta>
                                     <Meta>
                                         Delivery Cost:
@@ -160,7 +157,7 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
                                                 return (
                                                     <ItemWrapper>
                                                         <ImageWrapper>
-                                                            <img src={record.image} alt={record.title}/>
+                                                            <Image url={record.image} alt={record.title} width={75} height={75} />
                                                         </ImageWrapper>
 
                                                         <ItemDetails>
@@ -191,7 +188,6 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
                                     ]}
                                     data={order?.items || []}
                                     rowKey={(record) => record.id}
-                                    components={components}
                                     scroll={{ x: 450 }}
                                     // scroll={{ y: 250 }}
                                 />

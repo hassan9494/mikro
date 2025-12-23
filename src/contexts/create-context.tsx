@@ -1,6 +1,6 @@
 import React, { useContext, createContext } from 'react';
 
-export function useCreateContext<StateType, ActionType>(
+export function createContextHelpers<StateType, ActionType>(
     reducer: React.Reducer<StateType, ActionType>,
     initialState: StateType
 ) {

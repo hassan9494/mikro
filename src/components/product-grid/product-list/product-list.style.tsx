@@ -348,7 +348,7 @@ export const CheckboxLabel = styled.label<{ checked: boolean }>`
   }
 `;
 
-import { Accordion } from '@material-ui/core';
+import { Accordion } from '@mui/material';
 
 export const MobileFilterWrapper = styled.div`
   margin-bottom: 20px;

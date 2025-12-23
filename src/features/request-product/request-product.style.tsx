@@ -1,6 +1,19 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
-import { Row as Rows, Col as Cols } from 'react-styled-flexboxgrid';
+
+const Rows = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -15px;
+  margin-right: -15px;
+`;
+
+const Cols = styled.div`
+  padding-left: 15px;
+  padding-right: 15px;
+  flex: 1 1 0;
+  min-width: 0;
+`;
 
 const FormWrapper = styled.div`
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};

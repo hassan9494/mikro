@@ -5,8 +5,8 @@ import css from '@styled-system/css';
 import ErrorMessage from 'components/error-message/error-message';
 import { useRouter } from 'next/router';
 import useProducts from 'data/use-products';
-import { Box } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+import { Box } from "@mui/material";
+import { Pagination } from '@mui/material';
 
 const Grid = styled.div(
     css({

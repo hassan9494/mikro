@@ -9,6 +9,7 @@ import {
     CardNumTitle,
     Name,
 } from './payment-card.style';
+import Image from 'components/image/image';
 
 interface Props {
     id: string;
@@ -25,15 +26,15 @@ const Card: React.FC<Props> = ({
                                    lastFourDigit,
                                    color,
                                }) => {
-    const logo =
-        (cardType === 'paypal' && Paypal) ||
-        (cardType === 'master' && MasterCard) ||
-        (cardType === 'visa' && Visa);
+    const logoSrc = 
+        (cardType === 'paypal' && Paypal.src) ||
+        (cardType === 'master' && MasterCard.src) ||
+        (cardType === 'visa' && Visa.src);
 
     return (
         <PaymentCardWrapper className="payment-card" color={color}>
             <CardLogo>
-                <img src={logo} alt={`card-${id}`}/>
+                {logoSrc && <Image url={logoSrc} alt={`card-${id}`} width={48} height={30} /> }
             </CardLogo>
             <CardNumTitle>Card Number</CardNumTitle>
             <CardNumber>
