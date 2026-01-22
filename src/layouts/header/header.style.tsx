@@ -38,21 +38,32 @@ export const SearchWrapper = styled.div`
     opacity: 0;
   }
 `;
+export const SelectStylesWrapper = styled.div`
+  .select__placeholder {
+    @media (min-width: 990px) and (max-width: 1200px) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px; /* Adjust as needed */
+    }
+  }
+`;
 
 const HeaderWrapper = styled.header`
-  /* padding: 30px 60px; */
-  padding: 20px 50px;
+  /* Dynamic padding based on screen size */
+  padding: 15px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: fixed;
-  z-index: 99999;
+  z-index: 999;
   top: 0;
   left: 0;
   width: 100%;
   background-color: ${themeGet('colors.white', '#ffffff')};
   box-shadow: ${themeGet('shadows.header', '0 1px 2px rgba(0, 0, 0, 0.06)')};
   transition: all 0.3s ease;
+  box-sizing: border-box; /* Important for proper sizing */
 
   &.home {
     position: absolute;
@@ -60,24 +71,45 @@ const HeaderWrapper = styled.header`
     box-shadow: none;
   }
 
+  /* Responsive padding - adjust based on screen size */
   @media (min-width: 1600px) {
-    padding: 25px 40px;
+    padding: 20px 40px;
   }
 
-  @media (max-width: 990px) {
+  @media (min-width: 1200px) and (max-width: 1599px) {
+    padding: 18px 30px;
+  }
+
+  @media (min-width: 992px) and (max-width: 1199px) {
+    padding: 15px 20px;
+  }
+
+  @media (max-width: 991px) {
     display: none;
   }
 
   .headerSearch {
-    margin: 0 30px;
-
-    @media only screen and (min-width: 991px) and (max-width: 1200px) {
+    flex: 1; /* Takes available space */
+    margin: 0 20px;
+    min-width: 0; /* Allows shrinking below content size */
+    max-width: 600px; /* Optional: set max width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    @media (min-width: 1200px) and (max-width: 1400px) {
       margin: 0 15px;
-
+      max-width: 500px;
+    }
+    
+    @media only screen and (min-width: 991px) and (max-width: 1200px) {
+      margin: 0 10px;
+      max-width: 400px;
+      
       input {
         width: 80%;
       }
-
+      
       .buttonText {
         display: none;
       }
@@ -97,12 +129,12 @@ const HeaderWrapper = styled.header`
     background-color: ${themeGet('colors.white', '#ffffff')};
     position: fixed;
     box-shadow: ${themeGet('shadows.header', '0 1px 2px rgba(0, 0, 0, 0.06)')};
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
     @media (max-width: 1400px) {
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding-top: 15px;
+      padding-bottom: 15px;
     }
 
     .headerSearch {
@@ -124,38 +156,6 @@ const HeaderWrapper = styled.header`
     }
   }
 
-  .popover-wrapper {
-    .popover-content {
-      padding: 20px 0;
-
-      .menu-item {
-        a {
-          margin: 0;
-          padding: 12px 30px;
-          border-bottom: 1px solid ${themeGet('colors.gray.200', '#F7F7F7')};
-          cursor: pointer;
-          white-space: nowrap;
-
-          &:last-child {
-            border-bottom: 0;
-          }
-
-          &:hover {
-            color: ${themeGet('colors.primary.regular', '#009e7f')};
-          }
-
-          &.current-page {
-            color: ${themeGet('colors.primary.regular', '#009e7f')};
-          }
-
-          .menu-item-icon {
-            margin-right: 15px;
-          }
-        }
-      }
-    }
-  }
-
   .headerSearch {
     input {
       @media (max-width: 1400px) {
@@ -164,6 +164,8 @@ const HeaderWrapper = styled.header`
       }
 
       @media only screen and (min-width: 991px) and (max-width: 1200px) {
+        padding: 0 10px;
+        font-size: ${themeGet('fontSizes.base', '15')}px;
       }
     }
 
@@ -171,6 +173,10 @@ const HeaderWrapper = styled.header`
       @media (max-width: 1400px) {
         padding: 0 15px;
         font-size: ${themeGet('fontSizes.base', '15')}px;
+      }
+      
+      @media only screen and (min-width: 991px) and (max-width: 1200px) {
+        padding: 0 10px;
       }
     }
   }
@@ -372,8 +378,13 @@ export const DrawerWrapper = styled.div`
 `;
 
 export const DrawerBody = styled.div`
+  height: 100vh;               /* 👈 full viewport height */
+  display: flex;
+  flex-direction: column;
+
   .drawer-scrollbar {
     height: 100%;
+    overflow-y: auto;          /* 👈 enable vertical scrolling */
   }
 `;
 
@@ -441,6 +452,9 @@ export const HamburgerIcon = styled.div`
 
 export const DrawerContentWrapper = styled.div`
   padding-top: 60px;
+  flex: 1;                     /* 👈 allow content to grow */
+  display: flex;
+  flex-direction: column;
 `;
 
 export const DrawerClose = styled.div`
@@ -583,7 +597,10 @@ export const SearchModalWrapper = styled.div`
   padding-bottom: 15px;
   background-color: ${themeGet('colors.white', '#ffffff')};
   display: flex;
-  width: 100%;
+  width: 100vw;
+ position: fixed; 
+  top: 0; 
+  left: 0;
 
   .header-modal-search {
     width: calc(100% - 60px);

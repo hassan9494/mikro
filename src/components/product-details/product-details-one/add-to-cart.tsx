@@ -22,6 +22,9 @@ const CustomTextField = withStyles({
                 borderRadius: `0px`,
             },
         },
+         '& *': {
+            boxSizing: 'content-box !important', // Override the border-box
+        },
     },
 })(TextField);
 

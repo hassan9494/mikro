@@ -570,4 +570,4 @@ const TermsPage: NextPage<{}> = () => {
   );
 };
 
-export default TermsPage;
+export default TermsPage; 

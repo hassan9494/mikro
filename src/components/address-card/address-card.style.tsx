@@ -15,5 +15,17 @@ const Heading = styled.div`
   color: ${themeGet('colors.text.bold', '#0D1136')};
   margin-bottom: 15px;
 `;
+// Add a new styled component for the form
+const FormContainer = styled.form`
+  padding: 24px;
+  
+  /* Or use theme values if available */
+  padding: ${themeGet('space.3', '24px')};
+  
+  /* For responsive design */
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+`;
 
-export { FieldWrapper, Heading };
+export { FieldWrapper, Heading, FormContainer };

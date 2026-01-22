@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 
-export const MobileCarouselDropdown = styled.div`
-  @media (min-width: 990px) {
-    display: none;
-  }
+ const MobileCarouselDropdown = styled.div`
+  display: none;
+
+  // @media (max-width: 1024px) {
+  //   display: block;
+  //   margin-bottom: 160px;
+  // }
 `;
 
 const OfferPageWrapper = styled.div`
@@ -37,102 +40,97 @@ const HeaderSection = styled.div`
 
 const MainWrapper = styled.div`
   padding-top: 50px;
+  width: 100%;
 `;
 
-const ProductsWrapper = styled.div`
-  padding: 0px 15px 30px;
+ const ProductsWrapper = styled.div`
+  padding: 0 15px 30px;
+  width: 100%;
 `;
 
 
-const MainContentArea = styled.main`
+ const MainContentArea = styled.main`
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
-  padding-right: 0;
-  transition: padding-right 0.35s ease-in-out;
-  
+
+  /* REQUIRED for sticky to work */
+  overflow: visible;
+
   @media (max-width: 990px) {
     background-color: ${themeGet('colors.white', '#ffffff')};
   }
 `;
 
-const SidebarSection = styled.div`
+ const SidebarSection = styled.aside`
   background-color: ${themeGet('colors.white', '#ffffff')};
+
   width: 280px;
+  flex-shrink: 0;
+
+  position: sticky;
+  top: 81px;
+
+  /* Sidebar height minus top */
+  max-height: auto;
+
+  // /* Make only sidebar scrollable */
+  // overflow-y: auto;
+  // overscroll-behavior: auto;
+  // scroll-behavior: smooth;
+
+  // &::-webkit-scrollbar {
+  //   width: 6px; /* your scrollbar width */
+  // }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+//   /* Add padding-bottom for 991-1024px screens */
+//   @media (min-width: 991px) and (max-width: 1024px) {
+//  padding-bottom: 500px;   }
 
   @media (max-width: 990px) {
     display: none;
   }
+     /* Add bottom padding only for 991px - 1024px screens */
+      @media (min-width: 991px) and (max-width: 1024px) {
+      min-height: auto
+        margin-bottom: 50px; /* Set your bottom padding */
+        
+      }
 `;
 
-const ContentSection = styled.div`
-  width: calc(100% - 280px);
-  height: auto;
-  min-height: 100vh;
-  //padding: 30px 30px 50px;
-  // padding: 30px 0px 0px;
 
-  // Send footer to bottom
+ const ContentSection = styled.main`
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
-  @media (max-width: 1199px) and (min-width: 991px) {
-    //padding: 15px 30px 50px;
-    // padding: 15px 0px 0px;
-  }
-  
-
-  @media (max-width: 1367px) and (min-width: 1200px) {
-    //padding: 15px 30px 50px;
-    // padding: 15px 0px 0px;
-  }
-
   @media (max-width: 990px) {
     width: 100%;
-    // padding: 0px 0px 100px;
-  }
-
-  @media (max-width: 768px) {
-    min-height: auto;
-  }
-
-  .offer-slider {
-    padding: 0 0 30px 30px;
   }
 `;
 
-const OfferSection = styled.div`
+ const OfferSection = styled.section`
   width: 100%;
-  display: block;
   padding: 60px;
   background-color: ${themeGet('colors.white', '#ffffff')};
-  position: relative;
   border-bottom: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
-  margin-top: -25px;
 
-  @media (max-width: 1199px) and (min-width: 991px) {
-    padding: 20px 15px;
-    .prevButton {
-      left: 0;
-    }
-
-    .nextButton {
-      right: 0;
-    }
-  }
   @media (max-width: 990px) {
     padding: 15px;
-    border-bottom: 0;
-
-    .prevButton {
-      left: 5px;
-    }
-
-    .nextButton {
-      right: 5px;
-    }
   }
 `;
 
@@ -147,7 +145,7 @@ const Heading = styled.h2`
   display: inline-block;
 `;
 
-export const ProductsRow = styled.div`
+ const ProductsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 30px;
@@ -200,6 +198,7 @@ const ProductsCol = styled.div`
 
 export {
     OfferPageWrapper,
+    MobileCarouselDropdown,
     HeaderSection,
     MainContentArea,
     SidebarSection,
@@ -208,5 +207,6 @@ export {
     Heading,
     ProductsCol,
     MainWrapper,
-    ProductsWrapper
+    ProductsWrapper,
+    ProductsRow
 };

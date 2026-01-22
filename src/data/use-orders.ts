@@ -20,8 +20,16 @@ export function useOrders() {
 }
 
 export const order = {
-    create: async (params, isUser = false) => {
-        const url = isUser ? `order/user` : `order/guest`;
+    create: async (params, isUser = false, isEmployee = false) => {
+        let url = '';
+        if (isEmployee) {
+            url = `order/employee`;
+        } else if (isUser) {
+            url = `order/user`;
+        } else {
+            url = `order/guest`;
+        }
+        
         const { data } = await axiosInstance.post(url, params);
         return data?.data;
     },

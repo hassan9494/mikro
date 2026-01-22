@@ -8,6 +8,7 @@ import {useCart} from "../../contexts/cart/use-cart";
 interface Props {
     data: any;
 }
+
 const useStyles = makeStyles((theme) => ({
     input: {
         borderRadius: 0,
@@ -21,11 +22,13 @@ const CustomTextField = withStyles({
                 borderRadius: `0px`,
             },
         },
+         '& *': {
+            boxSizing: 'content-box !important', // Override the border-box
+        },
     },
 })(TextField);
 
 export const CheckoutQuantityControl: React.FC<Props> = ({data}) => {
-
     const classes = useStyles();
     const {addItem, removeItem, getItem} = useCart();
 

@@ -27,7 +27,8 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
                 textShadow: '1px 1px 1px rgba(0, 0, 0, 0.004)',
-                overflow: 'scroll !important',
+overflowY: 'auto',
+overflowX: 'hidden',
                 paddingRight: '0 !important',
                 paddingBottom: '0 !important',
             },
@@ -127,8 +128,6 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                     boxSizing: 'border-box',
                 },
             },
-
-
 
             '.reuseModalCloseBtn': {
                 right: '10px!important',
@@ -282,8 +281,37 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                     maxHeight: 32,
                 },
             },
-
+// Add this anywhere in your GlobalStyle css object
+'*': {
+    // Dropdown container
+    '.user-pages-dropdown': {
+        padding: '8px 0 !important',
+    },
+    
+    // Menu items
+    '.user-pages-dropdown .menu-item': {
+        padding: '10px 16px !important',
+        margin: '4px 8px !important',
+        display: 'block !important',
+        borderRadius: '4px !important',
+    },
+    
+    '.user-pages-dropdown .menu-item:hover': {
+        backgroundColor: '#f5f5f5 !important',
+    },
+    
+    // Logout button
+    '.user-pages-dropdown div.menu-item:last-child': {
+        color: '#d32f2f !important',
+        marginTop: '8px !important',
+        paddingTop: '12px !important',
+        borderTop: '1px solid #e0e0e0 !important',
+    },
+},
 //@ts-ignore
             ...theme.globals,
+              '.css-t3jn0f': {
+            position: 'static !important',
+        },
         })
 );

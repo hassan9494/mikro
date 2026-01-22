@@ -68,19 +68,25 @@ const TermsOfService = () => {
   </p>
 </section>
 
-          <section className="policy-section">
-            <div className="section-header">
-              <div className="section-number">4</div>
-              <h2>Returns and Refunds</h2>
-            </div>
-            <p>Our return policy includes:</p>
-            <ul className="policy-list">
-              <li>14-day return window from delivery date</li>
-              <li>Products must be in original condition with packaging</li>
-              <li>Refunds processed within 7 business days after inspection</li>
-              <li>Customer responsible for return shipping costs</li>
-            </ul>
-          </section>
+<section className="policy-section">
+  <div className="section-header">
+    <div className="section-number">4</div>
+    <h2>Discount & Coupon Policy</h2>
+  </div>
+  <p>To ensure fair and consistent use of promotional offers, please review the following coupon guidelines:</p>
+  <ul className="policy-list">
+    <li><strong>Expiration Dates:</strong> All coupons have a specified expiration date and cannot be used after that date.</li>
+    <li><strong>Usage Limits:</strong> Each coupon has a limit on the number of times it can be used per customer. Unless stated otherwise, coupons are single-use.</li>
+    <li><strong>One Coupon Per Order:</strong> Only one coupon or discount may be applied per order.</li>
+    <li><strong>Exclusions:</strong> Certain brands or products may be excluded from coupon eligibility. For details regarding exclusions for a specific coupon, please contact the sales department.</li>
+    <li><strong>Non-Transferable:</strong> Coupons are non-transferable and cannot be redeemed for cash.</li>
+    <li><strong>Canceled Orders:</strong> If an order is canceled, the coupon used for that order cannot be reactivated or reused.</li>
+    <li><strong>Fraud Prevention:</strong> The store reserves the right to cancel any order if a coupon is used fraudulently or in violation of these terms.</li>
+    <li><strong>Eligible Orders Only:</strong> Coupons may only be used on orders that meet the eligibility criteria stated in the coupon details.</li>
+    <li><strong>Restricted Coupons:</strong> Some coupons are restricted to specific customer groups or organizations. Unauthorized use will result in the coupon being rejected.</li>
+    <li><strong>Reseller Restrictions:</strong> Coupons cannot be applied to reseller or commercial orders without prior approval from the sales team.</li>
+  </ul>
+</section>
 
           <section className="policy-section">
             <div className="section-header">
@@ -225,11 +231,13 @@ const TermsOfService = () => {
         }
 
         .security-note {
-          background-color: #fff8f0;
-          border-left: 4px solid #fe5e00;
-          padding: 1rem;
-          margin: 1.5rem 0;
-          font-weight: 500;
+           background-color: #f0f9ff;
+                 border-left: 4px solid #0ea5e9;
+                 padding: 1.5rem;
+                 margin-bottom: 2rem;
+                 border-radius: 0 8px 8px 0;
+                 font-size: 1.1rem;
+                 color: #0369a1;
         }
 
         .contact-section {
@@ -331,16 +339,7 @@ const TermsOfService = () => {
           margin-bottom: 2rem;
         }
 
-        .last-updated {
-          display: inline-block;
-          background-color: #f8fafc;
-          padding: 0.5rem 1.5rem;
-          border-radius: 20px;
-          font-size: 0.9rem;
-          color: #64748b;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-          border: 1px solid #e2e8f0;
-        }
+
 
         /* Rest of your existing styles... */
         .privacy-policy-container {

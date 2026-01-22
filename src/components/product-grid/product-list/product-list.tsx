@@ -46,7 +46,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 
 const ErrorMessage = dynamic(() =>
-    import('components/error-message/error-message')
+  import('components/error-message/error-message')
 );
 
 import { ProductCard } from 'components/product-card/product-card-six';
@@ -73,7 +73,7 @@ export const Products: React.FC<ProductsProps> = ({
   const isHomePage = router.pathname === '/';
 
   const theme = useTheme();
-  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
   useEffect(() => {

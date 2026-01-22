@@ -2,35 +2,62 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 
 const CartPopupBody = styled.div`
-  height: auto;
+  height: 100%;
   width: 385px;
   display: flex;
   flex-direction: column;
   border-radius: ${themeGet('radii.base', '6px')};
   background-color: ${themeGet('colors.white', '#ffffff')};
-  box-sizing: content-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  
+  /* Make cart take full height */
+  flex: 1;
+  min-height: 0; /* Important for flex children */
 
-  @media (max-width: 767px) {
-    width: 100%;
-  }
+  height: 100vh;        /* ✅ FIXED height */
+  max-height: 100vh;    /* lock it */
 
   .cart-scrollbar {
-    height: 100%;
-    max-height: calc(100vh - 245px);
-
-    @media (max-width: 767px) {
-      max-height: 330px;
+    flex: 1;
+    overflow-x: hidden;
+    min-height: 0; /* Important for flex children */
+    
+    /* Modern Thin Scrollbar */
+    &::-webkit-scrollbar {
+      width: 3px;
     }
+    
+    &::-webkit-scrollbar-track {
+      background: ${themeGet('colors.gray.100', '#f5f5f5')};
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: ${themeGet('colors.gray.400', '#bdbdbd')};
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background: ${themeGet('colors.gray.500', '#9e9e9e')};
+    }
+    
+    /* For Firefox - Modern Thin */
+    scrollbar-width: thin;
+    // scrollbar-color: ${themeGet('colors.gray.400', '#bdbdbd')} ${themeGet('colors.gray.100', '#f5f5f5')};
   }
 `;
 
 const PopupHeader = styled.div`
-  padding: 15px 25px;
+  padding: 20px 25px;
   background-color: ${themeGet('colors.white', '#ffffff')};
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
+  flex-shrink: 0; /* Prevent header from shrinking */
 
   @media (max-width: 766px) {
     justify-content: center;
@@ -76,12 +103,14 @@ const CloseButton = styled.button`
 
   @media (max-width: 767px) {
     position: absolute;
-    top: -45px;
+    top: 15px;
+    right: 15px;
     background-color: ${themeGet('colors.white', '#ffffff')};
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
 
   &.fixedCartClose {
@@ -92,8 +121,35 @@ const CloseButton = styled.button`
 `;
 
 const ItemWrapper = styled.div`
-  width: 100%;
-  height: auto;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Modern Thin Scrollbar */
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${themeGet('colors.gray.100', '#f5f5f5')};
+    border-radius: 4px;
+    margin: 4px 0;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${themeGet('colors.gray.400', '#bdbdbd')};
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${themeGet('colors.gray.500', '#9e9e9e')};
+  }
+  
+  /* For Firefox - Modern Thin */
+  // scrollbar-width: thin;
+  // scrollbar-color: ${themeGet('colors.gray.400', '#bdbdbd')} ${themeGet('colors.gray.100', '#f5f5f5')};
 `;
 
 const ItemCards = styled.div`
@@ -218,7 +274,6 @@ const CheckoutButton = styled.button`
   border: 0;
   outline: 0;
   cursor: pointer;
-  /* margin-top: auto; */
   margin-bottom: 15px;
   margin-left: 15px;
 
@@ -239,7 +294,18 @@ const CheckoutButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: auto;
+  // margin-top: auto;
+  height: fit-content;
+  overflow: hidden;
+  
+  /* Fixed at bottom */
+  position: sticky;
+  bottom: 0;
+  background-color: ${themeGet('colors.white', '#ffffff')};
+  // padding: 15px 0;
+  border-top: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
+  z-index: 1;
+  flex-shrink: 0; /* Prevent from shrinking */
 `;
 
 const Title = styled.a`
@@ -309,6 +375,7 @@ const CouponBoxWrapper = styled.div`
   padding: 0 15px;
   flex-direction: column;
   padding-right: 22px;
+  overflow: hidden;
 `;
 
 const CouponCode = styled.p`
@@ -316,10 +383,10 @@ const CouponCode = styled.p`
   font-size: ${themeGet('fontSizes.base', '15')}px;
   font-weight: ${themeGet('fontWeights.medium', '500')};
   color: ${themeGet('colors.text.regular', '#77798c')};
-
   width: 100%;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 
   span {
     font-weight: ${themeGet('fontWeights.bold', '700')};
@@ -336,41 +403,64 @@ const ErrorMsg = styled.span`
   padding-top: 10px;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 `;
 
 const CartSlidePopup = styled.div`
-  width: 420px;
-  height: 100vh;
-  background-color: ${themeGet('colors.white', '#ffffff')};
   position: fixed;
-  bottom: 0;
-  right: -450px;
   z-index: 99999;
-  box-shadow: ${themeGet('shadows.big', '0 21px 36px rgba(0, 0, 0, 0.16)')};
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;   /* 🔒 NEVER SCROLL */
+  height: 100%;
+
+  opacity: 0;
+  visibility: hidden;
   transition: all 0.35s ease-in-out;
 
+  &.cartPopupFixed {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Desktop */
+  @media (min-width: 581px) {
+    width: 420px;
+    height: 100vh;     /* 🔒 LOCK HEIGHT */
+    top: 0;
+    right: -420px;
+
+    &.cartPopupFixed {
+      right: 0;
+    }
+  }
+
+  /* Mobile */
   @media (max-width: 580px) {
     width: 100%;
-    display: none;
-  }
+    height: 70vh;      /* 🔒 LOCK HEIGHT */
+    bottom: -70vh;
+    left: 0;
+    border-radius: 20px 20px 0 0;
 
-  @media (min-width: 581px) {
-    display: block;
-  }
-
-  &.cartPopupFixed {
-    right: 0;
+    &.cartPopupFixed {
+      bottom: 0;
+    }
   }
 
   ${CartPopupBody} {
-    height: 100%;
+    // height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   ${ItemWrapper} {
-    /* height: calc(100vh - 240px); */
-    max-height: calc(100vh - 245px);
+    flex: 1;
+    overflow-y: auto;
     background-color: ${themeGet('colors.white', '#ffffff')};
+    padding-bottom: 10px;
   }
 
   ${ItemCards} {
@@ -378,15 +468,53 @@ const CartSlidePopup = styled.div`
     margin-bottom: 0;
   }
 
-  @media (max-width: 767px) {
+  /* Mobile-specific header styling */
+  @media (max-width: 580px) {
     ${PopupHeader} {
-      justify-content: space-between;
-    }
-
-    ${CloseButton} {
-      top: auto;
+      padding: 20px 25px 15px;
       position: relative;
-      background-color: transparent;
+      
+      /* Add drag handle for mobile bottom sheet */
+      &::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background-color: ${themeGet('colors.gray.400', '#cccccc')};
+        border-radius: 2px;
+      }
+    }
+    
+    ${CloseButton} {
+      top: 15px;
+      right: 15px;
+      position: absolute;
+      background-color: ${themeGet('colors.white', '#ffffff')};
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  }
+
+  /* Desktop-specific styling */
+  @media (min-width: 581px) {
+    ${CloseButton} {
+      @media (max-width: 767px) {
+        top: 15px;
+        right: 15px;
+        position: absolute;
+        background-color: ${themeGet('colors.white', '#ffffff')};
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        color: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
     }
   }
 `;

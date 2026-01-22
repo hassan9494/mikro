@@ -77,6 +77,7 @@ export const ReplacementProductCard = ({ data }: Props) => {
                             height={100}
                             // unoptimized={true}
                         />
+
                     </ImageWrapper>
                 <Title>
                     {title.substring(0,32) + (title.length > 32 ? '...' : '')}

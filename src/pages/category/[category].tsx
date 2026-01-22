@@ -115,7 +115,7 @@ const CategoryPage: NextPage<Props> = ({ data, deviceType, social }) => {
                             <ContentSection>
                                 <ProductsWrapper>
                                     <div ref={targetRef}>
-                                        <Products type={PAGE_TYPE} deviceType={deviceType} />
+                                        <Products type={PAGE_TYPE} deviceType={deviceType}   />
                                     </div>
                                 </ProductsWrapper>
                                 <Footer social={social}/>

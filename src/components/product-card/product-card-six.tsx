@@ -1799,24 +1799,31 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                                         status={variantStatus}
                                         onClick={(e) => handleVariantClick(variant, e)}
                                     >
-                                        <VariantImage>
-                                            {variantImage ? (
-                                                <Image
-                                                    src={variantImage.src}
-                                                    alt={variant.title}
-                                                    width={30}
-                                                    height={30}
-                                                    loading="lazy"
-                                                />
-                                            ) : (
-                                                <div style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    backgroundColor: colorCode,
-                                                    borderRadius: '50%',
-                                                }} />
-                                            )}
-                                        </VariantImage>
+                                    <VariantImage>
+  {variantImage ? (
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+    }}>
+      <Image
+        src={variantImage.src}
+        alt={variant.title}
+        layout="fill"
+        objectFit="cover"
+        loading="lazy"
+        unoptimized={true}
+      />
+    </div>
+  ) : (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      backgroundColor: colorCode,
+      borderRadius: '50%',
+    }} />
+  )}
+</VariantImage>
                                         <SelectedIndicator selected={isSelected}>
                                             <Check style={{ fontSize: 3 }} />
                                         </SelectedIndicator>

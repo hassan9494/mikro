@@ -356,10 +356,10 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
 
   // Get the correct set of images to display
   const displayItems = selectedColor?.gallery?.length > 0
-      ? selectedColor.gallery
-      : selectedColor?.image
-          ? [{ url: selectedColor.image }]
-          : items;
+    ? selectedColor.gallery
+    : selectedColor?.image
+      ? [{ url: selectedColor.image }]
+      : items;
 
   const imageUrls = displayItems.map(item => item.url);
 
@@ -538,8 +538,8 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
       const touch2 = e.touches[1];
 
       const distance = Math.sqrt(
-          Math.pow(touch2.clientX - touch1.clientX, 2) +
-          Math.pow(touch2.clientY - touch1.clientY, 2)
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
       );
 
       lastTouchDistance.current = distance;
@@ -562,8 +562,8 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
       const touch2 = e.touches[1];
 
       const distance = Math.sqrt(
-          Math.pow(touch2.clientX - touch1.clientX, 2) +
-          Math.pow(touch2.clientY - touch1.clientY, 2)
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
       );
 
       if (lastTouchDistance.current > 0) {
@@ -751,9 +751,9 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
             ×
           </CloseButton>
 
-          <ImageCounter>
-            {popup.currentIndex + 1} / {displayItems.length}
-          </ImageCounter>
+        <ImageCounter>
+          {popup.currentIndex + 1} / {displayItems.length}
+        </ImageCounter>
 
           {displayItems.length > 1 && (
               <>
@@ -766,17 +766,17 @@ const CarouselWithCustomDots: React.FC<CarouselWithCustomDotsProps> = ({
               </>
           )}
 
-          <ZoomControls>
-            <ControlButton onClick={(e) => { e.stopPropagation(); zoomImage(-0.5); }}>
-              −
-            </ControlButton>
-            <ControlButton onClick={(e) => { e.stopPropagation(); resetZoom(); }}>
-              Fit
-            </ControlButton>
-            <ControlButton onClick={(e) => { e.stopPropagation(); zoomImage(0.5); }}>
-              +
-            </ControlButton>
-          </ZoomControls>
+        <ZoomControls>
+          <ControlButton onClick={(e) => { e.stopPropagation(); zoomImage(-0.5); }}>
+            −
+          </ControlButton>
+          <ControlButton onClick={(e) => { e.stopPropagation(); resetZoom(); }}>
+            Fit
+          </ControlButton>
+          <ControlButton onClick={(e) => { e.stopPropagation(); zoomImage(0.5); }}>
+            +
+          </ControlButton>
+        </ZoomControls>
 
           <PopupImageContainer>
             <PopupImageWrapper

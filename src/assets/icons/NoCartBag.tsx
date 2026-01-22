@@ -3,5 +3,5 @@ import noCartBag from './NoCartBag.svg';
 import Image from 'components/image/image';
 
 export const NoCartBag = () => {
-  return <Image url={noCartBag} alt="Empty Cart" width={120} height={120} />;
+  return <Image url={noCartBag} alt="Empty Cart" width={500} height={500} />;
 };

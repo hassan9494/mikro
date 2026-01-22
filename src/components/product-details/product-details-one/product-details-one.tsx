@@ -476,9 +476,6 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         <Typography component="span" variant="body1" color="textPrimary"
                                                                     style={{ marginRight: 50 }}>
                                                             Quantity: {displayProduct.availableQty}
-                                                            ( Stock: {displayProduct.stock_available},
-                                                            Store: {displayProduct.store_available} )
-
                                                         </Typography>
                                                         <Typography component="span" variant="body1" color="textPrimary">
                                                             Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}
@@ -532,9 +529,6 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         <Typography component="span" variant="body1" color="textPrimary"
                                                                     style={{ marginRight: 50 }}>
                                                             Quantity: {displayProduct.availableQty}
-                                                            ( Stock: {displayProduct.stock_available},
-                                                            Store: {displayProduct.store_available} )
-
                                                         </Typography>
                                                         <Typography component="span" variant="body1" color="textPrimary">
                                                             Location: {displayProduct.location} / {displayProduct.stock_location ?? '----'}

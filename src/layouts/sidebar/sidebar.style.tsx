@@ -61,15 +61,13 @@ export const RequestMedicine = styled.span`
     border-radius: ${themeGet('radii.base', '6px')};
   }
 `;
-
 export const SidebarWrapper = styled.div`
-  padding: 45px 0px;
   padding-top: 35px;
-  padding-right: 0;
+  padding-right: 5px;
 
   @media (max-width: 1199px) {
-    padding: 40px 0px;
-    padding-right: 0;
+    padding-top: 40px;
+    padding-right: 5px;
   }
 
   @media (max-width: 990px) {
@@ -79,9 +77,33 @@ export const SidebarWrapper = styled.div`
 
   .sidebar-scrollbar {
     height: 100%;
-    max-height: calc(100vh - 108px);
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    /* Keep scrollbar space (prevents jump) */
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    /* Hidden by default */
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0);
+      border-radius: 6px;
+      transition: background 0.25s ease;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  }
+
+  &:hover .sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.35);
   }
 `;
+
+
 
 export const CategoryWrapper = styled.div`
   position: relative;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -16,7 +16,6 @@ import { motion } from 'framer-motion';
 import useRelatedProducts from "../../../data/use-related-products";
 import { FormattedMessage } from "react-intl";
 import { ProductCard } from 'components/product-card/product-card-six';
-import { Button } from "../../button/button";
 
 const ErrorMessage = dynamic(() =>
     import('components/error-message/error-message')

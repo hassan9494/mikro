@@ -11,6 +11,11 @@ import { api } from 'data/use-address';
 import useCities from "../../data/use-city";
 import { Autocomplete } from '@mui/material';
 import {useAppDispatch} from "../../contexts/app/app.provider";
+import {
+  FormContainer,
+  Heading,
+  FieldWrapper,
+} from './address-card.style';
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -114,7 +119,7 @@ const UpdateAddress = (props: FormikProps<FormValues> & MyFormProps) => {
     }, [cities])
 
     return (
-        <form
+        <FormContainer
             onSubmit={async (event) => {
                 event.preventDefault();
                 await handleAddressSubmit();
@@ -224,7 +229,7 @@ const UpdateAddress = (props: FormikProps<FormValues> & MyFormProps) => {
             >
                 <FormattedMessage id="savedAddressId" defaultMessage="Save Address"/>
             </Button>
-        </form>
+        </FormContainer>
     );
 
 };

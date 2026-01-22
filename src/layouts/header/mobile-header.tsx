@@ -34,7 +34,6 @@ type MobileHeaderProps = {
     social?;
 };
 
-
 export const AuthMenuWrapper = styled.div`
   margin-left: 0;
   margin-right: 25px;
@@ -46,7 +45,7 @@ const SearchModal: React.FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             <SearchModalClose type="button" onClick={() => closeModal()}>
                 <LongArrowLeft />
             </SearchModalClose>
-            <MySearch onSubmit={onSubmit} /> {/* Pass down the onSubmit prop */}
+            <MySearch onSubmit={onSubmit} /> 
         </SearchModalWrapper>
     );
 };
@@ -69,7 +68,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
                 width: '100%',
                 height: '100%',
             },
-            closeOnClickOutside: false,
+            closeOnClickOutside: true,
             component: (props) => (
                 (<SearchModal {...props} onSubmit={handleClose} />) // Pass handleClose as onSubmit
             ),

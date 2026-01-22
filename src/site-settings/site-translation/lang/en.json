@@ -183,5 +183,11 @@
   "countryPlaceholder": "Country",
   "countryJordan": "الأردن",
   "msgResetPasswordEmailSent": "Reset password instruction has been sent to the given email address",
-  "available" : "This product is't available now"
+  "available" : "This product is't available now",
+    "customerNamePlaceholder": " Name",
+    "customerEmailPlaceholder": "Email",
+    "customerPhonePlaceholder": " Phone",
+    "customerAddressPlaceholder": " Address",
+    "placeCustomerOrder": "proceed to checkout",
+    "orderNotesPlaceholder": "Notes"
 }
