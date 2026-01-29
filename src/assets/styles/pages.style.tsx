@@ -128,9 +128,36 @@ const MainWrapper = styled.div`
   padding: 60px;
   background-color: ${themeGet('colors.white', '#ffffff')};
   border-bottom: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
+  position: relative; /* Add this */
+  overflow: visible; /* Ensure arrows aren't clipped */
 
   @media (max-width: 990px) {
     padding: 15px;
+  }
+
+  /* If using react-slick carousel, add these styles */
+  .slick-prev, .slick-next {
+    z-index: 2;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .slick-prev {
+    left: -25px;
+  }
+
+  .slick-next {
+    right: -25px;
+  }
+
+  @media (max-width: 768px) {
+    .slick-prev {
+      left: -15px;
+    }
+    
+    .slick-next {
+      right: -15px;
+    }
   }
 `;
 

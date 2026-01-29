@@ -60,6 +60,11 @@ export default function useUser() {
             new_password
         });
     };
+        const addOrUpdateContactNumber = async (contact) => {
+        console.log(contact, 'contact');
+        // return await fetch(end_point_url,{method: 'POST', body: contact });
+    };
+
 
     const addOrUpdateAddress = async (address) => {
         // Only allow address saving if user has only "user" role or no roles
@@ -82,6 +87,22 @@ export default function useUser() {
         
         return await axiosInstance.post(`address/${id}/primary`);
     };
+     const addOrUpdatePaymentCard = async (payment_card) => {
+        console.log(payment_card, 'payment_card');
+        // return await fetch(end_point_url,{method: 'POST', body: payment_card });
+    };
+
+    const deleteContactNumber = async (contactId) => {
+        console.log(contactId, 'contactId');
+        // return await fetch(end_point_url,{method: 'POST', body: contactId });
+    };
+
+
+    const deletePaymentCard = async (cardId) => {
+        console.log(cardId, 'cardId');
+        // return await fetch(end_point_url,{method: 'POST', body: cardId });
+    };
+
 
     const deleteAddress = async (id) => {
         // Only allow if user has only "user" role or no roles
@@ -92,17 +113,6 @@ export default function useUser() {
         return await axiosInstance.delete(`address/${id}`);
     };
 
-    const deleteContactNumber = async (contactId) => {
-        console.log(contactId, 'contactId');
-        // return await fetch(end_point_url,{method: 'POST', body: contactId });
-    };
-    const deletePaymentCard = async (cardId) => {
-        console.log(cardId, 'cardId');
-        // return await fetch(end_point_url,{method: 'POST', body: cardId });
-    };
-
-
-
     return {
         user,
         mutate,
@@ -112,10 +122,11 @@ export default function useUser() {
         isEmployee: isEmployee(),
         addOrUpdateAddress,
         setPrimaryAddress,
+        addOrUpdateContactNumber,
+        deleteContactNumber,
+        deletePaymentCard,
         deleteAddress,
         updateProfile,
         changePassword,
-        deleteContactNumber,
-        deletePaymentCard
     };
 }

@@ -5,7 +5,7 @@ import Popover from 'components/popover/popover';
 import Logo from 'layouts/logo/logo';
 import { MenuDown } from 'assets/icons/MenuDown';
 import { CATEGORY_MENU_ITEMS } from 'site-settings/site-navigation';
-import * as categoryMenuIcons from 'assets/icons/category-menu-icons';
+import { getIconComponent } from 'utils/icons/icon-mapper';
 import {
     MainMenu,
     MenuItem,
@@ -17,8 +17,8 @@ import {
 } from './left-menu.style';
 
 const CategoryIcon = ({ name }) => {
-    const TagName = categoryMenuIcons[name];
-    return !!TagName ? <TagName/> : <p>Invalid icon {name}</p>;
+    const IconComponent = getIconComponent(name);
+    return <IconComponent />;
 };
 
 const CategoryMenu = (props: any) => {
@@ -59,7 +59,6 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
         initialMenu ?? CATEGORY_MENU_ITEMS[0]
     );
 
-    // Ensure we pass a string URL to Logo even if the import is an object
     const logoSrc = typeof logo === 'string' ? logo : (logo && (logo.src || (logo.default && (typeof logo.default === 'string' ? logo.default : logo.default.src))) ) || '';
 
     return (

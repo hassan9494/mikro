@@ -156,7 +156,7 @@ const CheckoutEmployee: React.FC<MyFormProps> = ({ user }) => {
                 <CheckoutInformation>
                     <Card variant="outlined" className={classes.margin}>
                         <CardHeader
-                            title={t('customerDeliveryAddress')}
+                            title={t('Customer Delivery Address')}
                         />
                         <Divider/>
                         <CardContent>
@@ -260,7 +260,8 @@ const CheckoutEmployee: React.FC<MyFormProps> = ({ user }) => {
                                         id='termAndConditionHelper'
                                         defaultMessage='By making this purchase you agree to our'
                                     />
-                                    <Link href='#'>
+                                    
+                                    <Link href='/terms-of-service'>
                                         <TermConditionLink>
                                             <FormattedMessage
                                                 id='termAndCondition'

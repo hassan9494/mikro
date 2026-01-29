@@ -63,6 +63,7 @@ const OptimizedImg = styled.img`
   position: relative;
   object-fit: cover;
   background-color: #f6f6f6; /* light placeholder */
+  border-radius: 10px;
 `;
 
 const SlideContainer = styled.div`
