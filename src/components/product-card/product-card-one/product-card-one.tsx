@@ -3,6 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Image from 'components/image/image';
+import NextImage from 'next/image';
 import { Button } from 'components/button/button';
 import {
     ProductCardWrapper,
@@ -132,11 +133,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
     return (
         <ProductCardWrapper onClick={handleQuickViewModal} className="product-card">
             <ProductImageWrapper>
-                <Image
-                    url={image}
-                    className="product-image"
-                    style={{ position: 'relative' }}
+                <NextImage
+                    src={image as any}
                     alt={title}
+                    width={300}
+                    height={240}
+                    style={{ position: 'relative', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
                 {discountInPercent ? (
                     <DiscountPercent>{discountInPercent}%</DiscountPercent>

@@ -27,7 +27,8 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
                 textShadow: '1px 1px 1px rgba(0, 0, 0, 0.004)',
-                overflow: 'scroll !important',
+overflowY: 'auto',
+overflowX: 'hidden',
                 paddingRight: '0 !important',
                 paddingBottom: '0 !important',
             },
@@ -128,16 +129,6 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 },
             },
 
-            '.search-modal-mobile': {
-                transform: 'none!important',
-                maxWidth: 'none!important',
-                maxHeight: 'none!important',
-                top: '0!important',
-                left: '0!important',
-                background: 'transparent!important',
-                borderRadius: '0!important',
-            },
-
             '.reuseModalCloseBtn': {
                 right: '10px!important',
                 backgroundColor: '#ffffff!important',
@@ -195,10 +186,62 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 position: 'relative',
             },
 
-            '.drawer': {
+            '.rc-drawer, .drawer': {
                 outline: 0,
                 boxShadow: 'none',
+                zIndex: 999999,
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                // Ensure drawer content is opaque and visible
+                '& .rc-drawer-content, & .rc-drawer-body, & .drawer-content': {
+                    background: '#ffffff',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                    display: 'block',
+                    height: '100%',
+                },
             },
+
+            // Backdrop/mask for rc-drawer
+            '.rc-drawer-mask': {
+                backgroundColor: 'rgba(0,0,0,0.45)',
+                // Keep mask underneath header but above page content when present
+                zIndex: 99998,
+            },
+
+            // When modal overlay is used for mobile search, align to top instead of centered
+            '.search-modal-mobile-overlay': {
+                alignItems: 'flex-start !important',
+                justifyContent: 'flex-start !important',
+                paddingTop: '60px !important',
+            },
+
+            '.search-modal-mobile': {
+                transform: 'none!important',
+                maxWidth: 'none!important',
+                maxHeight: 'none!important',
+                top: '0!important',
+                left: '0!important',
+                background: '#ffffff !important',
+                borderRadius: '0!important',
+                width: '100% !important',
+                height: 'auto !important',
+            },
+
+            // Ensure modal overlay aligns to top on small screens (for mobile search)
+            '@media (max-width: 990px)': {
+                '.modal-overlay.search-modal-mobile-overlay': {
+                    alignItems: 'flex-start !important',
+                    justifyContent: 'flex-start !important',
+                    paddingTop: '60px !important',
+                },
+                '.drawer__handler': {
+                    zIndex: 100000,
+                    position: 'relative',
+                },
+            },
+
+
             '.srOnly': {
                 border: '0 !important',
                 clip: 'rect(1px, 1px, 1px, 1px) !important',
@@ -211,6 +254,7 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 width: '1px !important',
                 whiteSpace: 'nowrap !important',
             },
+            
             '.footer-logo': {
                 maxWidth: '200px',
                 height: 'auto',
@@ -225,7 +269,49 @@ export const GlobalStyle = createGlobalStyle(({theme}) =>
                 },
             },
 
+            // Ensure header logo has explicit size to avoid collapsing to 0x0
+            "img[alt='Shop Logo'], img[alt='shop logo']": {
+                display: 'block',
+                width: 'auto',
+                height: 40,
+                maxHeight: 40,
+                minWidth: 40,
+                '@media (max-width: 575px)': {
+                    height: 32,
+                    maxHeight: 32,
+                },
+            },
+// Add this anywhere in your GlobalStyle css object
+'*': {
+    // Dropdown container
+    '.user-pages-dropdown': {
+        padding: '8px 0 !important',
+    },
+    
+    // Menu items
+    '.user-pages-dropdown .menu-item': {
+        padding: '10px 16px !important',
+        margin: '4px 8px !important',
+        display: 'block !important',
+        borderRadius: '4px !important',
+    },
+    
+    '.user-pages-dropdown .menu-item:hover': {
+        backgroundColor: '#f5f5f5 !important',
+    },
+    
+    // Logout button
+    '.user-pages-dropdown div.menu-item:last-child': {
+        color: '#d32f2f !important',
+        marginTop: '8px !important',
+        paddingTop: '12px !important',
+        borderTop: '1px solid #e0e0e0 !important',
+    },
+},
 //@ts-ignore
             ...theme.globals,
+              '.css-t3jn0f': {
+            position: 'static !important',
+        },
         })
 );

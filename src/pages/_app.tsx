@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { Backdrop, CircularProgress, CssBaseline, ThemeProvider as MuiThemeProvider } from '@material-ui/core';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import { Backdrop, CircularProgress, CssBaseline } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider, StyledEngineProvider, Theme } from '@mui/material/styles';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from 'site-settings/site-theme/default';
 import { AppProvider, useAppState } from 'contexts/app/app.provider';
@@ -9,28 +11,35 @@ import { CartProvider } from 'contexts/cart/use-cart';
 import { useMedia } from 'utils/use-media';
 import AppLayout from 'layouts/app-layout';
 import 'react-toastify/dist/ReactToastify.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+// Swiper styles are imported only where the component is used to avoid loading them on every page
 import { ToastContainer } from 'react-toastify';
 import theme from 'theme';
-import 'swiper/swiper-bundle.min.css';
-import 'rc-drawer/assets/index.css';
-import 'rc-table/assets/index.css';
-import 'rc-collapse/assets/index.css';
-import 'react-multi-carousel/lib/styles.css';
-import 'components/multi-carousel/multi-carousel.style.css';
-import 'react-spring-modal/dist/index.css';
-import 'overlayscrollbars/css/OverlayScrollbars.css';
-import 'components/scrollbar/scrollbar.css';
-import '@redq/reuse-modal/lib/index.css';
 import { GlobalStyle } from 'assets/styles/global.style';
 import { messages } from 'site-settings/site-translation/messages';
-import 'typeface-lato';
-import 'typeface-poppins';
 import React from 'react';
 import { OrderProvider } from "../contexts/order/order.provider";
 import {useSocial} from "../data/use-website";
 import {useSettings} from "../data/use-website";
+import type { AppProps } from 'next/app';
+import createEmotionCache from 'utils/createEmotionCache';
+import { ModalProvider } from 'components/modal/modal-provider';
+import AnalyticsScripts from 'components/analytics/analytics-scripts';
 
-export default function ExtendedApp({ Component, pageProps }) {
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+
+const clientSideEmotionCache = createEmotionCache();
+
+interface ExtendedAppProps extends AppProps {
+    emotionCache?: EmotionCache;
+}
+
+export default function ExtendedApp({ Component, pageProps, emotionCache = clientSideEmotionCache }: ExtendedAppProps) {
     // useEffect(() => {
     //     // Inject head scripts
     //     const headScripts = document.documentElement.getAttribute('data-head-scripts');
@@ -72,26 +81,36 @@ export default function ExtendedApp({ Component, pageProps }) {
     const tablet = useMedia('(max-width: 991px)');
     const desktop = useMedia('(min-width: 992px)');
 
+    const StyledThemeProvider = ThemeProvider as unknown as React.ComponentType<React.PropsWithChildren<{ theme: typeof defaultTheme }>>;
+    const StyledGlobalStyle = GlobalStyle as unknown as React.ComponentType;
+
     return (
-        <MuiThemeProvider theme={theme}>
-            <CssBaseline />
-            <ThemeProvider theme={defaultTheme}>
-                <LanguageProvider messages={messages}>
-                    <CartProvider>
-                        <AppProvider>
-                            <AuthProvider>
-                                <AppLayout>
-                                    <Loading />
-                                    <Component {...pageProps} deviceType={{ mobile, tablet, desktop }} social={social} settings={setting}/>
-                                    <ToastContainer />
-                                </AppLayout>
-                                <GlobalStyle />
-                            </AuthProvider>
-                        </AppProvider>
-                    </CartProvider>
-                </LanguageProvider>
-            </ThemeProvider>
-        </MuiThemeProvider>
+        <CacheProvider value={emotionCache}>
+            <StyledEngineProvider injectFirst>
+                <MuiThemeProvider theme={theme as Theme}>
+                    <CssBaseline />
+                    <StyledThemeProvider theme={defaultTheme}>
+                        <LanguageProvider messages={messages}>
+                            <CartProvider>
+                                <AppProvider>
+                                    <AuthProvider>
+                                        <ModalProvider>
+                                            <AnalyticsScripts />
+                                            <AppLayout>
+                                                <Loading />
+                                                <Component {...pageProps} deviceType={{ mobile, tablet, desktop }} social={social} settings={setting}/>
+                                                <ToastContainer />
+                                            </AppLayout>
+                                            <StyledGlobalStyle />
+                                        </ModalProvider>
+                                    </AuthProvider>
+                                </AppProvider>
+                            </CartProvider>
+                        </LanguageProvider>
+                    </StyledThemeProvider>
+                </MuiThemeProvider>
+            </StyledEngineProvider>
+        </CacheProvider>
     );
 }
 

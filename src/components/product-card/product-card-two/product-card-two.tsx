@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Image from 'components/image/image';
+import NextImage from 'next/image';
 import {
     BookCardWrapper,
     BookImageWrapper,
@@ -44,11 +45,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
     return (
         <BookCardWrapper onClick={onClick} className="book-card">
             <BookImageWrapper>
-                <Image
-                    url={image}
-                    className="product-image"
-                    style={{ position: 'relative' }}
+                <NextImage
+                    src={image as any}
                     alt={title}
+                    width={300}
+                    height={275}
+                    style={{ position: 'relative', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
                 {discountInPercent ? (
                     <DiscountPercent>{discountInPercent}%</DiscountPercent>

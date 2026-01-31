@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
-import Carousel from 'react-multi-carousel';
+import dynamic from 'next/dynamic';
+// Styles required by react-multi-carousel (was missing, causing slides to stack)
+import 'react-multi-carousel/lib/styles.css';
+
+const Carousel = dynamic(() => import('react-multi-carousel'), { ssr: false });
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { ArrowNext } from 'assets/icons/ArrowNext';
@@ -53,19 +57,27 @@ const ButtonGroupWrapper = styled('div')``;
 // Optimized image component
 const OptimizedImg = styled.img`
   width: 100%;
+  min-height: 200px; /* ensure visible area even if image missing */
   height: 100%;
   display: block;
   position: relative;
   object-fit: cover;
+  background-color: #f6f6f6; /* light placeholder */
+  border-radius: 10px;
 `;
 
 const SlideContainer = styled.div`
   padding: 0 15px;
   overflow: hidden;
+  min-height: 200px;
+
+  @media (max-width: 575px) {
+    min-height: 140px;
+  }
 `;
 
 const LinkWrapper = styled.a`
-  display: flex;
+  display: block; /* ensure the link takes the full slide */
   cursor: pointer;
   text-decoration: none;
   height: 100%;
@@ -171,23 +183,35 @@ export default function CustomCarousel({
                                            isRtl,
                                            ...props
                                        }: Props) {
-    if (!data || data.length === 0) return null;
-
-    // Preload first 3 images for better user experience
     useEffect(() => {
-        if (data) {
-            const imagesToPreload = data.slice(0, 3); // Preload first 3 images
-            imagesToPreload.forEach((item, index) => {
-                if (item.image) {
-                    const link = document.createElement('link');
-                    link.rel = 'preload';
-                    link.as = 'image';
-                    link.href = item.image;
-                    document.head.appendChild(link);
+        if (!data || data.length === 0) {
+            return;
+        }
+
+        const resolveSrc = (src: any) => (typeof src === 'object' && src?.src) ? src.src : src;
+        const links: HTMLLinkElement[] = [];
+        data.slice(0, 3).forEach((item) => {
+            const src = resolveSrc(item?.image);
+            if (src) {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = src;
+                document.head.appendChild(link);
+                links.push(link);
+            }
+        });
+
+        return () => {
+            links.forEach((link) => {
+                if (link.parentNode) {
+                    link.parentNode.removeChild(link);
                 }
             });
-        }
+        };
     }, [data]);
+
+    if (!data || data.length === 0) return null;
 
     return (
         <div dir='ltr'>
@@ -207,24 +231,52 @@ export default function CustomCarousel({
                 {...props}
             >
                 {data.map((item: any, index: number) => {
-                    if (component) return component(item);
+                    const key = item?.id ?? item?.slug ?? index;
+
+                    const resolveSrc = (src: any) => (typeof src === 'object' && src?.src) ? src.src : src;
+                    const imgSrc = resolveSrc(item.image) || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"><rect width="100%" height="100%" fill="#f6f6f6" /></svg>';
+
+                    if (component) {
+                        return (
+                            <SlideContainer key={key}>
+                                {component(item)}
+                            </SlideContainer>
+                        );
+                    }
 
                     return (
-                        <SlideContainer key={index}>
-                            <LinkWrapper
-                                href={item.link}
-                                target='_blank'
-                                rel="noopener noreferrer"
-                            >
-                                <OptimizedImg
-                                    src={item.image}
-                                    alt={item?.alt || `Carousel item ${index + 1}`}
-                                    loading={index < 3 ? "eager" : "lazy"} // Load first 3 immediately
-                                    decoding="async"
-                                    width="400" // Approximate width
-                                    height="300" // Approximate height
-                                />
-                            </LinkWrapper>
+                        <SlideContainer key={key}>
+                            {typeof item.link === 'string' ? (
+                                <LinkWrapper
+                                    href={item.link}
+                                    target='_blank'
+                                    rel="noopener noreferrer"
+                                >
+                                    <OptimizedImg
+                                        src={imgSrc}
+                                        alt={item?.alt || `Carousel item ${index + 1}`}
+                                        loading={index < 3 ? "eager" : "lazy"} // Load first 3 immediately
+                                        decoding="async"
+                                        onError={(e: any) => {
+                                            e.currentTarget.onerror = null;
+                                            e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"><rect width="100%" height="100%" fill="#f6f6f6" /></svg>';
+                                        }}
+                                    />
+                                </LinkWrapper>
+                            ) : (
+                                <div>
+                                    <OptimizedImg
+                                        src={imgSrc}
+                                        alt={item?.alt || `Carousel item ${index + 1}`}
+                                        loading={index < 3 ? "eager" : "lazy"}
+                                        decoding="async"
+                                        onError={(e: any) => {
+                                            e.currentTarget.onerror = null;
+                                            e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"><rect width="100%" height="100%" fill="#f6f6f6" /></svg>';
+                                        }}
+                                    />
+                                </div>
+                            )} 
                         </SlideContainer>
                     );
                 })}

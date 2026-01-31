@@ -1,0 +1,54 @@
+[
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+    "type": "info",
+    "text": "images:[{\"alt\":\"Shop Logo\",\"src\":\"/_next/static/media/logo_mikro.000581c0.svg\",\"width\":200,\"height\":40}]"
+  },
+  {
+    "type": "warn",
+    "text": "logo collapsed (pre): {\"width\":0,\"height\":0,\"top\":0,\"left\":0,\"offsetWidth\":0,\"offsetHeight\":0,\"display\":\"block\",\"visibility\":\"visible\",\"widthStyle\":\"auto\",\"heightStyle\":\"32px\",\"src\":\"/_next/static/media/logo_mikro.000581c0.svg\",\"loading\":\"eager\",\"fetchpriority\":\"auto\"} - forcing inline styles as diagnostic"
+  },
+  {
+    "type": "info",
+    "text": "logoInfo:{\"pre\":{\"width\":0,\"height\":0,\"top\":0,\"left\":0,\"offsetWidth\":0,\"offsetHeight\":0,\"display\":\"block\",\"visibility\":\"visible\",\"widthStyle\":\"auto\",\"heightStyle\":\"32px\",\"src\":\"/_next/static/media/logo_mikro.000581c0.svg\",\"loading\":\"eager\",\"fetchpriority\":\"auto\"},\"post\":{\"width\":0,\"height\":0,\"offsetWidth\":0,\"offsetHeight\":0,\"display\":\"block\",\"visibility\":\"visible\",\"widthStyle\":\"200px\",\"heightStyle\":\"40px\",\"src\":\"/_next/static/media/logo_mikro.000581c0.svg\",\"loading\":\"eager\",\"fetchpriority\":\"auto\",\"parents\":[{\"tag\":\"SPAN\",\"position\":\"static\",\"zIndex\":\"auto\",\"overflow\":\"visible\"},{\"tag\":\"A\",\"position\":\"static\",\"zIndex\":\"auto\",\"overflow\":\"visible\"},{\"tag\":\"DIV\",\"position\":\"static\",\"zIndex\":\"auto\",\"overflow\":\"visible\"},{\"tag\":\"HEADER\",\"position\":\"fixed\",\"zIndex\":\"99999\",\"overflow\":\"visible\"},{\"tag\":\"DIV\",\"position\":\"static\",\"zIndex\":\"auto\",\"overflow\":\"visible\"},{\"tag\":\"DIV\",\"position\":\"static\",\"zIndex\":\"auto\",\"overflow\":\"visible\"}]}}"
+  },
+  {
+    "type": "info",
+    "text": "drawer handler not found"
+  }
+]

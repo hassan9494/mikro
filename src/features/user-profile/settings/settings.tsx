@@ -38,7 +38,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
     useEffect(() => {
         if(user) {
             setName(user.name)
-            setEmail(user.name)
+            setEmail(user.email)
         }
     }, [user])
 
@@ -71,92 +71,112 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                         />
                     </Title>
                 </HeadingSection>
-                <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
-                    <Col xs={12} sm={5} md={5} lg={5}>
-                        <Label>
+               <Row style={{ marginBottom: '50px', display: 'flex', flexWrap: 'wrap' }}>
+                    <Col style={{ flex: 1, minWidth: '250px', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <Label style={{ marginBottom: '8px' }}>
                             <FormattedMessage
                                 id='profileNameField'
                                 defaultMessage='Your Name'
                             />
                         </Label>
-                        <Input
-                            type='text'
-                            label='Name'
-                            name='name'
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            backgroundColor='#F7F7F7'
-                            height='48px'
-                        />
+                        <div style={{ marginTop: 'auto' }}>
+                            <Input
+                                type='text'
+                                label='Name'
+                                name='name'
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                backgroundColor='#F7F7F7'
+                                height='48px'
+                                style={{ width: '100%' }}
+                            />
+                        </div>
                     </Col>
 
-                    <Col xs={12} sm={5} md={5} lg={5}>
-                        <Label>
+                    <Col style={{ flex: 1, minWidth: '250px', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <Label style={{ marginBottom: '8px' }}>
                             <FormattedMessage
                                 id='profileEmailField'
                                 defaultMessage='Your Email'
                             />
                         </Label>
-                        <Input
-                            type='email'
-                            name='email'
-                            label='Email Address'
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            backgroundColor='#F7F7F7'
-                        />
+                        <div style={{ marginTop: 'auto' }}>
+                            <Input
+                                type='email'
+                                name='email'
+                                label='Email Address'
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                backgroundColor='#F7F7F7'
+                                height='48px'
+                                style={{ width: '100%' }}
+                            />
+                        </div>
                     </Col>
 
-                    <Col xs={12} sm={2} md={2} lg={2}>
-                        <Button size='big' style={{ width: '100%' }} onClick={handleSave}>
-                            <FormattedMessage id='profileSaveBtn' defaultMessage='Save'/>
-                        </Button>
+                    <Col style={{ flex: 1, minWidth: '250px', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ height: '28px', marginBottom: '8px' }}></div> {/* Spacer for label alignment */}
+                        <div style={{ marginTop: 'auto' }}>
+                            <Button size='big' style={{ width: '100%', height: '48px' }} onClick={handleSave}>
+                                <FormattedMessage id='profileSaveBtn' defaultMessage='Save'/>
+                            </Button>
+                        </div>
                     </Col>
                 </Row>
-                <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
-                    <Col xs={12} sm={5} md={5} lg={5}>
-                        <Label>
+                <Row style={{ marginBottom: '50px', display: 'flex', flexWrap: 'wrap' }}>
+                    <Col style={{ flex: 1, minWidth: '250px', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <Label style={{ marginBottom: '8px' }}>
                             <FormattedMessage
                                 id='profileCurrentPasswordField'
                                 defaultMessage='Current Password'
                             />
                         </Label>
-                        <Input
-                            type='password'
-                            label='Current Password'
-                            name='password'
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            backgroundColor='#F7F7F7'
-                            height='48px'
-                        />
+                        <div style={{ marginTop: 'auto' }}>
+                            <Input
+                                type='password'
+                                label='Current Password'
+                                name='password'
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                backgroundColor='#F7F7F7'
+                                height='48px'
+                                style={{ width: '100%' }}
+                            />
+                        </div>
                     </Col>
 
-                    <Col xs={12} sm={5} md={5} lg={5}>
-                        <Label>
+                    <Col style={{ flex: 1, minWidth: '250px', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <Label style={{ marginBottom: '8px' }}>
                             <FormattedMessage
                                 id='profileNewPasswordField'
                                 defaultMessage='New Password'
                             />
                         </Label>
-                        <Input
-                            type='password'
-                            name='newPassword'
-                            label='New Password'
-                            value={newPassword}
-                            onChange={e => setNewPassword(e.target.value)}
-                            backgroundColor='#F7F7F7'
-                        />
+                        <div style={{ marginTop: 'auto' }}>
+                            <Input
+                                type='password'
+                                name='newPassword'
+                                label='New Password'
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                backgroundColor='#F7F7F7'
+                                height='48px'
+                                style={{ width: '100%' }}
+                            />
+                        </div>
                     </Col>
 
-                    <Col xs={12} sm={2} md={2} lg={2}>
-                        <Button size='big' style={{ width: '100%' }} onClick={handleChangePassword}>
-                            <FormattedMessage id='profileChangePasswordBtn' defaultMessage='Change Password'/>
-                        </Button>
+                    <Col style={{ flex: 1, minWidth: '250px', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ height: '28px', marginBottom: '8px' }}></div> {/* Spacer for label alignment */}
+                        <div style={{ marginTop: 'auto' }}>
+                            <Button size='big' style={{ width: '100%', height: '48px' }} onClick={handleChangePassword}>
+                                <FormattedMessage id='profileChangePasswordBtn' defaultMessage='Change Password'/>
+                            </Button>
+                        </div>
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} sm={12} md={12} lg={12} style={{ position: 'relative' }}>
+                    <Col style={{ position: 'relative' }}>
                         <SettingsFormContent>
                             <Address/>
                         </SettingsFormContent>
@@ -168,3 +188,4 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
 };
 
 export default SettingsContent;
+

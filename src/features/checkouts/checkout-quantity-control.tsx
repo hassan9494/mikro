@@ -1,11 +1,14 @@
 import React from 'react';
 import {Plus, Minus} from 'assets/icons/PlusMinus';
-import {Box, Button, makeStyles, TextField, withStyles} from "@material-ui/core";
+import { Box, Button, TextField } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
 import {useCart} from "../../contexts/cart/use-cart";
 
 interface Props {
     data: any;
 }
+
 const useStyles = makeStyles((theme) => ({
     input: {
         borderRadius: 0,
@@ -19,11 +22,13 @@ const CustomTextField = withStyles({
                 borderRadius: `0px`,
             },
         },
+         '& *': {
+            boxSizing: 'content-box !important', // Override the border-box
+        },
     },
 })(TextField);
 
 export const CheckoutQuantityControl: React.FC<Props> = ({data}) => {
-
     const classes = useStyles();
     const {addItem, removeItem, getItem} = useCart();
 

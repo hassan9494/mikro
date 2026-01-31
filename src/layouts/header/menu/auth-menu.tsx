@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { AuthorizedMenu } from './authorized-menu';
-import { Avatar, Button } from "@material-ui/core";
-import { Person } from "@material-ui/icons";
+import { Avatar, Button } from "@mui/material";
+import { Person } from "@mui/icons-material";
 import Popover from 'components/popover/popover';
 
 interface Props {

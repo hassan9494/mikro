@@ -2,8 +2,15 @@ import React from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import systemCss from '@styled-system/css';
 import { compose, variant, border, space, layout } from 'styled-system';
+import type { BorderProps, LayoutProps, SpaceProps } from 'styled-system';
 
-export const StyledButton = styled.div<any>(
+type StyledButtonProps = SpaceProps & LayoutProps & BorderProps & {
+    loading?: boolean;
+    variant?: 'outlined' | 'primary' | 'secondary' | 'text' | 'select';
+    size?: 'big' | 'small';
+};
+
+export const StyledButton = styled.button<StyledButtonProps>(
     (props) =>
         systemCss({
             px: '15px',
@@ -136,19 +143,15 @@ const Spinner = styled.div(
   `
 );
 
-type Props = {
-    children: React.ReactNode;
-    loading?: boolean;
-    disabled?: boolean;
-    type: 'submit' | 'button';
-    [key: string]: unknown;
-};
-export type Ref = HTMLDivElement;
-export const Button = React.forwardRef<Ref, Props>(
-    ({ children, disabled, loading = false, ...props }, ref) => (
-        <StyledButton ref={ref} {...props} disabled={disabled} role="button">
+type LoadMoreButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & StyledButtonProps;
+
+export type Ref = HTMLButtonElement;
+export const Button = React.forwardRef<Ref, LoadMoreButtonProps>(
+    ({ children, loading = false, ...rest }, ref) => (
+        <StyledButton ref={ref} loading={loading} {...rest}>
             {children}
             {loading && <Spinner/>}
         </StyledButton>
     )
 );
+Button.displayName = 'LoadMoreButton';

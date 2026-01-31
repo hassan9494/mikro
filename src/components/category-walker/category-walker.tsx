@@ -5,7 +5,7 @@ import {
     NoCategory,
     CategoryWrapper,
 } from './category-walker.style';
-import { Button } from 'components/button/button';
+import styled from 'styled-components';
 import SpringModal from 'components/spring-modal/spring-modal';
 import { useRouter } from 'next/router';
 import startCase from 'lodash/startCase';
@@ -33,9 +33,19 @@ const CategoryWalker: React.FunctionComponent<WalkerProps> = ({
                 )}
             </CategoryWrapper>
 
-            <Button variant="text" onClick={() => setOpen(true)}>
+            <button
+                type="button"
+                onClick={() => setOpen(true)}
+                style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#133695',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                }}
+            >
                 Categories
-            </Button>
+            </button>
             <SpringModal isOpen={isOpen} onRequestClose={() => setOpen(false)}>
                 {children}
             </SpringModal>

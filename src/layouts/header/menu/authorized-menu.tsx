@@ -20,11 +20,11 @@ export const AuthorizedMenu: React.FC<Props> = ({ onLogout }) => {
                 />
             ))}
             <div className='menu-item' onClick={onLogout}>
-                <a>
+                <span>
           <span>
             <FormattedMessage id='nav.logout' defaultMessage='Logout'/>
           </span>
-                </a>
+                </span>
             </div>
         </>
     );

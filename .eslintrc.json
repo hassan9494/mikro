@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-empty-interface": "off",
+    "@next/next/no-img-element": "off",
+    "@next/next/next-script-for-ga": "off",
+    "jsx-a11y/alt-text": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "import/no-anonymous-default-export": "off"
+  },
+  "settings": {
+    "next": {
+      "rootDir": ["./"]
+    }
+  }
+}

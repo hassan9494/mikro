@@ -77,7 +77,21 @@ const Cart: React.FC<CartPropsType> = ({
                     <CloseIcon/>
                 </CloseButton>
             </PopupHeader>
-
+{isEmpty ? (
+  <ItemWrapper
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      overflow: 'hidden',   // ⛔ NO SCROLL
+    }}
+  >
+    <NoProductImg>
+      <NoCartBag />
+    </NoProductImg>
+  </ItemWrapper>
+) : (
             <Scrollbar
                 className='cart-scrollbar'
                 style={{
@@ -115,7 +129,7 @@ const Cart: React.FC<CartPropsType> = ({
                     )}
                 </ItemWrapper>
             </Scrollbar>
-
+)}
             <CheckoutButtonWrapper>
                 <PromoCode style={{
                     minHeight: coupon ? 'auto' : 'auto',

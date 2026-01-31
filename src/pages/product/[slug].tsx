@@ -1,19 +1,21 @@
 import React from 'react';
-import {NextPage} from 'next';
+import { GetServerSideProps, NextPage } from 'next';
+
 import dynamic from 'next/dynamic';
-import {useRouter} from 'next/router';
-import {SEO} from 'components/seo';
-import {Modal} from '@redq/reuse-modal';
+import { useRouter } from 'next/router';
+import { SEO } from 'components/seo';
+import { Modal } from 'components/modal/modal-provider';
+
 import ProductSingleWrapper, {
     ProductSingleContainer,
 } from 'assets/styles/product-single.style';
-import {getAllProducts, getProductBySlug} from 'utils/api/product';
-import {Backdrop, CircularProgress} from "@material-ui/core";
-import {useProduct} from "data/use-products";
+import { getProductBySlug } from 'utils/api/product';
+
+import { Backdrop, CircularProgress } from "@mui/material";
+import { useProduct } from "data/use-products";
 import Footer from "../../layouts/footer";
-import {useSocial} from "../../data/use-website";
-import {ContentSection, MainContentArea, MainWrapper} from "../../assets/styles/pages.style";
-import {ModalProvider} from "../../contexts/modal/modal.provider";
+import { useSocial } from "../../data/use-website";
+import { ContentSection, MainContentArea, MainWrapper } from "../../assets/styles/pages.style";
 
 const stripHtml = (html) => {
     if (typeof window !== 'undefined') {
@@ -42,7 +44,7 @@ type Props = {
     };
     data: any;
     [key: string]: any;
-    social: any;
+    social?: any;
 };
 
 // Helper to safely get meta fields
@@ -53,35 +55,41 @@ function getMetaField(obj, field, fallback) {
 function Loading() {
     return (
         <Backdrop open={true}>
-            <CircularProgress/>
+            <CircularProgress />
         </Backdrop>
     );
 }
 
-const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
+const ProductPage: NextPage<Props> = ({ data, deviceType, social }) => {
     // const {data: social} = useSocial();
     const router = useRouter();
+    const productSlug = data?.slug ?? router.query.slug;
+    const { data: swrProduct, loading: productLoading } = useProduct(productSlug);
 
-    if (router.isFallback || !data?.slug) return <Loading/>;
+    const resolvedProduct = swrProduct ?? data;
+    const isLoading = productLoading && !resolvedProduct;
 
-    const { data: product } = useProduct(data?.slug || router.query.slug);
+    if (!resolvedProduct?.slug) {
+        return <Loading />;
+    }
+
     // Prepare meta fields
-
-    const cleanShortDescription = data.short_description ? stripHtml(data.short_description) : '';
-    const cleanDescription = data.description ? stripHtml(data.description) : '';
-    const title = getMetaField(data, 'meta_title', data.title);
-    const description = getMetaField(data, 'meta_description', cleanShortDescription || cleanDescription);
-    const keywords = getMetaField(data, 'meta_keyword', undefined);
-    const productTitle = data?.title
+    const cleanShortDescription = resolvedProduct.short_description ? stripHtml(resolvedProduct.short_description) : '';
+    const cleanDescription = resolvedProduct.description ? stripHtml(resolvedProduct.description) : '';
+    const title = getMetaField(resolvedProduct, 'meta_title', resolvedProduct.title);
+    const description = getMetaField(resolvedProduct, 'meta_description', cleanShortDescription || cleanDescription);
+    const keywords = getMetaField(resolvedProduct, 'meta_keyword', undefined);
+    const productTitle = resolvedProduct.title;
     const productShortDescription = cleanShortDescription;
-    const canonical = `https://mikroelectron.com/product/${data.slug}`;
-    const image = data.image;
+    const canonical = `https://mikroelectron.com/product/${resolvedProduct.slug}`;
+    const image = resolvedProduct.image;
+
     // Prepare concatenated name and description for JSON-LD
-    const productName = (data.meta_title && data.meta_title !== data.title)
-        ? `${data.title} | ${data.meta_title}`
-        : data.title;
-    const productDescriptionText = (data.meta_description && data.meta_description !== cleanDescription)
-        ? `${cleanDescription} ${data.meta_description}`
+    const productName = (resolvedProduct.meta_title && resolvedProduct.meta_title !== resolvedProduct.title)
+        ? `${resolvedProduct.title} | ${resolvedProduct.meta_title}`
+        : resolvedProduct.title;
+    const productDescriptionText = (resolvedProduct.meta_description && resolvedProduct.meta_description !== cleanDescription)
+        ? `${cleanDescription} ${resolvedProduct.meta_description}`
         : cleanDescription;
     // Prepare JSON-LD structured data
     const productJsonLd = {
@@ -90,54 +98,54 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
         "name": productName,
         "description": productDescriptionText,
         "disambiguatingDescription": cleanShortDescription,
-        "sku": data.sku,
-        "mpn": data.sku, // If you have a separate MPN, use it
+        "sku": resolvedProduct.sku,
+        "mpn": resolvedProduct.sku, // If you have a separate MPN, use it
         "brand": {
             "@type": "Brand",
-            "name": data.brand?.name || "Mikroelectron"
+            "name": resolvedProduct.brand?.name || "Mikroelectron"
         },
-        "category": data.categories?.map(cat => cat.title),
-        "keywords": data.meta_keyword,
-        "image": (data.gallery && data.gallery.length > 0)
-            ? data.gallery.map(img => img.url)
-            : [data.image],
+        "category": resolvedProduct.categories?.map(cat => cat.title),
+        "keywords": resolvedProduct.meta_keyword,
+        "image": (resolvedProduct.gallery && resolvedProduct.gallery.length > 0)
+            ? resolvedProduct.gallery.map(img => img.url)
+            : [resolvedProduct.image],
         "offers": {
             "@type": "Offer",
-            "url": `https://mikroelectron.com/product/${data.slug}`,
+            "url": `https://mikroelectron.com/product/${resolvedProduct.slug}`,
             "priceCurrency": "JOD",
-            "price": data.sale_price || data.price,
-            "priceSpecification": data.sale_price ? {
+            "price": resolvedProduct.sale_price || resolvedProduct.price,
+            "priceSpecification": resolvedProduct.sale_price ? {
                 "@type": "UnitPriceSpecification",
-                "price": data.sale_price,
+                "price": resolvedProduct.sale_price,
                 "priceCurrency": "JOD"
             } : undefined,
-            "availability": (data.availableQty > 0 && data.is_available)
+            "availability": (resolvedProduct.availableQty > 0 && resolvedProduct.is_available)
                 ? "https://schema.org/InStock"
                 : "https://schema.org/OutOfStock",
             "inventoryLevel": {
                 "@type": "QuantitativeValue",
-                "value": data.availableQty
+                "value": resolvedProduct.availableQty
             }
         },
-        "manufacturer": data.source ? {
+        "manufacturer": resolvedProduct.source ? {
             "@type": "Organization",
-            "name": data.source
+            "name": resolvedProduct.source
         } : undefined,
         "additionalProperty": [
-            data.features && {
+            resolvedProduct.features && {
                 "@type": "PropertyValue",
                 "name": "Features",
-                "value": data.features
+                "value": resolvedProduct.features
             },
-            data.packageInclude && {
+            resolvedProduct.packageInclude && {
                 "@type": "PropertyValue",
                 "name": "Package Include",
-                "value": data.packageInclude
+                "value": resolvedProduct.packageInclude
             },
-            data.documents && {
+            resolvedProduct.documents && {
                 "@type": "PropertyValue",
                 "name": "Documents",
-                "value": data.documents
+                "value": resolvedProduct.documents
             }
         ].filter(Boolean)
     };
@@ -157,56 +165,54 @@ const ProductPage: NextPage<Props> = ({data, deviceType, social}) => {
                 jsonLd={productJsonLd}
             />
             {
-                product ?
+                resolvedProduct ?
                     <Modal>
                         <ProductSingleWrapper>
                             <ProductSingleContainer>
 
-                                <ProductDetails product={product || data} deviceType={deviceType}/>
-                                <CartPopUp deviceType={deviceType}/>
+                                <ProductDetails product={resolvedProduct} deviceType={deviceType} />
+                                <CartPopUp deviceType={deviceType} />
                             </ProductSingleContainer>
                         </ProductSingleWrapper>
-                        <Footer social={social}/>
+                        <Footer social={social} />
                     </Modal>
-                    : <Loading/>
+                    : isLoading ? <Loading /> : null
             }
+
 
         </>
 
     );
 };
 
-// export async function getServerSideProps({ params }) {
-//     const data = await getProductBySlug(params.slug);
-//     return {
-//         props: {
-//             data,
-//         },
-//     };
-// }
+export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
+    const slugParam = params?.slug;
 
-export async function getStaticProps({ params }) {
-    const data = await getProductBySlug(params.slug);
-    return {
-        props: {
-            data,
-        },
-        revalidate: 10, // Revalidate every 10 seconds
-    };
-}
+    if (!slugParam || Array.isArray(slugParam)) {
+        return {
+            notFound: true,
+        };
+    }
 
+    try {
+        const data = await getProductBySlug(slugParam);
 
-export async function getStaticPaths() {
-    const products = await getAllProducts();
-    const paths = products.map(product => ({
-        params: { slug: product.slug.toLowerCase() },
-    }));
+        if (!data) {
+            return {
+                notFound: true,
+            };
+        }
 
-    return {
-        paths,
-        fallback: 'blocking', // Use blocking mode for SSR
-    };
-}
-
+        return {
+            props: {
+                data,
+            },
+        };
+    } catch (error) {
+        return {
+            notFound: true,
+        };
+    }
+};
 
 export default ProductPage;

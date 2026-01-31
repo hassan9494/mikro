@@ -69,17 +69,19 @@ export const ModalProvider = ({
                     return isSmall ? (
                         <SpringModal
                             key={currentKey}
-                            children={<Component/>}
                             isOpen={isOpen}
                             onRequestClose={() => hideModal(currentKey, onClose)}
-                        />
+                        >
+                            <Component/>
+                        </SpringModal>
                     ) : (
                         <CenterModal
                             key={currentKey}
-                            children={<Component/>}
                             isOpen={isOpen}
                             onRequestClose={() => hideModal(currentKey, onClose)}
-                        />
+                        >
+                            <Component/>
+                        </CenterModal>
                     );
                 })}
             </React.Fragment>

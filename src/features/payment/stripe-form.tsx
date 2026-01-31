@@ -7,7 +7,7 @@ import {
     useElements,
 } from '@stripe/react-stripe-js';
 // import { useMutation } from '@apollo/client';
-import { closeModal } from '@redq/reuse-modal';
+import { closeModal } from 'components/modal/modal-provider';
 // import { GET_PAYMENT } from 'graphql/mutation/order';
 import StripeFormWrapper, { Heading, FieldWrapper } from './stripe-form.style';
 import { ProfileContext } from 'contexts/profile/profile.context';

@@ -1,6 +1,5 @@
 import React from 'react';
 import Router from 'next/router';
-// import { closeModal } from '@redq/reuse-modal';
 import { Button } from 'components/button/button';
 import {
     QuickViewWrapper,

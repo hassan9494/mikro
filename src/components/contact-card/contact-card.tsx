@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import * as Yup from 'yup';
-import { closeModal } from '@redq/reuse-modal';
-import { FormikProps, ErrorMessage, Formik, Form } from 'formik';
+import { closeModal } from 'components/modal/modal-provider';
+import { FormikProps, ErrorMessage, Formik } from 'formik';
 // import { useMutation } from '@apollo/client';
 import MaskedInput from 'react-text-mask';
 import { ProfileContext } from 'contexts/profile/profile.context';
@@ -49,13 +49,8 @@ const CreateOrUpdateContact: React.FC<Props> = ({ item }) => {
             onSubmit={handleSubmit}
             validationSchema={ContactValidationSchema}
         >
-            {({
-                  values,
-                  handleChange,
-                  handleBlur,
-                  isSubmitting,
-              }: FormikProps<FormValues>) => (
-                <Form>
+            {({ handleChange, handleBlur, values, handleSubmit, setFieldValue, isSubmitting }: FormikProps<FormValues>) => (
+                <form onSubmit={handleSubmit}>
                     <Heading>
                         {item && item.id ? 'Edit Contact' : 'Add New Contact'}
                     </Heading>
@@ -102,7 +97,7 @@ const CreateOrUpdateContact: React.FC<Props> = ({ item }) => {
                             defaultMessage="Save Contact"
                         />
                     </Button>
-                </Form>
+                </form>
             )}
         </Formik>
     );

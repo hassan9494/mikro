@@ -17,7 +17,7 @@ import {FormattedMessage} from 'react-intl';
 import Router from "next/router";
 import {useAppState} from "../../contexts/app/app.provider";
 import MoneyFormat from "components/money-format/money-format";
-import moment from "moment";
+import dayjs from "dayjs";
 
 type OrderReceivedProps = {};
 
@@ -34,10 +34,8 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
     return (
         <OrderReceivedWrapper>
             <OrderReceivedContainer>
-                <Link href="/">
-                    <a className="home-btn">
-                        <FormattedMessage id="backHomeBtn" defaultMessage="Back to Home"/>
-                    </a>
+                <Link href="/" className="home-btn">
+                    <FormattedMessage id="backHomeBtn" defaultMessage="Back to Home"/>
                 </Link>
 
                 <OrderInfo>
@@ -122,7 +120,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                             </Text>
                         </ListTitle>
                         <ListDes>
-                            <Text>{moment(received?.date).format('Y/M/D')}</Text>
+                            <Text>{dayjs(received?.date).format('YYYY/M/D')}</Text>
                         </ListDes>
                     </ListItem>
 

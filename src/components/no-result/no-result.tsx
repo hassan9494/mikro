@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import NoResultSvg from './no-result.svg';
+import Image from 'components/image/image';
 import {
     NoResultWrapper,
     ImageWrapper,
@@ -38,7 +39,7 @@ const NoResultFound: React.FC<NoResultFoundProps> = ({ id }) => {
             </h3>
 
             <ImageWrapper>
-                <img src={NoResultSvg} alt="No Result"/>
+                <Image url={NoResultSvg} alt="No Result" width={240} height={160} />
             </ImageWrapper>
 
             <ButtonWrapper>

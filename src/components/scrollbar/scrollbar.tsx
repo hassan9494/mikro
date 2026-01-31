@@ -1,10 +1,10 @@
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import React from 'react';
+import { OverlayScrollbarsComponent, type OverlayScrollbarsComponentProps } from 'overlayscrollbars-react';
 
-type ScrollbarProps = {
+type ScrollbarProps = Omit<OverlayScrollbarsComponentProps, 'options' | 'className'> & {
     className?: string;
-    children: React.ReactNode;
-    options?: any;
-    style?: any;
+    options?: OverlayScrollbarsComponentProps['options'];
+    style?: React.CSSProperties;
 };
 
 export const Scrollbar: React.FC<ScrollbarProps> = ({
@@ -14,15 +14,21 @@ export const Scrollbar: React.FC<ScrollbarProps> = ({
                                                         style,
                                                         ...props
                                                     }) => {
+    const hostClassName = ['os-theme-thin', className].filter(Boolean).join(' ');
+    const mergedOptions = options === false
+        ? false
+        : {
+            ...options,
+            scrollbars: {
+                autoHide: options?.scrollbars?.autoHide ?? 'scroll',
+                ...(options?.scrollbars ?? {}),
+            },
+        };
+
     return (
         <OverlayScrollbarsComponent
-            options={{
-                className: `${className} os-theme-thin`,
-                scrollbars: {
-                    autoHide: 'leave',
-                },
-                ...options,
-            }}
+            className={hostClassName}
+            options={mergedOptions}
             style={style}
             {...props}
         >

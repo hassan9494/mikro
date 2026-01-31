@@ -41,15 +41,16 @@ const NavLink: React.SFCFactory<NavLinkProps> = ({
     return (
         <div onClick={onClick} className={className ? className : ''}>
             {dynamic ? (
-                <Link href={'/[type]'} as={href}>
-                    <a
-                        className={isCurrentPath ? ' current-page' : ''}
-                        style={{ display: 'flex', alignItems: 'center' }}
-                        target={target || '_self'}
-                    >
-                        {icon ? <Icon className={iconClass}>{icon}</Icon> : ''}
+                <Link
+                    href={'/[type]'}
+                    as={href}
+                    className={isCurrentPath ? ' current-page' : ''}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    target={target || '_self'}
+                >
+                    {icon ? <Icon className={iconClass}>{icon}</Icon> : ''}
 
-                        <span className="label">
+                    <span className="label">
               {intlId ? (
                   <FormattedMessage
                       id={intlId ? intlId : 'defaultNavLinkId'}
@@ -59,18 +60,17 @@ const NavLink: React.SFCFactory<NavLinkProps> = ({
                   label
               )}
             </span>
-                    </a>
                 </Link>
             ) : (
-                <Link href={href}>
-                    <a
-                        className={isCurrentPath ? ' current-page' : ''}
-                        style={{ display: 'flex', alignItems: 'center' }}
-                        target={target || '_self'}
-                    >
-                        {icon ? <Icon className={iconClass}>{icon}</Icon> : ''}
+                <Link
+                    href={href}
+                    className={isCurrentPath ? ' current-page' : ''}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    target={target || '_self'}
+                >
+                    {icon ? <Icon className={iconClass}>{icon}</Icon> : ''}
 
-                        <span className="label">
+                    <span className="label">
               {intlId ? (
                   <FormattedMessage
                       id={intlId ? intlId : 'defaultNavLinkId'}
@@ -80,7 +80,6 @@ const NavLink: React.SFCFactory<NavLinkProps> = ({
                   label
               )}
             </span>
-                    </a>
                 </Link>
             )}
         </div>

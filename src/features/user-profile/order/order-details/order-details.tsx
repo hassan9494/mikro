@@ -11,11 +11,13 @@ import {
     OrderTableWrapper,
     OrderTable,
 } from './order-details.style';
+
 import Progress from 'components/progress-box/progress-box';
 import { CURRENCY } from 'utils/constant';
 import { FormattedMessage } from 'react-intl';
 import MoneyFormat from "../../../../components/money-format/money-format";
 import {ImageWrapper, ItemDetails, ItemName, ItemPrice, ItemWrapper} from "../order.style";
+import Image from 'components/image/image';
 import Link from "next/link";
 import styled from 'styled-components';
 
@@ -23,8 +25,12 @@ type OrderDetailsProps = {
     order?: any;
 };
 
+const StyledTableComponent: React.FC<React.HTMLAttributes<HTMLTableElement>> = ({ children, ...rest }) => (
+    <OrderTable {...rest}>{children}</OrderTable>
+);
+
 const components = {
-    table: OrderTable,
+    table: StyledTableComponent,
 };
 
 // Add styled component for color variants
@@ -178,7 +184,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                                     return (
                                         <ColorVariantItem>
                                             <VariantImageWrapper>
-                                                <img src={record.image} alt={record.name}/>
+                                                <Image url={record.image} alt={record.name} width={30} height={30} />
                                             </VariantImageWrapper>
                                             <span> {record.name}</span>
                                         </ColorVariantItem>
@@ -189,7 +195,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                                 return (
                                     <ItemWrapper>
                                         <ImageWrapper>
-                                            <img src={record.image} alt={record.name}/>
+                                            <Image url={record.image} alt={record.name} width={75} height={75} />
                                         </ImageWrapper>
 
                                         <ItemDetails>

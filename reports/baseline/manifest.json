@@ -1,0 +1,7 @@
+{
+  "captured": [
+    "index.html (.next/server/pages/index.html)",
+    "home.html (.next/server/pages/home.html)"
+  ],
+  "note": "These files are the prerendered baseline captured from the current `testing` snapshot. If you want additional pages captured (product detail, category pages), tell me which URL slugs and I will capture their prerendered HTML or start a temporary server to fetch runtime HTML and screenshots."
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import NextImage from 'next/image';
 import Image from 'components/image/image';
 import { PlusOutline } from 'assets/icons/PlusOutline';
 import {
@@ -70,11 +71,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
     return (
         <CardWrapper onClick={onClick} className="medicine-card">
             <ImageWrapper className={isInCart(data?.id) && 'overlay'}>
-                <Image
-                    url={image}
-                    className="product-image"
-                    style={{ position: 'relative' }}
+                <NextImage
+                    src={image as any}
                     alt={title}
+                    width={300}
+                    height={240}
+                    style={{ position: 'relative', width: '100%', height: 'auto', objectFit: 'contain' }}
                 />
 
                 {!isInCart(data?.id) ? (

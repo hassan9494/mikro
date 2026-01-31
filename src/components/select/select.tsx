@@ -46,6 +46,7 @@ const Select: React.FC<SelectProps> = ({
             <ReactSelect
                 className="select-field__wrapper"
                 classNamePrefix="select"
+                instanceId={props.name ?? 'select'}
                 {...props}
             />
             {position === 'bottom' && LabelField}

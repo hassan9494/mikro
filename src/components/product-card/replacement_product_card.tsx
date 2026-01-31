@@ -66,8 +66,7 @@ export const ReplacementProductCard = ({ data }: Props) => {
 
     return (
         <Card style={{border:'1px dotted',borderRadius:'5px',padding:'5px'}}>
-            <Link href="/product/[slug]" as={`/product/${slug}`}>
-                <a>
+            <Link href="/product/[slug]" as={`/product/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <ImageWrapper>
                         {/*<img src={image} alt={title} width={100} height={100}/>*/}
                         <Image
@@ -78,11 +77,11 @@ export const ReplacementProductCard = ({ data }: Props) => {
                             height={100}
                             // unoptimized={true}
                         />
+
                     </ImageWrapper>
                 <Title>
                     {title.substring(0,32) + (title.length > 32 ? '...' : '')}
                 </Title>
-                </a>
             </Link>
 
 

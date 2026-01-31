@@ -3,8 +3,18 @@ import styled, { keyframes } from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import css from '@styled-system/css';
 import { compose, variant, border, space, layout } from 'styled-system';
+import type { BorderProps, LayoutProps, SpaceProps } from 'styled-system';
 
-export const StyledButton = styled.button(
+export type ButtonVariant = 'outlined' | 'primary' | 'secondary' | 'text' | 'select';
+export type ButtonSize = 'big' | 'small';
+
+type StyledButtonOwnProps = SpaceProps & LayoutProps & BorderProps & {
+    loading?: boolean;
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+};
+
+export const StyledButton = styled.button<StyledButtonOwnProps>(
     (props) =>
         css({
             px: '15px',
@@ -121,7 +131,7 @@ const rotate = keyframes`
   to {transform: rotate(360deg);}
 `;
 
-const Spinner = styled.div`
+const Spinner = styled.div<{ color?: string }>`
   width: 18px;
   height: 18px;
   margin-left: 10px;
@@ -153,19 +163,24 @@ const Spinner = styled.div`
 //   })
 // );
 
-type Props = {
-    children: React.ReactNode;
-    loading?: boolean;
-    disabled?: boolean;
-    type: 'submit' | 'button';
-    [key: string]: unknown;
-};
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & StyledButtonOwnProps;
 export type Ref = HTMLButtonElement;
-export const Button = React.forwardRef<Ref, Props>(
-    ({ children, disabled, loading = false, ...props }, ref) => (
-        <StyledButton ref={ref} {...props} disabled={disabled}>
+
+type ForwardRefComponent<P, T> = React.ForwardRefExoticComponent<P & React.RefAttributes<T>> & ((props: P & { ref?: React.Ref<T> }) => React.ReactElement | null);
+
+export const Button = React.forwardRef<Ref, ButtonProps>(
+    ({ children, loading = false, type = 'button', disabled, ...rest }, ref) => (
+        // Avoid passing the `loading` prop to the underlying DOM node (it becomes loading="false" in the DOM)
+        <StyledButton
+            ref={ref}
+            type={type}
+            disabled={loading || disabled}
+            aria-busy={loading}
+            {...rest}
+        >
             {children}
             {loading && <Spinner/>}
         </StyledButton>
     )
-);
+) as ForwardRefComponent<ButtonProps, Ref>;
+Button.displayName = 'Button';

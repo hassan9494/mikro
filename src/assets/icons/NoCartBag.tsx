@@ -1,6 +1,7 @@
 import React from 'react';
 import noCartBag from './NoCartBag.svg';
+import Image from 'components/image/image';
 
 export const NoCartBag = () => {
-  return <img src={noCartBag} alt="Empty Cart" />;
+  return <Image url={noCartBag} alt="Empty Cart" width={500} height={500} />;
 };

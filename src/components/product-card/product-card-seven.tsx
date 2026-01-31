@@ -112,8 +112,7 @@ interface Props {
 export const ProductCard = ({ data }: Props) => {
     const { title, image, price, salePrice, slug, discountInPercent } = data;
     return (
-        <Link href="/products/[slug]" as={`/products/${slug}`}>
-            <a>
+        <Link href="/products/[slug]" as={`/products/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Card>
                     <ImageWrapper>
                         <Image src={image} alt={title}/>
@@ -130,7 +129,6 @@ export const ProductCard = ({ data }: Props) => {
                         <AddItemToCart data={data} variant="full" buttonText="Add"/>
                     </Box>
                 </Card>
-            </a>
         </Link>
     );
 };

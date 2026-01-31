@@ -2,21 +2,14 @@ import React, { useContext } from 'react';
 import { AuthContext } from 'contexts/auth/auth.context';
 import { FormattedMessage } from 'react-intl';
 import useAuth from 'data/use-auth';
-import {
-    Box,
-    Button,
-    FormControl,
-    Link,
-    makeStyles,
-    TextField,
-    Typography
-} from "@material-ui/core";
+import { Box, Button, FormControl, Link, TextField, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {
     HelperText,
 } from './authentication-form.style';
 
 import useTranslation from "../../utils/use-translation";
-import { closeModal } from '@redq/reuse-modal';
+import { closeModal } from 'components/modal/modal-provider';
 import {useAppDispatch} from "../../contexts/app/app.provider";
 
 const useStyles = makeStyles((theme) => ({
@@ -119,12 +112,10 @@ export default function SignUpModal()
                     />
                     &nbsp;
                     <Link href='/'>
-                        <a>
-                            <FormattedMessage
-                                id='termsConditionText'
-                                defaultMessage='Terms &amp; Condition'
-                            />
-                        </a>
+                        <FormattedMessage
+                            id='termsConditionText'
+                            defaultMessage='Terms &amp; Condition'
+                        />
                     </Link>
                 </HelperText>
 

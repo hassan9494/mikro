@@ -1,15 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { withFormik, FormikProps, Form } from 'formik';
-import { closeModal } from '@redq/reuse-modal';
+import { withFormik, FormikProps } from 'formik';
+import { closeModal } from 'components/modal/modal-provider';
 import { ProfileContext } from 'contexts/profile/profile.context';
 import { FormattedMessage } from 'react-intl';
-import { FormControl, makeStyles, TextField, Typography, Button, Box } from "@material-ui/core";
+import { FormControl, TextField, Typography, Button, Box } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import useTranslation from "../../utils/use-translation";
 import { api } from 'data/use-address';
 import useCities from "../../data/use-city";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useAppDispatch} from "../../contexts/app/app.provider";
+import {
+  FormContainer,
+  Heading,
+  FieldWrapper,
+} from './address-card.style';
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -89,7 +95,7 @@ const UpdateAddress = (props: FormikProps<FormValues> & MyFormProps) => {
 
     const { t } = useTranslation();
     const { data: cities } = useCities()
-    const handleSubmit = async () => {
+    const handleAddressSubmit = async () => {
         if (isValid) {
             try {
                 dispatch({ type: 'SET_LOADING', payload: true })
@@ -113,7 +119,12 @@ const UpdateAddress = (props: FormikProps<FormValues> & MyFormProps) => {
     }, [cities])
 
     return (
-        <Form>
+        <FormContainer
+            onSubmit={async (event) => {
+                event.preventDefault();
+                await handleAddressSubmit();
+            }}
+        >
             <Typography variant='h5' style={{marginBottom: 16}}>
                 {item && item.id ? 'Edit Address' : 'Add New Address'}
             </Typography>
@@ -211,7 +222,6 @@ const UpdateAddress = (props: FormikProps<FormValues> & MyFormProps) => {
                 />
             </FormControl>
             <Button
-                onClick={handleSubmit}
                 type="submit"
                 color='secondary'
                 variant='contained'
@@ -219,7 +229,7 @@ const UpdateAddress = (props: FormikProps<FormValues> & MyFormProps) => {
             >
                 <FormattedMessage id="savedAddressId" defaultMessage="Save Address"/>
             </Button>
-        </Form>
+        </FormContainer>
     );
 
 };

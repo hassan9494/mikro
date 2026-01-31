@@ -1,33 +1,53 @@
-const withPlugins = require('next-compose-plugins');
-const withOptimizedImages = require('next-optimized-images');
-
-// Create unique version using package.json version + timestamp
-const APP_VERSION = `v${require('./package.json').version}-${Date.now()}`;
-
-// next.js configuration
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+    compiler: {
+        styledComponents: true,
+        emotion: true,
+    },
     images: {
-        domains: [
-            's3.eu-central-1.amazonaws.com',
-            '127.0.0.1',
-            'api.mikroelectron.com',
-            'apitest.mikroelectron.com',
-            '134.209.88.205',
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 's3.eu-central-1.amazonaws.com',
+            },
+            {
+                protocol: 'http',
+                hostname: '127.0.0.1',
+                port: '8000',
+            },
+            {
+                protocol: 'https',
+                hostname: 'api.mikroelectron.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'apitest.mikroelectron.com',
+            },
+            {
+                protocol: 'http',
+                hostname: '134.209.88.205',
+            },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+            },
         ],
         formats: ['image/avif', 'image/webp'],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },
-    // compress: true,
-    // poweredByHeader: false,
-    // Remove experimental.optimizeCss or set it to false
-    // experimental: {
-    //     optimizeCss: false, // Disable this for now
-    // },
-    // Enable Webpack 5
-    // webpack5: true,
+    experimental: {
+        optimizePackageImports: ['@mui/material', '@mui/icons-material'],
+    },
 };
 
-module.exports = withPlugins([
-    withOptimizedImages,
-], nextConfig);
+// Bundle analyzer (enable with ANALYZE=true)
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+  openAnalyzer: false,
+  analyzerMode: 'static',
+  reportFilename: './reports/bundle-report.html',
+  generateStatsFile: true,
+});
+
+module.exports = withBundleAnalyzer(nextConfig);

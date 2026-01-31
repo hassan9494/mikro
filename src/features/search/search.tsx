@@ -49,7 +49,6 @@ const Search: React.FC<Props> = ({ onSubmit, ...props }) => {
         }
     };
     return (
-        <MySearch onSubmit={onSubmit}/>
         // <SearchBox
         //     onEnter={onSearch}
         //     onChange={handleOnChange}
@@ -66,6 +65,7 @@ const Search: React.FC<Props> = ({ onSubmit, ...props }) => {
         //     })}
         //     {...props}
         // />
+        <MySearch onSubmit={onSubmit}/>
     );
 };
 

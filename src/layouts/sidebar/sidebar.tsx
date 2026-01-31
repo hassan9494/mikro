@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { FormattedMessage } from 'react-intl';
-import Sticky from 'react-stickynode';
+import Sticky from 'components/sticky/sticky';
 import { Scrollbar } from 'components/scrollbar/scrollbar';
 import Popover from 'components/popover/popover';
 import { ArrowDropDown } from 'assets/icons/ArrowDropDown';
@@ -29,8 +29,8 @@ import { REQUEST_MEDICINE_MENU_ITEM } from 'site-settings/site-navigation';
 import useCategory from 'data/use-category';
 import ErrorMessage from 'components/error-message/error-message';
 import CategoryWalker from 'components/category-walker/category-walker';
-import {Button, Grid} from "@material-ui/core";
-import { Whatshot, Update} from '@material-ui/icons'; 
+import {Button, Grid} from "@mui/material";
+import { Whatshot, Update} from '@mui/icons-material'; 
 
 
 type SidebarCategoryProps = {
@@ -48,12 +48,12 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
 }) => {
     const router = useRouter();
     const { data, error } = useCategory();
+    const { isRtl } = useLocale();
+    const isSidebarSticky = useAppState('isSidebarSticky');
 
     if (error) return <ErrorMessage message={error.message}/>;
     const { pathname, query } = router;
     const selectedQueries = query.category;
-
-    const { isRtl } = useLocale();
 
     const onCategoryClick = (category: string) => {
         router.push({
@@ -62,12 +62,8 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
         });
     };
 
-    const isSidebarSticky = useAppState('isSidebarSticky');
-
     if (!data) {
-        if (mobile || tablet) {
-            return <SidebarMobileLoader/>;
-        }
+        // Always return the same loader on server and client to avoid hydration mismatches
         return <SidebarLoader/>;
     }
     

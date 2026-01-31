@@ -19,6 +19,12 @@ export const IconWrapper = styled.span`
   justify-content: center;
   width: 24px;
   margin-right: 15px;
+  /* Ensure icons inherit text color and have consistent sizing */
+  svg {
+    color: inherit;
+    width: 18px;
+    height: 18px;
+  }
 `;
 
 export const MenuItem = styled.button`

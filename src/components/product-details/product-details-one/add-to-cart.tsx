@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Plus, Minus} from 'assets/icons/PlusMinus';
-import {Button, makeStyles, TextField, withStyles} from "@material-ui/core";
+import { Button, TextField } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
 import {useCart} from "../../../contexts/cart/use-cart";
 
 interface Props {
@@ -19,6 +21,9 @@ const CustomTextField = withStyles({
             '& fieldset': {
                 borderRadius: `0px`,
             },
+        },
+         '& *': {
+            boxSizing: 'content-box !important', // Override the border-box
         },
     },
 })(TextField);

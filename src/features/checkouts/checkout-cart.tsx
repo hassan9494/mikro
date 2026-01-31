@@ -10,8 +10,8 @@ import {
     Grid,
     List,
     ListItemText,
-    makeStyles
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import MoneyFormat from "../../components/money-format/money-format";
 import {
     Bold,
@@ -61,7 +61,7 @@ const CheckoutCartItem: React.FC<CartItemProps> = ({ product }) => {
     return (
         <Grid container alignItems="center" spacing={2} style={{ marginBottom: 16 }}>
             <Grid item md={1} xs={2}>
-                <Avatar alt={name} src={image} style={{ width: 50, height: 50 }} />
+                <Avatar alt={name} src={(typeof image === 'object' && image?.src) ? image.src : image} style={{ width: 50, height: 50 }} />
             </Grid>
             <Grid item md={7} xs={10}>
                 <Link href="/product/[slug]" as={`/product/${slug}`}>

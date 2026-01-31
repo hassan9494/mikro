@@ -1,7 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
 import Carousel from 'components/carousel/carousel';
 // import { Banner } from 'components/banner/banner';
 import Banner from 'components/banner/banner-two';
@@ -61,7 +61,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
             />
             <ModalProvider>
                 <Modal>
-                    <MainWrapper>
+                    <MainWrapper style={{ paddingTop: 0 }}>
 
                         {/*{*/}
                         {/*    !query.category &&*/}

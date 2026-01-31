@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import AsyncSelect from 'react-select/async';
 import { useRouter } from "next/router";
 import useUser from "data/use-user";
@@ -8,11 +8,35 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
-    Typography
-} from "@material-ui/core";
-import { autocomplete } from "../../data/use-products"; // ADD THIS IMPORT
+    Typography,
+    Button
+} from "@mui/material";
+import { autocomplete } from "../../data/use-products";
+import SearchIcon from '@mui/icons-material/Search';
 
-const formatOptionLabel = ({ item }, onClick, hasAccess) => {
+// Add this custom hook for responsive behavior
+const useWindowWidth = () => {
+    const [windowWidth, setWindowWidth] = useState<number>(0);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setWindowWidth(window.innerWidth);
+            
+            const handleResize = () => {
+                setWindowWidth(window.innerWidth);
+            };
+            
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, []);
+
+    return windowWidth;
+};
+
+const renderOptionLabel = (option, onClick, hasAccess) => {
+    const item = option.item || option;
+    
     return (
         <div style={{ position: 'relative' }}>
             <div
@@ -26,10 +50,12 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                     cursor: 'pointer'
                 }}
                 onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
                     if (e.ctrlKey || e.metaKey) {
                         window.open(`/product/${item.slug}`, '_blank');
-                        e.preventDefault();
-                    } else if (e.button === 0) {
+                    } else if (e.button === 0 && onClick && item.slug) {
                         onClick(item.slug);
                     }
                 }}
@@ -41,45 +67,54 @@ const formatOptionLabel = ({ item }, onClick, hasAccess) => {
                 component="div"
             >
                 <ListItemAvatar>
-                    <Avatar alt={item.title} src={item.image} />
+                    {item.image && (
+                        <Avatar 
+                            alt={item.title || item.name || 'Product image'} 
+                            src={
+                                typeof item.image === 'object' && item.image?.src 
+                                    ? item.image.src 
+                                    : item.image
+                            } 
+                        />
+                    )}
                 </ListItemAvatar>
                 <ListItemText
                     primary={
-                        <Box display="flex">
-                            <Box flexGrow={3} className={'d-flex justify-content-between'}>
-                                <Typography component="p" variant="body2" color="textPrimary">
-                                    {item.title}
-                                </Typography>
-                                <Typography component="span" variant="body2" color="textSecondary" style={{marginRight:50}}>
-                                    <Chip label={'JD ' + (item.sale_price || item.price)} size="small" color='secondary' />
-                                </Typography>
-                                {hasAccess && (
-                                    <>
-                                        <Typography component="span" variant="body1" color="textPrimary" style={{ marginRight: 50 }}>
-                                            Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
-                                        </Typography>
-                                        <Typography component="span" variant="body2" color="textSecondary">
-                                            Location: {item?.location} / {item.stock_location ?? '----'}
-                                        </Typography>
-                                    </>
-                                )}
+                        <Box display="flex" flexDirection="column" width="100%">
+                            <Box display="flex" alignItems="center" justifyContent="space-between" minWidth={0}>
+                                <Box minWidth={0} style={{ paddingRight: 12 }}>
+                                    <Typography component="p" variant="body2" color="textPrimary" noWrap style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {item.title || item.name || 'Unnamed Product'}
+                                    </Typography>
+                                </Box>
+
+                                <Box style={{ pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
+                                    {item.hasVariants ? (
+                                        'Select Options'
+                                    ) : item.availableQty && item.availableQty > 0 ? (
+                                        <AddItemToCart data={item} variant={'full'} />
+                                    ) : (
+                                        'Out Of Stock'
+                                    )}
+                                </Box>
                             </Box>
-                            <Box
-                                style={{
-                                    pointerEvents: 'auto',
-                                    position: 'relative',
-                                    zIndex: 2
-                                }}
-                            >
-                                {
-                                    item.colors.length > 0 && item.hasVariants ?
-                                        'Select Options' :
-                                        item.availableQty ? (
-                                            <AddItemToCart data={item} variant={'full'} />
-                                        ) : (
-                                            'Out Of Stock'
-                                        )
-                                }
+
+                            <Box display="flex" alignItems="center" style={{ gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
+                                <Typography component="span" variant="body2" color="textSecondary">
+                                    <Chip label={'JD ' + (item.sale_price || item.price || 0)} size="small" color='secondary' />
+                                </Typography>
+
+                                {hasAccess && item.availableQty !== undefined && (
+                                    <Typography component="span" variant="body1" color="textPrimary">
+                                        Quantity: <Chip label={item.availableQty} size="small" color='secondary' />
+                                    </Typography>
+                                )}
+
+                                {hasAccess && item.location && (
+                                    <Typography component="span" variant="body2" color="textSecondary">
+                                        Location: {item.location || '----'}
+                                    </Typography>
+                                )}
                             </Box>
                         </Box>
                     }
@@ -93,15 +128,49 @@ export default function MySearch({ onSubmit }) {
     const router = useRouter();
     const [search, setSearch] = useState('');
     const [defaultOptions, setDefaultOptions] = useState(null);
+    const [isMobile, setIsMobile] = useState(false);
     const { user } = useUser();
+    const windowWidth = useWindowWidth();
+    const selectRef = useRef(null);
     const allowedRoles = ['super', 'admin', 'Manager', 'Product Manager', 'Cashier', 'Distributer', 'Admin cash'];
     const hasAccess = user?.roles?.some(role => allowedRoles.includes(role.name));
 
+        useEffect(() => {
+        // Check if mobile based on window width
+        setIsMobile(windowWidth < 768);
+    }, [windowWidth]);
+
+    // Update the placeholder based on screen width
+    const getPlaceholder = () => {
+        if (search.length === 1) {
+            return 'Type at least 2 characters...';
+        }
+        
+        if (windowWidth >= 990 && windowWidth <= 1200) {
+            return 'Search products...'; // Shorter placeholder
+        }
+        
+        return 'Search your product from here'; // Original placeholder
+    };
+
     const normalizeSearchString = (str: string): string => {
-        // Keep special characters but prevent XSS and other issues
         return str
-            .trim() // Trim whitespace
-            .replace(/\s+/g, ' '); // Collapse multiple spaces
+            .trim()
+            .replace(/\s+/g, ' ');
+    };
+
+        const handleSearch = () => {
+        if (search && search.length >= 2) {
+            const normalizedSearch = normalizeSearchString(search);
+            const encodedSearch = encodeURIComponent(normalizedSearch);
+            router.push({
+                pathname: '/search/[search]',
+                query: { search: encodedSearch },
+            });
+            if (onSubmit) {
+                onSubmit();
+            }
+        }
     };
 
     const promiseOptions = text => {
@@ -111,7 +180,6 @@ export default function MySearch({ onSubmit }) {
             return Promise.resolve([]);
         }
 
-        // Encode the search text for URL safety
         const encodedSearch = encodeURIComponent(normalizedText);
         return autocomplete({ text: encodedSearch }).then(res => {
             const data = res.data || [];
@@ -128,15 +196,7 @@ export default function MySearch({ onSubmit }) {
     const onKeydown = (e) => {
         if (e.key === 'Enter' && search.length >= 2) {
             e.preventDefault();
-            const normalizedSearch = normalizeSearchString(search);
-            const encodedSearch = encodeURIComponent(normalizedSearch);
-            router.push({
-                pathname: '/search/[search]',
-                query: { search: encodedSearch },
-            });
-            if (onSubmit) {
-                onSubmit();
-            }
+            handleSearch();
         }
     };
 
@@ -150,35 +210,138 @@ export default function MySearch({ onSubmit }) {
         }
     };
 
-
-
     const handleInputChange = (newValue, action) => {
         if (action.action !== "input-blur" && action.action !== "menu-close") {
             setSearch(newValue);
         }
     };
 
+    // CRITICAL FIX: Set maximum z-index for dropdown
+    const selectStyles = {
+        control: (provided, state) => ({ 
+          ...provided, 
+            minHeight: 40,
+            borderRight: isMobile ? 'none' : provided.borderRight,
+            borderRadius: isMobile ? '4px 0 0 4px' : provided.borderRadius,
+            '@media (min-width: 990px) and (max-width: 1200px)': {
+                minWidth: 150,
+            }
+        }),
+        menu: (provided) => ({ 
+            ...provided, 
+            zIndex: 2147483647, // Maximum possible z-index
+            position: 'absolute',
+        }),
+        menuPortal: (provided) => ({ 
+            ...provided, 
+            zIndex: 2147483647, // Maximum possible z-index
+        }),
+        menuList: (provided) => ({
+            ...provided,
+            zIndex: 2147483647,
+            position: 'relative',
+            maxHeight: '400px', // Add max-height for scrolling
+            overflowY: 'auto', // Enable vertical scrolling
+        }),
+        option: (provided) => ({ 
+            ...provided, 
+            padding: '8px 12px',
+            zIndex: 2147483647,
+        }),
+        container: (provided) => ({ 
+            ...provided, 
+            position: 'relative',
+        }),
+        placeholder: (provided) => ({
+            ...provided,
+            '@media (min-width: 990px) and (max-width: 1200px)': {
+                fontSize: '14px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '150px',
+            }
+        }),
+        input: (provided) => ({
+            ...provided,
+            '@media (min-width: 990px) and (max-width: 1200px)': {
+                fontSize: '14px',
+            }
+        })
+    };
+
+    const menuPortalTarget = (typeof document !== 'undefined') ? document.body : undefined;
+
     return (
-        <div style={{ width: '100%', marginRight: '20px', marginLeft: '20px' }} onKeyDown={onKeydown}>
+        <div style={{ 
+            width: '100%', 
+            marginRight: '20px', 
+            marginLeft: '20px',
+            position: 'relative',
+        }} onKeyDown={onKeydown}>
+                 <div style={{ 
+                display: 'flex', 
+                width: '100%',
+                alignItems: 'center'
+            }}>
+                <div style={{ 
+                    flex: 1,
+                    position: 'relative'
+                }}>
             <AsyncSelect
                 cacheOptions
+                instanceId="header-search"
                 defaultOptions={defaultOptions || true}
                 value={null}
                 inputValue={search}
-                getOptionLabel={(data) => formatOptionLabel(data, onChange, hasAccess)}
+                getOptionLabel={(data) => data.label}
+                formatOptionLabel={(data) => renderOptionLabel(data, onChange, hasAccess)}
                 loadOptions={promiseOptions}
                 onInputChange={handleInputChange}
-                placeholder={
-                    search.length === 1 ?
-                        'Type at least 2 characters...' :
-                        'Search your product from here'
+                onChange={(option) => {
+                    if (option && option.value) {
+                        onChange(option.value);
+                    }
+                }}
+                styles={selectStyles}
+                menuPortalTarget={menuPortalTarget}
+                menuPosition="fixed" // Changed to fixed for proper positioning
+                menuPlacement="auto"
+                menuShouldBlockScroll={false} // CRITICAL: Changed from true to false to allow page scrolling
+                classNamePrefix="select"
+                placeholder={getPlaceholder()}
+                noOptionsMessage={({ inputValue }) => 
+                    inputValue && inputValue.length > 1 
+                        ? 'No products found' 
+                        : 'Type at least 2 characters...'
                 }
+                loadingMessage={() => 'Loading...'}
+                closeMenuOnScroll={false} // Don't close menu when page scrolls
+                captureMenuScroll={false} // Don't capture scroll events
             />
+        </div>
+          {isMobile && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSearch}
+                        disabled={!search || search.length < 2}
+                        style={{
+                            height: '40px',
+                            minWidth: '60px',
+                            borderRadius: '0 4px 4px 0',
+                            boxShadow: 'none',
+                            marginLeft: '-1px',
+                            zIndex: 2
+                        }}
+                    >
+                        <SearchIcon />
+                    </Button>
+                )}
+            </div>
         </div>
     );
 }
-
-
 
 // import React, {useState} from 'react';
 // import AsyncSelect from 'react-select/async';
@@ -190,7 +353,7 @@ export default function MySearch({ onSubmit }) {
 //     ListItemAvatar,
 //     ListItemText,
 //     Typography
-// } from "@material-ui/core";
+// } from "@mui/material";
 // import { AddItemToCart } from "../../components/add-item-to-cart";
 // import { useRouter } from "next/router";
 // import useUser from "data/use-user";

@@ -96,7 +96,7 @@ const CookiePolicy = () => {
             </div>
             <p>You have control over cookies through your browser settings. Most browsers allow you to:</p>
             <ul className="policy-list">
-              <li>See what cookies you've got and delete them</li>
+              <li>See what cookies you&apos;ve got and delete them</li>
               <li>Block third-party cookies</li>
               <li>Block cookies from particular sites</li>
               <li>Block all cookies from being set</li>

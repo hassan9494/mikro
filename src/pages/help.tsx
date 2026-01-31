@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
 import { SEO } from 'components/seo';
 import Footer from 'layouts/footer';
 // import Accordion from 'components/accordion/accordion';
 import { sitePages } from 'site-settings/site-pages';
-import { Accordion, AccordionDetails, AccordionSummary, Container, Typography } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary, Container, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormattedMessage } from "react-intl";
 import {useSocial} from "../data/use-website";
 
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function () {
+const HelpPage: React.FC = () => {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const handleChange = (panel) => (event, isExpanded) => {
@@ -106,8 +106,8 @@ export default function () {
                 <Container maxWidth={'md'}>
                     <Heading>F.A.Q</Heading>
                     {
-                        accordionData.map((item, index) =>
-                            <Accordion >
+                        accordionData.map((item) => (
+                            <Accordion key={item.id}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1bh-content"
@@ -127,11 +127,13 @@ export default function () {
                                     </Typography>
                                 </AccordionDetails>
                             </Accordion>
-                        )
+                        ))
                     }
                 </Container>
                 <Footer social={social}/>
             </HelpPageWrapper>
         </Modal>
     );
-}
+};
+
+export default HelpPage;

@@ -133,7 +133,7 @@ export const CartButton = styled(Button)`
   }
 `;
 
-export const Counter = styled(Counters)`
+export const Counter = styled(Counters as any)`
   position: absolute;
   width: calc(100% - 60px);
   height: 36px;

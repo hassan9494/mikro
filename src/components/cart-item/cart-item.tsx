@@ -14,7 +14,6 @@ import {
 } from './cart-item.style';
 import MoneyFormat from "../money-format/money-format";
 import { FormattedMessage } from 'react-intl';
-import { variant } from 'styled-system';
 
 interface Props {
     data: any;

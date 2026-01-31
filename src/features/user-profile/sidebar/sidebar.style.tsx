@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import NavLink from 'components/nav-link/nav-link';
@@ -27,7 +28,7 @@ const SidebarBottom = styled.div`
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
 `;
 
-const SidebarMenu = styled(NavLink)<any>`
+const SidebarMenu = styled(NavLink as any)`
   display: flex;
   a {
     font-family: ${themeGet('fonts.body', 'Lato')};

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -12,11 +12,10 @@ import {
 } from './related-list.style';
 import { CURRENCY } from 'utils/constant';
 import Placeholder from 'components/placeholder/placeholder';
-import Fade from 'react-reveal/Fade';
+import { motion } from 'framer-motion';
 import useRelatedProducts from "../../../data/use-related-products";
 import { FormattedMessage } from "react-intl";
 import { ProductCard } from 'components/product-card/product-card-six';
-import { Button } from "../../button/button";
 
 const ErrorMessage = dynamic(() =>
     import('components/error-message/error-message')
@@ -147,16 +146,14 @@ export const RelatedProducts: React.FC<ProductsProps> = ({
 
     const renderCard = (props, index) => (
         <ProductCardWrapper className="product-card-wrapper" key={`${props.id}-${index}`}>
-            <Fade
-                duration={800}
-                delay={index * 10}
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 style={{ height: '100%' }}
-                mountOnEnter
-                unmountOnExit
-                appear
             >
                 <ProductCard data={props} />
-            </Fade>
+            </motion.div>
         </ProductCardWrapper>
     );
 

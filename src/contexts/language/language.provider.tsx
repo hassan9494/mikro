@@ -25,13 +25,15 @@ export const LanguageProvider = ({ children, messages }) => {
     }, [locale]);
     let isRtl = isRTL(locale);
 
+    const StyledManager = StyleSheetManager as unknown as React.ComponentType<React.PropsWithChildren<{ stylisPlugins?: any }>>;
+
     return (
         <LanguageContext.Provider value={{ locale, changeLanguage, isRtl }}>
             <IntlProvider locale={locale} messages={messages[locale]}>
                 <InjectRTL lang={locale} dir={isRtl ? 'rtl' : 'ltr'}>
-                    <StyleSheetManager stylisPlugins={isRtl ? [RTLPlugin] : []}>
+                    <StyledManager stylisPlugins={isRtl ? [RTLPlugin] : []}>
                         {children}
-                    </StyleSheetManager>
+                    </StyledManager>
                 </InjectRTL>
             </IntlProvider>
         </LanguageContext.Provider>

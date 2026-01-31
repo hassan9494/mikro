@@ -4,7 +4,7 @@ import { AddItemToCart } from 'components/add-item-to-cart';
 import styled from 'styled-components';
 import css from '@styled-system/css';
 import { Box } from 'components/box';
-import { RadioButtonChecked } from '@material-ui/icons';
+import { RadioButtonChecked } from '@mui/icons-material';
 import MoneyFormat from "../money-format/money-format";
 import {FormattedMessage} from "react-intl";
 import Image from "next/image";
@@ -161,8 +161,7 @@ export const ProductColorCard = ({ data }: Props) => {
     // }
     return (
         <Card>
-            <Link href="/product/[slug]" as={`/product/${slug}`}>
-                <a>
+            <Link href="/product/[slug]" as={`/product/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Box position="relative">
                         <Stock>
                             <RadioButtonChecked style={{width: 16, color: stockColor }} />
@@ -182,7 +181,6 @@ export const ProductColorCard = ({ data }: Props) => {
                             <Discount>On Sale</Discount>
                         ) : null}
                     </Box>
-                </a>
             </Link>
 
             <Box padding={20}>

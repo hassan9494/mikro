@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { openModal } from '@redq/reuse-modal';
+import { openModal } from 'components/modal/modal-provider';
 import Router from 'next/router';
 import { FormattedMessage } from 'react-intl';
 import { Scrollbar } from 'components/scrollbar/scrollbar';
@@ -24,7 +24,7 @@ import {
     UserOptionMenu,
 } from './header.style';
 import UserImage from 'assets/images/user.jpg';
-import {Button as BTN} from "@material-ui/core";
+import {Button as BTN} from "@mui/material";
 import {
     MOBILE_DRAWER_MENU,
     PROFILE_PAGE,
@@ -37,8 +37,8 @@ import {
 } from 'site-settings/site-navigation';
 import { useAppState, useAppDispatch } from 'contexts/app/app.provider';
 import useUser from "../../data/use-user";
-import {Person, ExitToApp, ExpandMore, ChevronRight} from "@material-ui/icons";
-import {Avatar} from "@material-ui/core";
+import {Person, ExitToApp, ExpandMore, ChevronRight} from "@mui/icons-material";
+import {Avatar} from "@mui/material";
 import Link from "next/link";
 import {RequestMedicine} from "../sidebar/sidebar.style";
 import {TreeMenu} from "../../components/tree-menu/tree-menu";
@@ -59,7 +59,7 @@ import {
     LocalOffer,
     Help,
     ContactMail
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { background } from 'styled-system';
 
 // Styled components for better organization
@@ -246,28 +246,27 @@ const SecondaryMenuSection = styled.div(
 // Custom NavLink wrapper to handle styling
 const StyledNavLink = ({ href, onClick, children, className = '' }) => {
     return (
-        <Link href={href} passHref>
-            <a
-                onClick={onClick}
-                className={`drawer_menu_item ${className}`}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    fontSize: '15px',
-                    fontWeight: '500',
-                    color: '#555',
-                    transition: 'color 0.3s ease',
-                    textDecoration: 'none',
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#fe5e00';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#555';
-                }}
-            >
-                {children}
-            </a>
+        <Link
+            href={href}
+            className={`drawer_menu_item ${className}`}
+            onClick={onClick}
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '15px',
+                fontWeight: '500',
+                color: '#555',
+                transition: 'color 0.3s ease',
+                textDecoration: 'none',
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#fe5e00';
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#555';
+            }}
+        >
+            {children}
         </Link>
     );
 };
@@ -300,6 +299,47 @@ const getIconForMenuItem = (id) => {
         default:
             return <Info />;
     }
+};
+
+// Overlay for closing drawer when clicking outside
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+`;
+
+// Safe TreeMenu wrapper component
+const SafeTreeMenu = ({ data, onClick, active }) => {
+    // If data is not available or not an array, show empty state
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        return (
+            <div style={{ 
+                padding: '15px', 
+                color: '#666', 
+                textAlign: 'center',
+                fontSize: '14px'
+            }}>
+                <FormattedMessage 
+                    id="noCategories" 
+                    defaultMessage="No categories available" 
+                />
+            </div>
+        );
+    }
+    
+    return (
+        <TreeMenu
+            data={data}
+            onClick={onClick}
+            active={active}
+        />
+    );
 };
 
 const MobileDrawer: React.FunctionComponent = () => {
@@ -373,231 +413,252 @@ const MobileDrawer: React.FunctionComponent = () => {
     const selectedQueries = query.category;
 
     const onCategoryClick = (category: string) => {
+        toggleHandler(); // Close drawer when category is clicked
         router.push({
             pathname: '/category/[category]',
             query: { category },
         });
     };
 
+    // Handle clicking outside the drawer to close it
+    const handleOverlayClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            toggleHandler();
+        }
+    };
+
     return (
-        <Drawer
-            width='316px'
-            drawerHandler={
-                <HamburgerIcon>
-                    <span/>
-                    <span/>
-                    <span/>
-                </HamburgerIcon>
-            }
-            open={isDrawerOpen}
-            toggleHandler={toggleHandler}
-            closeButton={
-                <DrawerClose>
-                    <CloseIcon/>
-                </DrawerClose>
-            }
-        >
-            <DrawerBody>
-                <Scrollbar className='drawer-scrollbar'>
-                    <DrawerContentWrapper>
-                        <DrawerProfile>
-                            {user ? (
-                                <ProfileLink onClick={handleProfileClick}>
-                                    <LoginView>
-                                        <Avatar style={{backgroundColor: '#133695'}}>
-                                            <Person />
-                                        </Avatar>
-                                        <UserDetails>
-                                            <h3 style={{color: '#133695', fontWeight: '800',    fontSize: '16px',    letterSpacing: '0.5px',
-                                            }}>{ user?.name }</h3>
-                                            <span style={{color: '#fe5e00', fontWeight: '500'}}>{ user?.email }</span>
-                                        </UserDetails>
-                                    </LoginView>
-                                </ProfileLink>
-                            ) : (
-                                <LogoutView>
-                                    <LogoutView>
-                                        <JoinButton variant='primary' onClick={signInOutForm}>
-                                            <FormattedMessage
-                                                id='mobileSignInButtonText'
-                                                defaultMessage='Join Now'
-                                            />
-                                        </JoinButton>
-                                    </LogoutView>
-                                </LogoutView>
-                            )}
-                        </DrawerProfile>
+        <>
+            {/* Hamburger Icon - Always visible and clickable */}
+            <HamburgerIcon onClick={toggleHandler}>
+                <span/>
+                <span/>
+                <span/>
+            </HamburgerIcon>
 
-                        <DrawerMenu>
-                            <MainMenuSection>
-                                <MenuTitle onClick={() => toggleMenu('mainMenu')}>
-                                    <span>
-                                        <FormattedMessage id="Main Menu" defaultMessage="Main Menu" />
-                                    </span>
-                                    <ExpandIcon $open={menuStates.mainMenu}>
-                                        <ExpandMore />
-                                    </ExpandIcon>
-                                </MenuTitle>
-                                <MenuItemsWrapper open={menuStates.mainMenu}>
-                                    <StyledDrawerMenuItem>
-                                        <StyledNavLink
-                                            onClick={toggleHandler}
-                                            href={HOME_PAGE}
-                                        >
-                                            <MenuIcon><Home /></MenuIcon>
-                                            <FormattedMessage id="home" defaultMessage="Home" />
-                                        </StyledNavLink>
-                                    </StyledDrawerMenuItem>
+            {/* Only render the drawer and overlay when it's open */}
+            {isDrawerOpen && (
+                <>
+                    <Overlay onClick={handleOverlayClick} />
+                    <Drawer
+                        width='316px'
+                        drawerHandler={<></>} // Empty because we're handling the hamburger icon separately
+                        open={isDrawerOpen}
+                        toggleHandler={toggleHandler}
+                        closeButton={
+                            <DrawerClose>
+                                <CloseIcon/>
+                            </DrawerClose>
+                        }
+                    >
+                        <DrawerBody>
+                            <Scrollbar className='drawer-scrollbar'>
+                                <DrawerContentWrapper>
+                                    <DrawerProfile>
+                                        {user ? (
+                                            <ProfileLink onClick={handleProfileClick}>
+                                                <LoginView>
+                                                    <Avatar style={{backgroundColor: '#133695'}}>
+                                                        <Person />
+                                                    </Avatar>
+                                                    <UserDetails>
+                                                        <h3 style={{
+                                                            color: '#133695', 
+                                                            fontWeight: '800',    
+                                                            fontSize: '16px',    
+                                                            letterSpacing: '0.5px',
+                                                        }}>{ user?.name }</h3>
+                                                        <span style={{color: '#fe5e00', fontWeight: '500'}}>{ user?.email }</span>
+                                                    </UserDetails>
+                                                </LoginView>
+                                            </ProfileLink>
+                                        ) : (
+                                            <LogoutView>
+                                                <LogoutView>
+                                                    <JoinButton variant='primary' onClick={signInOutForm}>
+                                                        <FormattedMessage
+                                                            id='mobileSignInButtonText'
+                                                            defaultMessage='Join Now'
+                                                        />
+                                                    </JoinButton>
+                                                </LogoutView>
+                                            </LogoutView>
+                                        )}
+                                    </DrawerProfile>
 
-                                    <StyledDrawerMenuItem>
-                                        <StyledNavLink
-                                            onClick={toggleHandler}
-                                            href={COURSES_PAGE}
-                                        >
-                                            <MenuIcon><School /></MenuIcon>
-                                            <FormattedMessage id="courses" defaultMessage="Courses" />
-                                        </StyledNavLink>
-                                    </StyledDrawerMenuItem>
+                                    <DrawerMenu>
+                                        <MainMenuSection>
+                                            <MenuTitle onClick={() => toggleMenu('mainMenu')}>
+                                                <span>
+                                                    <FormattedMessage id="Main Menu" defaultMessage="Main Menu" />
+                                                </span>
+                                                <ExpandIcon $open={menuStates.mainMenu}>
+                                                    <ExpandMore />
+                                                </ExpandIcon>
+                                            </MenuTitle>
+                                            <MenuItemsWrapper open={menuStates.mainMenu}>
+                                                <StyledDrawerMenuItem>
+                                                    <StyledNavLink
+                                                        onClick={toggleHandler}
+                                                        href={HOME_PAGE}
+                                                    >
+                                                        <MenuIcon><Home /></MenuIcon>
+                                                        <FormattedMessage id="home" defaultMessage="Home" />
+                                                    </StyledNavLink>
+                                                </StyledDrawerMenuItem>
 
-                                    <StyledDrawerMenuItem>
-                                        <StyledNavLink
-                                            onClick={toggleHandler}
-                                            href={SERVICES_PAGE}
-                                        >
-                                            <MenuIcon><Build /></MenuIcon>
-                                            <FormattedMessage id="services" defaultMessage="Services" />
-                                        </StyledNavLink>
-                                    </StyledDrawerMenuItem>
+                                                <StyledDrawerMenuItem>
+                                                    <StyledNavLink
+                                                        onClick={toggleHandler}
+                                                        href={COURSES_PAGE}
+                                                    >
+                                                        <MenuIcon><School /></MenuIcon>
+                                                        <FormattedMessage id="courses" defaultMessage="Courses" />
+                                                    </StyledNavLink>
+                                                </StyledDrawerMenuItem>
 
-                                    <StyledDrawerMenuItem>
-                                        <StyledNavLink
-                                            onClick={toggleHandler}
-                                            href={TUTORIALS_PAGE}
-                                        >
-                                            <MenuIcon><OndemandVideo /></MenuIcon>
-                                            <FormattedMessage id="tutorials" defaultMessage="Tutorials" />
-                                        </StyledNavLink>
-                                    </StyledDrawerMenuItem>
+                                                <StyledDrawerMenuItem>
+                                                    <StyledNavLink
+                                                        onClick={toggleHandler}
+                                                        href={SERVICES_PAGE}
+                                                    >
+                                                        <MenuIcon><Build /></MenuIcon>
+                                                        <FormattedMessage id="services" defaultMessage="Services" />
+                                                    </StyledNavLink>
+                                                </StyledDrawerMenuItem>
 
-                                    <StyledDrawerMenuItem>
-                                        <StyledNavLink
-                                            onClick={toggleHandler}
-                                            href={ABOUT_US_PAGE}
-                                        >
-                                            <MenuIcon><Info /></MenuIcon>
-                                            <FormattedMessage id="aboutUs" defaultMessage="About Us" />
-                                        </StyledNavLink>
-                                    </StyledDrawerMenuItem>
-                                </MenuItemsWrapper>
-                            </MainMenuSection>
+                                                <StyledDrawerMenuItem>
+                                                    <StyledNavLink
+                                                        onClick={toggleHandler}
+                                                        href={TUTORIALS_PAGE}
+                                                    >
+                                                        <MenuIcon><OndemandVideo /></MenuIcon>
+                                                        <FormattedMessage id="tutorials" defaultMessage="Tutorials" />
+                                                    </StyledNavLink>
+                                                </StyledDrawerMenuItem>
 
-                            <SecondaryMenuSection>
-                                <MenuTitle onClick={() => toggleMenu('moreOptions')}>
-                                    <span>
-                                        <FormattedMessage id="More Options" defaultMessage="More Options" />
-                                    </span>
-                                    <ExpandIcon $open={menuStates.moreOptions}>
-                                        <ExpandMore />
-                                    </ExpandIcon>
-                                </MenuTitle>
-                                <MenuItemsWrapper open={menuStates.moreOptions}>
-                                    {MOBILE_DRAWER_MENU.filter(item => item.href !== HOME_PAGE).map((item) => (
-                                        <StyledDrawerMenuItem key={item.id}>
-                                            <StyledNavLink
-                                                onClick={toggleHandler}
-                                                href={item.href}
+                                                <StyledDrawerMenuItem>
+                                                    <StyledNavLink
+                                                        onClick={toggleHandler}
+                                                        href={ABOUT_US_PAGE}
+                                                    >
+                                                        <MenuIcon><Info /></MenuIcon>
+                                                        <FormattedMessage id="aboutUs" defaultMessage="About Us" />
+                                                    </StyledNavLink>
+                                                </StyledDrawerMenuItem>
+                                            </MenuItemsWrapper>
+                                        </MainMenuSection>
+
+                                        <SecondaryMenuSection>
+                                            <MenuTitle onClick={() => toggleMenu('moreOptions')}>
+                                                <span>
+                                                    <FormattedMessage id="More Options" defaultMessage="More Options" />
+                                                </span>
+                                                <ExpandIcon $open={menuStates.moreOptions}>
+                                                    <ExpandMore />
+                                                </ExpandIcon>
+                                            </MenuTitle>
+                                            <MenuItemsWrapper open={menuStates.moreOptions}>
+                                                {MOBILE_DRAWER_MENU.filter(item => item.href !== HOME_PAGE).map((item) => (
+                                                    <StyledDrawerMenuItem key={item.id}>
+                                                        <StyledNavLink
+                                                            onClick={toggleHandler}
+                                                            href={item.href}
+                                                        >
+                                                            <MenuIcon>{getIconForMenuItem(item.id)}</MenuIcon>
+                                                            <FormattedMessage id={item.id} defaultMessage={item.defaultMessage} />
+                                                        </StyledNavLink>
+                                                    </StyledDrawerMenuItem>
+                                                ))}
+                                            </MenuItemsWrapper>
+                                        </SecondaryMenuSection>
+
+                                        <CategoryTitle>
+                                            <FormattedMessage id="Categories" defaultMessage="Categories" />
+                                        </CategoryTitle>
+
+                                        <ButtonContainer>
+                                            <NewProductButton
+                                                variant="contained"
+                                                disableElevation
+                                                onClick={() => onCategoryClick('new_product')}
+                                                startIcon={ <Whatshot style={{
+                                                    fontSize: '1.8rem',
+                                                    marginRight: '10px',
+                                                    flexShrink: 0,
+                                                    color: '#ffffffff'
+                                                }} />}
                                             >
-                                                <MenuIcon>{getIconForMenuItem(item.id)}</MenuIcon>
-                                                <FormattedMessage id={item.id} defaultMessage={item.defaultMessage} />
-                                            </StyledNavLink>
-                                        </StyledDrawerMenuItem>
-                                    ))}
-                                </MenuItemsWrapper>
-                            </SecondaryMenuSection>
+                                                <span style={{
+                                                    fontSize: '1.4rem',
+                                                    fontWeight: 700,
+                                                    lineHeight: '1.2',
+                                                    whiteSpace: 'nowrap',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    textAlign: 'center'
+                                                }}>
+                                                    <FormattedMessage id="New Products" defaultMessage="New Products"/>
+                                                </span>
+                                            </NewProductButton>
 
-                            <CategoryTitle>
-                                <FormattedMessage id="Categories" defaultMessage="Categories" />
-                            </CategoryTitle>
+                                            <BackinStockButton
+                                                variant="contained"
+                                                disableElevation
+                                                onClick={() => onCategoryClick('back_in_stock')}
+                                                startIcon={<Update style={{
+                                                    fontSize: '1.8rem',
+                                                    marginRight: '10px',
+                                                    flexShrink: 0,
+                                                    color: '#ffffffff'
+                                                }} />}
+                                            >
+                                                <span style={{
+                                                    fontSize: '1.4rem',
+                                                    fontWeight: 700,
+                                                    lineHeight: '1.2',
+                                                    whiteSpace: 'nowrap',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    textAlign: 'center'
+                                                }}>
+                                                    <FormattedMessage id="Back in Stock" defaultMessage="Back in Stock"/>
+                                                </span>
+                                            </BackinStockButton>
+                                        </ButtonContainer>
 
-                            <ButtonContainer>
-                                <NewProductButton
-                                    variant="contained"
-                                    disableElevation
-                                    onClick={() => onCategoryClick('new_product')}
-                                    startIcon={ <Whatshot style={{
-                                        fontSize: '1.8rem',
-                                        marginRight: '10px',
-                                        flexShrink: 0,
-                                        color: '#ffffffff'
-                                    }} />}
-                                >
-                                    <span style={{
-                                        fontSize: '1.4rem',
-                                        fontWeight: 700,
-                                        lineHeight: '1.2',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        textAlign: 'center'
-                                    }}>
-                                        <FormattedMessage id="New Products" defaultMessage="New Products"/>
-                                    </span>
-                                </NewProductButton>
+                                        <TreeWrapper>
+                                            <SafeTreeMenu
+                                                data={data}
+                                                onClick={onCategoryClick}
+                                                active={selectedQueries}
+                                            />
+                                        </TreeWrapper>
+                                    </DrawerMenu>
 
-                                <BackinStockButton
-                                    variant="contained"
-                                    disableElevation
-                                    onClick={() => onCategoryClick('back_in_stock')}
-                                    startIcon={<Update style={{
-                                        fontSize: '1.8rem',
-                                        marginRight: '10px',
-                                        flexShrink: 0,
-                                        color: '#ffffffff'
-                                    }} />}
-                                >
-                                    <span style={{
-                                        fontSize: '1.4rem',
-                                        fontWeight: 700,
-                                        lineHeight: '1.2',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        textAlign: 'center'
-                                    }}>
-                                        <FormattedMessage id="Back in Stock" defaultMessage="Back in Stock"/>
-                                    </span>
-                                </BackinStockButton>
-                            </ButtonContainer>
-
-                            <TreeWrapper>
-                                <TreeMenu
-                                    data={data}
-                                    onClick={onCategoryClick}
-                                    active={selectedQueries}
-                                />
-                            </TreeWrapper>
-                        </DrawerMenu>
-
-                        {isAuthenticated && (
-                            <UserOptionMenu>
-                                <StyledDrawerMenuItem>
-                                    <StyledNavLink
-                                        onClick={handleLogout}
-                                        href="#"
-                                    >
-                                        <MenuIcon><ExitToApp /></MenuIcon>
-                                        <FormattedMessage
-                                            id='navlinkLogout'
-                                            defaultMessage='Logout'
-                                        />
-                                    </StyledNavLink>
-                                </StyledDrawerMenuItem>
-                            </UserOptionMenu>
-                        )}
-                    </DrawerContentWrapper>
-                </Scrollbar>
-            </DrawerBody>
-        </Drawer>
+                                    {isAuthenticated && (
+                                        <UserOptionMenu>
+                                            <StyledDrawerMenuItem>
+                                                <StyledNavLink
+                                                    onClick={handleLogout}
+                                                    href="#"
+                                                >
+                                                    <MenuIcon><ExitToApp /></MenuIcon>
+                                                    <FormattedMessage
+                                                        id='navlinkLogout'
+                                                        defaultMessage='Logout'
+                                                    />
+                                                </StyledNavLink>
+                                            </StyledDrawerMenuItem>
+                                        </UserOptionMenu>
+                                    )}
+                                </DrawerContentWrapper>
+                            </Scrollbar>
+                        </DrawerBody>
+                    </Drawer>
+                </>
+            )}
+        </>
     );
 };
 

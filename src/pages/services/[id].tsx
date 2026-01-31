@@ -1,5 +1,7 @@
 import { NextPage } from 'next';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
 import {
   StyledContent,
   StyledLeftContent,
@@ -11,22 +13,21 @@ import {
   Chip, 
   Button, 
   IconButton 
-} from "@material-ui/core";
-import Skeleton from '@material-ui/lab/Skeleton';
+} from "@mui/material";
+import Skeleton from '@mui/material/Skeleton';
 import { useArticles, useArticle, getArticle } from "../../data/use-website";
-import Sticky from "react-stickynode";
 import { useMedia } from "../../utils/use-media";
 import { useRouter } from "next/router";
 import css from '@styled-system/css';
 import styled from "styled-components";
 import Link from "next/link";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import BuildIcon from '@material-ui/icons/Build';
-import ShareIcon from '@material-ui/icons/Share';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseIcon from '@material-ui/icons/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import BuildIcon from '@mui/icons-material/Build';
+import ShareIcon from '@mui/icons-material/Share';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from 'react';
 
 // Brand colors
@@ -53,11 +54,11 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 0, // Important for text truncation
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         fontSize: '1.8rem',
         flex: '1 1 60%', // Take 60% of space on small screens
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         flex: '1 1 100%', // Full width on extra small screens
       },
     },
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
       gap: theme.spacing(1.5),
       marginBottom: theme.spacing(1),
       flexShrink: 0, // Prevent shrinking
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flex: '0 0 auto', // Maintain natural width
       },
     },
@@ -162,7 +163,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1.5),
       textShadow: '0 4px 8px rgba(0,0,0,0.2)',
       position: 'relative',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         fontSize: '2.2rem',
       },
     },
@@ -173,7 +174,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '0 auto',
       opacity: 0.9,
       position: 'relative',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         fontSize: '1.1rem',
       },
     },
@@ -184,7 +185,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(4),
       gap: theme.spacing(2),
       flexWrap: 'nowrap', // Prevent wrapping
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap', // Allow wrapping only on extra small screens
       },
     },
@@ -240,7 +241,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: '#fff',
       padding: theme.spacing(5),
       marginBottom: theme.spacing(5),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         padding: theme.spacing(3),
       },
     },
@@ -263,7 +264,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(3),
       gap: theme.spacing(1),
       flexWrap: 'wrap',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         gap: theme.spacing(0.5),
       },
     },
@@ -449,6 +450,12 @@ const MobileActionsContainer = styled.div`
   align-items: center;
 `;
 
+const SidebarSticky = styled.div<{ $top?: number; $zIndex?: number }>`
+  position: sticky;
+  top: ${({ $top }) => ($top ?? 0)}px;
+  z-index: ${({ $zIndex }) => ($zIndex ?? 1)};
+`;
+
 type Props = {
   data: any;
 };
@@ -492,7 +499,6 @@ const ServiceDetailPage: NextPage<Props> = ({ data }) => {
   return (
     <>
       <SEO title={item?.title || 'Service'} description={item?.excerpt || ''} />
-      
       <StyledContainer>
         {mobile ? (
           <div className={classes.topBarMobile}>
@@ -514,11 +520,11 @@ const ServiceDetailPage: NextPage<Props> = ({ data }) => {
             </div>
             
             <MobileActionsContainer>
-              <IconButton 
-                aria-label="share" 
+              <IconButton
+                aria-label="share"
                 className={classes.shareButton}
                 onClick={handleShare}
-              >
+                size="large">
                 <ShareIcon fontSize="small" />
               </IconButton>
               
@@ -619,7 +625,7 @@ const ServiceDetailPage: NextPage<Props> = ({ data }) => {
           {!mobile && (
             <StyledLeftContent>
               <div className={classes.sidebarContainer}>
-                <Sticky top={100} innerZ="1">
+                <SidebarSticky $top={100} $zIndex={1}>
                   <div>
                     <Typography variant="h5" component="h2" className={classes.sidebarTitle}>
                       Service Catalog
@@ -659,7 +665,7 @@ const ServiceDetailPage: NextPage<Props> = ({ data }) => {
                       )}
                     </StyledLeftInnerContent>
                   </div>
-                </Sticky>
+                </SidebarSticky>
               </div>
             </StyledLeftContent>
           )}
@@ -667,8 +673,8 @@ const ServiceDetailPage: NextPage<Props> = ({ data }) => {
           <Box flex={1} pl={mobile ? 0 : 4}>
             {isServiceLoading ? (
               <Box>
-                <Skeleton variant="rect" height={60} width="80%" style={{ marginBottom: 30 }} />
-                <Skeleton variant="rect" height={400} style={{ marginBottom: 40, borderRadius: 16 }} />
+                <Skeleton variant="rectangular" height={60} width="80%" style={{ marginBottom: 30 }} />
+                <Skeleton variant="rectangular" height={400} style={{ marginBottom: 40, borderRadius: 16 }} />
                 <Skeleton variant="text" height={50} width="70%" style={{ marginBottom: 20 }} />
                 <Skeleton variant="text" height={30} width="90%" style={{ marginBottom: 10 }} />
                 <Skeleton variant="text" height={30} width="85%" style={{ marginBottom: 10 }} />
@@ -683,11 +689,11 @@ const ServiceDetailPage: NextPage<Props> = ({ data }) => {
                   
                   {!mobile && (
                     <div className={classes.actionContainer}>
-                      <IconButton 
-                        aria-label="share" 
+                      <IconButton
+                        aria-label="share"
                         className={classes.shareButton}
                         onClick={handleShare}
-                      >
+                        size="large">
                         <ShareIcon />
                       </IconButton>
                       

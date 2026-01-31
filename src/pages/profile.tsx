@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { Modal } from '@redq/reuse-modal';
+import { Modal } from 'components/modal/modal-provider';
 import { ProfileProvider } from 'contexts/profile/profile.provider';
 import SettingsContent from 'features/user-profile/settings/settings';
 import {
