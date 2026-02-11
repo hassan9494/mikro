@@ -8,54 +8,49 @@ import { ArrowPrev } from 'assets/icons/ArrowPrev';
 import styled from 'styled-components';
 import NextImage from 'next/image';
 
+// Register Swiper modules once
+SwiperCore.use([Navigation, Autoplay]);
+
 interface Props {
     data: any[] | undefined;
 }
-
-SwiperCore.use([Navigation]);
-SwiperCore.use([Autoplay]);
 
 // Full width container with top padding
 const FullWidthContainer = styled.div`
   position: relative;
   width: 100%;
-  margin-top: 30px; 
-  
+  margin-top: 30px;
+
   @media (max-width: 768px) {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
-    margin-top: 30px; 
+    margin-top: 30px;
   }
 `;
 
-// Image container with top padding
+// Image container with responsive heights
 const ImageContainer = styled.div`
   position: relative;
   width: 100%;
   height: 600px;
-  
-  // Desktop responsive heights
-  @media (max-width: 1400px) { 
-    height: 550px; 
+
+  @media (max-width: 1400px) {
+    height: 550px;
   }
-  @media (max-width: 1200px) { 
-    height: 500px; 
+  @media (max-width: 1200px) {
+    height: 500px;
   }
-  @media (max-width: 992px) { 
-    height: 450px; 
+  @media (max-width: 992px) {
+    height: 450px;
   }
-  
-  // Mobile: adjust height but keep full width
   @media (max-width: 768px) {
     height: 300px;
     width: 100vw;
   }
-  
   @media (max-width: 480px) {
     height: 250px;
   }
-  
   @media (max-width: 375px) {
     height: 200px;
   }
@@ -64,7 +59,7 @@ const ImageContainer = styled.div`
   & > span {
     width: 100% !important;
     height: 100% !important;
-    
+
     @media (max-width: 768px) {
       width: 100vw !important;
     }
@@ -84,7 +79,7 @@ const Banner = ({ data }: Props) => {
 
         const firstImage = data[0].image;
         const resolveSrc = (src: any) =>
-            (typeof src === 'object' && src?.src) ? src.src : src;
+            typeof src === 'object' && src?.src ? src.src : src;
 
         const link = document.createElement('link');
         link.rel = 'preload';
@@ -105,11 +100,11 @@ const Banner = ({ data }: Props) => {
     return (
         <FullWidthContainer>
             <Swiper
-                id='banner'
+                id="banner"
                 slidesPerView={1}
                 autoplay={{
                     delay: 5000,
-                    disableOnInteraction: false
+                    disableOnInteraction: false,
                 }}
                 loop={true}
                 navigation={{
@@ -118,13 +113,10 @@ const Banner = ({ data }: Props) => {
                 }}
                 observer={true}
                 observeParents={true}
+                // Removed invalid @media query; the container already provides full width
                 style={{
                     width: '100%',
                     marginBottom: 20,
-                    // Ensure Swiper container is full width on mobile
-                    '@media (max-width: 768px)': {
-                        width: '100vw'
-                    }
                 }}
             >
                 {data.map((item, idx) => (
@@ -135,7 +127,8 @@ const Banner = ({ data }: Props) => {
                                 alt={item.alt || `Banner ${idx + 1}`}
                                 priority={idx < 2}
                                 fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1920px"                                quality={100}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1920px"
+                                quality={100}
                                 style={{
                                     objectFit: 'cover',
                                     objectPosition: 'center',
@@ -147,11 +140,11 @@ const Banner = ({ data }: Props) => {
                         </ImageContainer>
                     </SwiperSlide>
                 ))}
-                <StyledSliderNav className='banner-slider-next'>
-                    <ArrowNext/>
+                <StyledSliderNav className="banner-slider-next">
+                    <ArrowNext />
                 </StyledSliderNav>
-                <StyledSliderNav className='banner-slider-prev'>
-                    <ArrowPrev/>
+                <StyledSliderNav className="banner-slider-prev">
+                    <ArrowPrev />
                 </StyledSliderNav>
             </Swiper>
         </FullWidthContainer>
