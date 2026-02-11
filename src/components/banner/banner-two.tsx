@@ -15,57 +15,77 @@ interface Props {
 SwiperCore.use([Navigation]);
 SwiperCore.use([Autoplay]);
 
-const ImageWrapper = styled.div({
-    position: 'relative',
-    marginTop: '10px',
-    width: '100%',
-    minHeight: 180,
-    height: 650, // desktop height
-    overflow: 'hidden',
-
-    // Ensure NextImage fill or img elements fill the container
-    '& > span, & > img': {
-        width: '100%',
-        height: '100% !important',
-        display: 'block',
-    },
-
-    '@media (max-width: 575px)': {
-        minHeight: 180,
-        height: 320, // increase mobile height to avoid clipping
-        '& > span, & > img': {
-            height: '100% !important',
-            objectPosition: 'center',
-            objectFit: 'cover',
-        },
-    },
-});
-
-const OptimizedImg = styled.img`
+// Full width container with top padding
+const FullWidthContainer = styled.div`
+  position: relative;
   width: 100%;
-  height: auto;
-  object-fit: contain;
+  margin-top: 30px; 
   
-  @media (max-width: 575px) {
-    height: 180px;
-    object-position: left;
-    object-fit: cover;
+  @media (max-width: 768px) {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    margin-top: 30px; 
   }
 `;
 
+// Image container with top padding
+const ImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 600px;
+  
+  // Desktop responsive heights
+  @media (max-width: 1400px) { 
+    height: 550px; 
+  }
+  @media (max-width: 1200px) { 
+    height: 500px; 
+  }
+  @media (max-width: 992px) { 
+    height: 450px; 
+  }
+  
+  // Mobile: adjust height but keep full width
+  @media (max-width: 768px) {
+    height: 300px;
+    width: 100vw;
+  }
+  
+  @media (max-width: 480px) {
+    height: 250px;
+  }
+  
+  @media (max-width: 375px) {
+    height: 200px;
+  }
+
+  // Ensure NextImage fills container
+  & > span {
+    width: 100% !important;
+    height: 100% !important;
+    
+    @media (max-width: 768px) {
+      width: 100vw !important;
+    }
+  }
+`;
+
+// Use the original SliderNav without any mobile modifications
+const StyledSliderNav = styled(SliderNav)`
+  z-index: 10;
+  cursor: pointer;
+`;
+
 const Banner = ({ data }: Props) => {
+    // Image preloading for better performance
     useEffect(() => {
-        if (!data || !data[0]?.image) {
-            return;
-        }
+        if (!data || !data[0]?.image) return;
 
-        const firstImage = data[0]?.image;
-        if (!firstImage) {
-            return;
-        }
+        const firstImage = data[0].image;
+        const resolveSrc = (src: any) =>
+            (typeof src === 'object' && src?.src) ? src.src : src;
 
-        // Resolve imported image objects to their URL (.src) to avoid creating a link.href of [object Object]
-        const resolveSrc = (src: any) => (typeof src === 'object' && src?.src) ? src.src : src;
         const link = document.createElement('link');
         link.rel = 'preload';
         link.as = 'image';
@@ -83,44 +103,58 @@ const Banner = ({ data }: Props) => {
     if (!data || data.length === 0) return null;
 
     return (
-        <Swiper
-            id='banner'
-            slidesPerView={1}
-            autoplay={{ delay: 5000 }}
-            loop={true}
-            navigation={{
-                nextEl: '.banner-slider-next',
-                prevEl: '.banner-slider-prev',
-            }}
-            style={{ marginBottom: 20, minHeight: 180 }}
-        >
-            {data.map((item, idx) => (
-                <SwiperSlide key={idx}>
-                    <ImageWrapper>
-                        {(() => {
-                            const src = item.image || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650"><rect width="100%" height="100%" fill="#f6f6f6" /></svg>';
-                            return (
-                                <NextImage
-                                    src={src}
-                                    alt={item.alt || `Banner ${idx + 1}`}
-                                    priority={idx === 0}
-                                    fill
-                                    sizes="(max-width: 575px) 100vw, 1200px"
-                                    style={{ objectFit: 'cover', objectPosition: 'center' }}
-                                    unoptimized={typeof src === 'string' && src.startsWith('data:image')}
-                                />
-                            );
-                        })()}
-                    </ImageWrapper>
-                </SwiperSlide>
-            ))} 
-            <SliderNav className='banner-slider-next'>
-                <ArrowNext/>
-            </SliderNav>
-            <SliderNav className='banner-slider-prev'>
-                <ArrowPrev/>
-            </SliderNav>
-        </Swiper>
+        <FullWidthContainer>
+            <Swiper
+                id='banner'
+                slidesPerView={1}
+                autoplay={{
+                    delay: 5000,
+                    disableOnInteraction: false
+                }}
+                loop={true}
+                navigation={{
+                    nextEl: '.banner-slider-next',
+                    prevEl: '.banner-slider-prev',
+                }}
+                observer={true}
+                observeParents={true}
+                style={{
+                    width: '100%',
+                    marginBottom: 20,
+                    // Ensure Swiper container is full width on mobile
+                    '@media (max-width: 768px)': {
+                        width: '100vw'
+                    }
+                }}
+            >
+                {data.map((item, idx) => (
+                    <SwiperSlide key={idx}>
+                        <ImageContainer>
+                            <NextImage
+                                src={item.image || '/default-banner.jpg'}
+                                alt={item.alt || `Banner ${idx + 1}`}
+                                priority={idx < 2}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1920px"                                quality={100}
+                                style={{
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                    imageRendering: 'crisp-edges',
+                                    WebkitFontSmoothing: 'antialiased',
+                                    MozOsxFontSmoothing: 'grayscale',
+                                }}
+                            />
+                        </ImageContainer>
+                    </SwiperSlide>
+                ))}
+                <StyledSliderNav className='banner-slider-next'>
+                    <ArrowNext/>
+                </StyledSliderNav>
+                <StyledSliderNav className='banner-slider-prev'>
+                    <ArrowPrev/>
+                </StyledSliderNav>
+            </Swiper>
+        </FullWidthContainer>
     );
 };
 
