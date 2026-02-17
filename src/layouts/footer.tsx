@@ -131,15 +131,15 @@ export function Footer({ social }: FooterProps) {
 
               {social?.call && (
                 <p className="footer-contact">
-                  <i className="bi bi-telephone-fill contact-call"></i> 
-                  <a href={`tel:${social.call}`}>+{social.call}</a>
+                  <i className="bi bi-telephone-fill contact-call"></i>
+                  <a href={`tel:${social.call}`}>{social.call}</a>
                 </p>
               )}
 
               {social?.whatsapp && (
                 <p className="footer-contact">
-                  <i className="bi bi-whatsapp contact-whatsapp"></i> 
-                  <a href={`https://wa.me/${social.whatsapp}`} target="_blank">+{social.whatsapp}</a>
+                  <i className="bi bi-whatsapp contact-whatsapp"></i>
+                  <a href={`https://wa.me/${social.whatsapp}`} target="_blank">{social.whatsapp}</a>
                 </p>
               )}
 

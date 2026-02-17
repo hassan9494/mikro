@@ -170,16 +170,20 @@ function tabProps(index: any) {
 }
 
 function ProductCategories({categories = []}) {
+
+    const topLevelCategories = categories.filter(cat => cat.parent_id !== 0);
+
+    if (topLevelCategories.length === 0) return null;
+
     return (
         <ProductMeta>
             <MetaSingle>
-                {categories.map((item: any) => (
+                {topLevelCategories.map((item: any) => (
                     <Box m={0.3} key={item.id}>
-                        <Link href={`/?category=${item.slug}`} key={`link-${item.id}`}>
+                        <Link href={`/category/${item.slug}`} key={`link-${item.id}`}>
                             <Chip
                                 label={item.title}
-                                onClick={() => {
-                                }}
+                                onClick={() => {}}
                                 variant="outlined"
                                 color={"secondary"}
                             />
@@ -188,7 +192,7 @@ function ProductCategories({categories = []}) {
                 ))}
             </MetaSingle>
         </ProductMeta>
-    )
+    );
 }
 
 const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
@@ -476,8 +480,9 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         <Typography component="span" variant="body1" color="textPrimary"
                                                                     style={{ marginRight: 50 }}>
                                                             Quantity: {displayProduct.availableQty}
-                                                            ( Stock: {displayProduct.stock_available},
-                                                            Store: {displayProduct.store_available} )
+                                                            ( Store: {displayProduct.store_available},
+                                                            Stock: {displayProduct.stock_available}
+                                                            )
 
                                                         </Typography>
                                                         <Typography component="span" variant="body1" color="textPrimary">
@@ -532,8 +537,9 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         <Typography component="span" variant="body1" color="textPrimary"
                                                                     style={{ marginRight: 50 }}>
                                                             Quantity: {displayProduct.availableQty}
-                                                            ( Stock: {displayProduct.stock_available},
-                                                            Store: {displayProduct.store_available} )
+                                                            ( Store: {displayProduct.store_available},
+                                                            Stock: {displayProduct.stock_available}
+                                                            )
 
                                                         </Typography>
                                                         <Typography component="span" variant="body1" color="textPrimary">
