@@ -174,7 +174,6 @@ export const ProductColorCard = ({ data }: Props) => {
                                 alt={title}
                                 width={200}
                                 height={200}
-                                unoptimized={true}
                             />
                         </ImageWrapper>
                         {sale_price ? (

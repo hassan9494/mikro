@@ -33,11 +33,14 @@ const OrdersContent: React.FC<{}> = () => {
         const thirtyDaysAgo = now - THIRTY_DAYS_MS;
 
         return ordersArray.filter((order) => {
-            const status = order.status?.toUpperCase?.();
-            if (status !== 'COMPLETED') return true;
+            // Keep if not completed
+            if (order.status?.toUpperCase?.() !== 'COMPLETED') return true;
 
+            // Keep if order is taxed (always visible)
+            if (order.taxed === true) return true;
+
+            // Otherwise completed and not taxed: apply 30-day filter
             const completionDateStr = order[COMPLETION_DATE_FIELD];
-
             if (!completionDateStr) return false;
 
             const completionTime = new Date(completionDateStr).getTime();

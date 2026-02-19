@@ -22,7 +22,8 @@ import {
     VariantChip,
     VariantImage,
     SelectedVariantIndicator,
-    OutOfStockOverlay
+    OutOfStockOverlay,
+    RichTextContent
 } from './product-details-one.style';
 import CarouselWithCustomDots from 'components/multi-carousel/multi-carousel';
 import {FormattedMessage} from 'react-intl';
@@ -681,21 +682,14 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                 <ProductDescription>
                                     {/* English Description */}
                                     {displayProduct.short_description && (
-                                        <div
-                                            dangerouslySetInnerHTML={{ __html: displayProduct.short_description }}
-                                            style={{
-                                                marginBottom: displayProduct.short_description_ar ? '28px' : '0',
-                                                lineHeight: '1.7',
-                                                fontSize: '15px',
-                                                color: '#444',
-                                                fontFeatureSettings: '"liga", "kern"'
-                                            }}
-                                        />
+
+                                        <RichTextContent   dangerouslySetInnerHTML={{ __html: displayProduct.short_description }} />
+
                                     )}
 
                                     {/* Arabic Description */}
                                     {displayProduct.short_description_ar && (
-                                        <div
+                                        <RichTextContent
                                             dangerouslySetInnerHTML={{ __html: displayProduct.short_description_ar }}
                                             style={{
                                                 direction: 'rtl',
@@ -768,10 +762,10 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                 </div>
                                 <Box p={1}>
                                     <TabPanel value={value} index={0}>
-                                        <div dangerouslySetInnerHTML={{__html: displayProduct.description}} />
+                                        <RichTextContent  dangerouslySetInnerHTML={{__html: displayProduct.description}} />
                                     </TabPanel>
                                     <TabPanel value={value} index={1}>
-                                        <div dangerouslySetInnerHTML={{__html: displayProduct.features}} />
+                                        <RichTextContent  dangerouslySetInnerHTML={{__html: displayProduct.features}} />
                                     </TabPanel>
                                     <TabPanel value={value} index={2}>
                                         {product.documents && (
@@ -1091,7 +1085,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                                                         <FormattedMessage id="productCode" defaultMessage="Product Code" />
                                                     </Typography>
 
-                                                    <div
+                                                    <RichTextContent
                                                         dangerouslySetInnerHTML={{ __html: product.code }}
                                                         style={{
                                                             lineHeight: '1.6',

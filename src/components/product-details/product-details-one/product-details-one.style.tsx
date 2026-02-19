@@ -48,7 +48,7 @@ export const BackButton = styled.div`
   position: absolute;
   top: 60px;
   left: 60px;
-  z-index: 999;
+  z-index: 99;
 
   @media (max-width: 990px) {
     top: 20px;
@@ -256,7 +256,22 @@ export const ColorBadge = styled.div`
    pointer-events: none;
    margin:10px;
 `;
-
+export const RichTextContent = styled.div`
+  ul, ol {
+    margin-left: 20px;  /* or 1.5em for relative sizing */
+    padding-left: 20px;
+  }
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
+  li {
+    list-style: inherit;
+    margin-bottom: 5px;
+  }
+`;
 export const ProductCartWrapper = styled.div`
   display: flex;
   flex-direction: row;

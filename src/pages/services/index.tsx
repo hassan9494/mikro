@@ -385,7 +385,6 @@ const ServicesPage: NextPage<{}> = () => {
                                       layout="fill"
                                       objectFit="cover"
                                       quality={90}
-                                      unoptimized={true}
                                   />
                                 </>
                             ) : (

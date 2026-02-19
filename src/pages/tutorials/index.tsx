@@ -396,7 +396,6 @@ const TermsPage: NextPage<{}> = () => {
                                     layout="fill"
                                     objectFit="cover"
                                     quality={90}
-                                    unoptimized={true}
                                 />
                             ) : (
                                 <div style={{

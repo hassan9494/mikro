@@ -57,7 +57,6 @@ export const getImageUrl = (imgUrl: string | undefined) => {
   }
   return {
     src: cleanedUrl,
-    unoptimized: true
   };
 };
 
@@ -171,6 +170,5 @@ export const getDisplayImage = (product: any, selectedVariants: Record<string, V
 
   return {
     src: LogoImage,
-    unoptimized: true
   };
 };

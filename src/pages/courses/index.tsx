@@ -493,7 +493,6 @@ const TermsPage: NextPage<{}> = () => {
                                       layout="fill"
                                       objectFit="cover"
                                       quality={90}
-                                      unoptimized={true}
                                   />
                                   {/* Rating Badge - Top Right Corner */}
                                   <div className={classes.courseBadge}>

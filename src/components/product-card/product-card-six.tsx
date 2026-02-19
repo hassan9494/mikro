@@ -1351,7 +1351,6 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
         }
         return {
             src: cleanedUrl,
-            unoptimized: true
         };
     };
 
@@ -1366,7 +1365,6 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
         }
         return {
             src: fallbackImageSrc,
-            unoptimized: true
         };
     };
 
@@ -1635,6 +1633,7 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                                                                 placeholder="blur"
                                                                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAICEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                                                                 loading="lazy"
+                                                                sizes="64px"
                                                             />
                                                         ) : (
                                                             <div style={{
@@ -1799,31 +1798,31 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                                         status={variantStatus}
                                         onClick={(e) => handleVariantClick(variant, e)}
                                     >
-                                    <VariantImage>
-  {variantImage ? (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-    }}>
-      <Image
-        src={variantImage.src}
-        alt={variant.title}
-        layout="fill"
-        objectFit="cover"
-        loading="lazy"
-        unoptimized={true}
-      />
-    </div>
-  ) : (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      backgroundColor: colorCode,
-      borderRadius: '50%',
-    }} />
-  )}
-</VariantImage>
+                                        <VariantImage>
+                                            {variantImage ? (
+                                                <div style={{
+                                                    position: 'relative',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                }}>
+                                                    <Image
+                                                        src={variantImage.src}
+                                                        alt={variant.title}
+                                                        layout="fill"
+                                                        objectFit="cover"
+                                                        loading="lazy"
+                                                        sizes="34px"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    backgroundColor: colorCode,
+                                                    borderRadius: '50%',
+                                                }} />
+                                            )}
+                                        </VariantImage>
                                         <SelectedIndicator selected={isSelected}>
                                             <Check style={{ fontSize: 3 }} />
                                         </SelectedIndicator>
@@ -1845,31 +1844,31 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
             ) : null}
 
             <Link href="/product/[slug]" as={`/product/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <ImageWrapper>
-                        <Image
-                            src={displayImage.src}
-                            alt={title}
-                            width={200}
-                            height={200}
-                            placeholder="blur"
-                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAICEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                            loading="lazy"
-                            onError={(event) => {
-                                const target = event.currentTarget;
-                                target.src = fallbackImageSrc;
-                                target.onerror = null;
-                            }}
-                            loader={({ src, width }) => src}
-                        />
-                        {(!hasVariantsToShow || selectedVariant) && (
-                            <Stock>
-                                <RadioButtonChecked style={{width: 16, color: stockColor }} />
-                            </Stock>
-                        )}
-                        {getEffectivePrice() < getEffectiveOriginalPrice() && (
-                            <Discount>On Sale</Discount>
-                        )}
-                    </ImageWrapper>
+                <ImageWrapper>
+                    <Image
+                        src={displayImage.src}
+                        alt={title}
+                        width={200}
+                        height={200}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAICEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                        loading="lazy"
+                        onError={(event) => {
+                            const target = event.currentTarget;
+                            target.src = fallbackImageSrc;
+                            target.onerror = null;
+                        }}
+                        loader={({ src, width }) => src}
+                    />
+                    {(!hasVariantsToShow || selectedVariant) && (
+                        <Stock>
+                            <RadioButtonChecked style={{width: 16, color: stockColor }} />
+                        </Stock>
+                    )}
+                    {getEffectivePrice() < getEffectiveOriginalPrice() && (
+                        <Discount>On Sale</Discount>
+                    )}
+                </ImageWrapper>
             </Link>
 
             <Box padding={20}>

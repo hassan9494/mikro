@@ -101,7 +101,6 @@ const TreeComponent = ({
                                 alt={name}
                                 width={50}
                                 height={50}
-                                unoptimized={true}
                             />
                         </ImageWrapper>
                     )}
