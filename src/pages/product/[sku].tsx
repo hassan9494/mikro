@@ -9,7 +9,7 @@ import { Modal } from 'components/modal/modal-provider';
 import ProductSingleWrapper, {
     ProductSingleContainer,
 } from 'assets/styles/product-single.style';
-import { getProductBySlug } from 'utils/api/product';
+import { getProductBySku } from 'utils/api/product';
 
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useProduct } from "data/use-products";
@@ -63,13 +63,13 @@ function Loading() {
 const ProductPage: NextPage<Props> = ({ data, deviceType, social }) => {
     // const {data: social} = useSocial();
     const router = useRouter();
-    const productSlug = data?.slug ?? router.query.slug;
-    const { data: swrProduct, loading: productLoading } = useProduct(productSlug);
+    const productSku = data?.sku ?? router.query.sku;
+    const { data: swrProduct, loading: productLoading } = useProduct(productSku);
 
     const resolvedProduct = swrProduct ?? data;
     const isLoading = productLoading && !resolvedProduct;
 
-    if (!resolvedProduct?.slug) {
+    if (!resolvedProduct?.sku) {
         return <Loading />;
     }
 
@@ -81,7 +81,7 @@ const ProductPage: NextPage<Props> = ({ data, deviceType, social }) => {
     const keywords = getMetaField(resolvedProduct, 'meta_keyword', undefined);
     const productTitle = resolvedProduct.title;
     const productShortDescription = cleanShortDescription;
-    const canonical = `https://mikroelectron.com/product/${resolvedProduct.slug}`;
+    const canonical = `https://mikroelectron.com/product/${resolvedProduct.sku}`;
     const image = resolvedProduct.image;
 
     // Prepare concatenated name and description for JSON-LD
@@ -111,7 +111,7 @@ const ProductPage: NextPage<Props> = ({ data, deviceType, social }) => {
             : [resolvedProduct.image],
         "offers": {
             "@type": "Offer",
-            "url": `https://mikroelectron.com/product/${resolvedProduct.slug}`,
+            "url": `https://mikroelectron.com/product/${resolvedProduct.sku}`,
             "priceCurrency": "JOD",
             "price": resolvedProduct.sale_price || resolvedProduct.price,
             "priceSpecification": resolvedProduct.sale_price ? {
@@ -186,16 +186,16 @@ const ProductPage: NextPage<Props> = ({ data, deviceType, social }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
-    const slugParam = params?.slug;
+    const skuParam = params?.sku;
 
-    if (!slugParam || Array.isArray(slugParam)) {
+    if (!skuParam || Array.isArray(skuParam)) {
         return {
             notFound: true,
         };
     }
 
     try {
-        const data = await getProductBySlug(slugParam);
+        const data = await getProductBySku(skuParam);
 
         if (!data) {
             return {

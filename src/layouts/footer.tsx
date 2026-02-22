@@ -165,7 +165,7 @@ export function Footer({ social }: FooterProps) {
             <div className="col-12 col-md-6 col-lg-2">
               <h5 className="footer-title">Our Location</h5>
               <a href={social?.location} target="_blank" className="map-wrapper">
-                <img src={LocationImage.src} className="footer-map" />
+                <img src={LocationImage.src} className="footer-map" alt='Shop Location'/>
                 <span className="map-overlay">View on Map</span>
               </a>
               <p className="footer-address">

@@ -1331,6 +1331,7 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
         price,
         sale_price,
         slug,
+        sku,
         availableQty,
         is_available,
         is_retired,
@@ -1768,7 +1769,7 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                             <ActionButton
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    window.location.href = `/product/${slug}`;
+                                    window.location.href = `/product/${sku}`;
                                 }}
                             >
                                 View Product Details
@@ -1843,7 +1844,7 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                 </VariantSelectorOverlay>
             ) : null}
 
-            <Link href="/product/[slug]" as={`/product/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/product/[sku]" as={`/product/${sku}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <ImageWrapper>
                     <Image
                         src={displayImage.src}

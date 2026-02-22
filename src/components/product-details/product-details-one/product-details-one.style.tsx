@@ -216,7 +216,7 @@ export const ProductWeight = styled.div`
   color: ${themeGet('colors.text.regular', '#77798C')};
 `;
 
-export const ProductDescription = styled.p`
+export const ProductDescription = styled.div`
   font-family: ${themeGet('fonts.body', 'sans-serif')};
   font-size: ${themeGet('fontSizes.base', '15')}px;
   font-weight: ${themeGet('fontWeights.regular', '400')};

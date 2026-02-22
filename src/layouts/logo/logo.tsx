@@ -19,12 +19,12 @@ const Logo: React.FC<LogoProps> = ({ imageUrl, alt, onClick }) => {
     const renderLogo = () => {
         // Resolve imported image objects ({ src }) to string
         if (typeof imageUrl === 'object' && imageUrl?.src) {
-            return <LogoImage src={imageUrl.src} alt={alt} width={200} height={40} loading="eager" fetchPriority="high" />;
+            return <LogoImage src={imageUrl.src} alt={alt} width={200} height={40} loading="eager" {...{ fetchpriority: 'high' } as any} />;
         }
 
         // If the imported asset is a string (URL), render an <img>
         if (typeof imageUrl === 'string') {
-            return <LogoImage src={imageUrl} alt={alt} width={200} height={40} loading="eager" fetchPriority="high" />;
+            return <LogoImage src={imageUrl} alt={alt} width={200} height={40} loading="eager" {...{ fetchpriority: 'high' } as any} />;
         }
 
         // If the imported asset is a React component (SVGR) or element, render it directly

@@ -95,6 +95,13 @@ module.exports = {
             lastmod: new Date().toISOString(),
         }));
 
+        const productSkuPaths = products.map((product) => ({
+            loc: `/product/${product.sku}`,
+            changefreq: 'daily',
+            priority: 0.8,
+            lastmod: new Date().toISOString(),
+        }));
+
         const categoryPaths = categories.map((category) => ({
             loc: `/category/${category.slug}`,
             changefreq: 'weekly',
@@ -109,6 +116,6 @@ module.exports = {
             lastmod: new Date().toISOString(),
         }));
 
-        return [...staticPaths, ...productPaths, ...categoryPaths];
+        return [...staticPaths, ...productPaths,...productSkuPaths, ...categoryPaths];
     },
 };

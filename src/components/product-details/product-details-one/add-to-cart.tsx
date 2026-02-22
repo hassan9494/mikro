@@ -1,44 +1,29 @@
-import React, {useState} from 'react';
-import {Plus, Minus} from 'assets/icons/PlusMinus';
-import { Button, TextField } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
-import {useCart} from "../../../contexts/cart/use-cart";
+import React, { useState } from 'react';
+import { Plus, Minus } from 'assets/icons/PlusMinus';
+import { Button, TextField, styled } from "@mui/material";
+import { useCart } from "../../../contexts/cart/use-cart";
 
 interface Props {
     data: any;
-    variant?: any; // Add variant prop if needed
+    variant?: any;
 }
-const useStyles = makeStyles((theme) => ({
-    input: {
-        borderRadius: 0,
-    },
-}));
 
-const CustomTextField = withStyles({
-    root: {
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderRadius: `0px`,
-            },
-        },
-         '& *': {
-            boxSizing: 'content-box !important', // Override the border-box
+// Styled TextField with custom styles (replaces withStyles)
+const CustomTextField = styled(TextField)({
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderRadius: 0,
         },
     },
-})(TextField);
+    '& *': {
+        boxSizing: 'content-box !important',
+    },
+});
 
-export const AddToCart: React.FC<Props> = ({data, variant}) => {
-    const classes = useStyles();
-    const {addItem, removeItem, getItem} = useCart();
+export const AddToCart: React.FC<Props> = ({ data, variant }) => {
+    const { addItem, getItem } = useCart();
     const [value, setValue] = useState(1);
 
-    // Generate unique ID for cart items
-    const getCartItemId = () => {
-        return variant?.color_id ? `${variant.color_id}` : data.id;
-    };
-
-    const cartItemId = getCartItemId();
     const itemInCart = getItem(data.id, variant?.color_id || null);
     const currentQty = itemInCart?.quantity || 0;
 
@@ -46,69 +31,61 @@ export const AddToCart: React.FC<Props> = ({data, variant}) => {
         e.stopPropagation();
         const max = (variant?.availableQty || data.availableQty) - currentQty;
         newValue = newValue || value + 1;
-        if (max >= newValue) setValue(newValue)
+        if (max >= newValue) setValue(newValue);
     };
 
     const handleRemoveClick = (e) => {
         e.stopPropagation();
-        let newValue = (value - 1) > 0 ? (value - 1) : 1;
-        setValue(newValue)
+        setValue(prev => (prev - 1 > 0 ? prev - 1 : 1));
     };
 
     const addToCart = (e) => {
-        // Create item with the exact same structure as handleAddToCart
         const item = {
             ...data,
             ...(variant || {}),
             baseProductId: data.id,
             variantId: variant?.color_id || null,
-            id: data.id, // Always use the base product ID
+            id: data.id,
             baseTitle: data.title,
-            title: variant
-                ? variant.name
-                : data.title,
+            title: variant ? variant.name : data.title,
         };
-
-        console.log("Adding to cart:", item);
         addItem(item, value);
         setValue(1);
-    }
+    };
 
     const isMaxed = () => {
         return currentQty >= (variant?.availableQty || data.availableQty);
-    }
+    };
 
     return (
         <>
-            <Button variant='contained' onClick={handleRemoveClick} size='small' disableElevation style={{borderRadius: 0}}>
-                <Minus/>
+            <Button variant='contained' onClick={handleRemoveClick} size='small' disableElevation style={{ borderRadius: 0 }}>
+                <Minus />
             </Button>
             <CustomTextField
                 type='tel'
                 variant='outlined'
                 className='cart-quantity-input'
                 size='small'
-                style={{width: 60}}
+                sx={{ width: 60 }}                // use sx instead of inline style for consistency
                 onChange={e => {
-                    const qty = Number(e.target.value)
+                    const qty = Number(e.target.value);
                     if (!isNaN(qty) && qty > 0 && qty <= (variant?.availableQty || data.availableQty)) {
-                        handleAddClick(e, qty)
+                        handleAddClick(e, qty);
                     }
                 }}
                 value={value}
-                inputProps={{
-                    style: {textAlign: 'center'},
-                }}
+                inputProps={{ style: { textAlign: 'center' } }}
             />
-            <Button variant='contained' onClick={handleAddClick} size='small' disableElevation style={{borderRadius: 0, marginRight: 10}}>
-                <Plus/>
+            <Button variant='contained' onClick={handleAddClick} size='small' disableElevation style={{ borderRadius: 0, marginRight: 10 }}>
+                <Plus />
             </Button>
             <Button
                 variant='contained'
                 color='primary'
                 disableElevation
                 disabled={isMaxed()}
-                style={{borderRadius: 0}}
+                style={{ borderRadius: 0 }}
                 onClick={addToCart}
             >
                 Add To Cart
