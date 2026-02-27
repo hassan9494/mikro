@@ -134,6 +134,181 @@ const ButtonGroup = styled.div`
     }
   }
 `;
+
+// ============ PROFILE OVERVIEW CARD ============
+
+const ProfileOverviewCard = styled.div`
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #133595 0%, #1a4bc6 100%);
+  border-radius: 12px;
+  padding: 30px 35px;
+  margin-bottom: 30px;
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.16);
+
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+    text-align: center;
+    padding: 25px 20px;
+  }
+`;
+
+const AvatarCircle = styled.div`
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
+  border-radius: 50%;
+  background-color: #fe5e00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-right: 25px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  @media only screen and (max-width: 767px) {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+`;
+
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const ProfileName = styled.h2`
+  font-family: ${themeGet('fonts.heading', 'sans-serif')};
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+`;
+
+const ProfileDetail = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 4px;
+  line-height: 1.5;
+
+  i {
+    margin-right: 10px;
+    font-size: 14px;
+    opacity: 0.75;
+  }
+
+  @media only screen and (max-width: 767px) {
+    justify-content: center;
+  }
+`;
+
+const ProfileBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-top: 8px;
+  width: fit-content;
+
+  i {
+    margin-right: 6px;
+    font-size: 12px;
+  }
+
+  @media only screen and (max-width: 767px) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+`;
+
+// ============ SECTION WRAPPER ============
+
+const SectionCard = styled.div`
+  background-color: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  padding: 30px;
+  margin-bottom: 30px;
+
+  @media only screen and (max-width: 767px) {
+    padding: 20px 15px;
+    margin-bottom: 20px;
+  }
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f1f1f1;
+`;
+
+const SectionIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 6px;
+  background-color: #F7F7F7;
+  color: #133595;
+  margin-right: 15px;
+  font-size: 18px;
+`;
+
+const SectionTitle = styled.h3`
+  font-family: ${themeGet('fonts.heading', 'sans-serif')};
+  font-size: 19px;
+  font-weight: 600;
+  color: ${themeGet('colors.text.bold', '#0D1136')};
+  margin: 0;
+`;
+
+// ============ FORM GRID ============
+
+const FormRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  @media only screen and (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+`;
+
+const FormField = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+  @media only screen and (max-width: 767px) {
+    button {
+      width: 100%;
+    }
+  }
+`;
+
 export {
     SettingsForm,
     HeadingSection,
@@ -142,4 +317,17 @@ export {
     Col,
     Row,
     ButtonGroup,
+    ProfileOverviewCard,
+    AvatarCircle,
+    ProfileInfo,
+    ProfileName,
+    ProfileDetail,
+    ProfileBadge,
+    SectionCard,
+    SectionHeader,
+    SectionIcon,
+    SectionTitle,
+    FormRow,
+    FormField,
+    FormActions,
 };

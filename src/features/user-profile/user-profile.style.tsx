@@ -35,12 +35,10 @@ const ContentBox = styled.div`
   min-height: 200px;
   display: flex;
   flex-direction: column;
-  padding: 60px 50px 20px;
-  border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
+  padding: 40px 30px 20px;
 
   @media only screen and (max-width: 1199px) {
     width: 100%;
-    border: 0;
     padding: 20px;
   }
 `;

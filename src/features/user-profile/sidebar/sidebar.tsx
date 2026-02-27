@@ -14,6 +14,12 @@ import {
     PROFILE_SIDEBAR_BOTTOM_MENU,
 } from 'site-settings/site-navigation';
 
+const MENU_ICONS: Record<string, React.ReactNode> = {
+    'nav.order': <i className="bi bi-bag" style={{ fontSize: '16px' }} />,
+    'nav.help': <i className="bi bi-question-circle" style={{ fontSize: '16px' }} />,
+    'nav.profile': <i className="bi bi-person" style={{ fontSize: '16px' }} />,
+};
+
 const SidebarCategory: React.FC<{}> = () => {
     const { authDispatch } = useContext<any>(AuthContext);
 
@@ -29,15 +35,20 @@ const SidebarCategory: React.FC<{}> = () => {
             <SidebarWrapper>
                 <SidebarTop>
                     {PROFILE_SIDEBAR_TOP_MENU.map((item, index) => (
-                        <SidebarMenu href={item.href} key={index} intlId={item.id}/>
+                        <SidebarMenu href={item.href} key={index} intlId={item.id}
+                                     icon={MENU_ICONS[item.id]}
+                        />
                     ))}
                 </SidebarTop>
 
                 <SidebarBottom>
                     {PROFILE_SIDEBAR_BOTTOM_MENU.map((item, index) => (
-                        <SidebarMenu href={item.href} key={index} intlId={item.id}/>
+                        <SidebarMenu href={item.href} key={index} intlId={item.id}
+                                     icon={MENU_ICONS[item.id]}
+                        />
                     ))}
                     <LogoutButton type="button" onClick={handleLogout}>
+                        <i className="bi bi-box-arrow-right" style={{ marginRight: '10px', fontSize: '16px' }} />
                         <FormattedMessage id="nav.logout" defaultMessage="Logout"/>
                     </LogoutButton>
                 </SidebarBottom>

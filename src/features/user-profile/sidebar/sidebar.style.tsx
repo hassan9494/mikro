@@ -9,73 +9,84 @@ const SidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  background-color: ${themeGet('colors.white', '#ffffff')};
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.16);
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e6e6e6;
 `;
 
 const SidebarTop = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 40px 0;
+  padding: 20px 0;
 `;
 
 const SidebarBottom = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 40px 0;
-  background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
+  padding: 20px 0;
+  border-top: 1px solid #f1f1f1;
 `;
 
 const SidebarMenu = styled(NavLink as any)`
   display: flex;
   a {
+    display: flex;
+    align-items: center;
+    width: 100%;
     font-family: ${themeGet('fonts.body', 'Lato')};
-    font-size: ${themeGet('fontSizes.base', '15')}px;
-    font-weight: ${themeGet('fontWeights.bold', '700')};
+    font-size: 15px;
+    font-weight: 600;
     color: ${themeGet('colors.text.bold', '#0D1136')};
-    transition: color 0.35s ease;
-    padding: 15px 60px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    padding: 12px 25px;
+    margin: 2px 10px;
+    border-radius: 8px;
 
     &.current-page {
-      color: ${themeGet('colors.primary.regular', '#009e7f')};
-      border-left: 5px solid ${themeGet('colors.primary.regular', '#009e7f')};
-      padding-left: 55px;
+      color: #133595;
+      background-color: rgba(19, 53, 149, 0.08);
+      border-left: 3px solid #133595;
+      padding-left: 22px;
+      font-weight: 700;
     }
 
     &:hover {
-      color: ${themeGet('colors.primary.regular', '#009e7f')};
-    }
-
-    &:last-child {
-      margin-bottom: 0;
+      color: #133595;
+      background-color: rgba(19, 53, 149, 0.04);
     }
   }
 `;
 
 const LogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  width: calc(100% - 20px);
   border: none;
   background-color: transparent;
   text-align: left;
   cursor: pointer;
   font-family: ${themeGet('fonts.body', 'Lato')};
-  font-size: ${themeGet('fontSizes.base', '15')}px;
-  font-weight: ${themeGet('fontWeights.bold', '700')};
-  color: ${themeGet('colors.text.bold', '#0D1136')};
-  transition: color 0.35s ease;
-  padding: 15px 60px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #d32f2f;
+  transition: all 0.2s ease;
+  padding: 12px 25px;
+  margin: 2px 10px;
+  border-radius: 8px;
   outline: 0;
 
   &:hover {
-    color: ${themeGet('colors.primary.regular', '#009e7f')};
+    background-color: rgba(211, 47, 47, 0.06);
   }
 
   &:focus {
     box-shadow: none;
   }
-
-  margin-bottom: 0;
 `;
 
 export { SidebarWrapper, SidebarTop, SidebarBottom, SidebarMenu, LogoutButton };

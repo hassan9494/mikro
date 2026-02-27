@@ -169,7 +169,6 @@ export const ProductColorCard = ({ data }: Props) => {
                         <ImageWrapper>
                             {/*<img src={image} alt={title} width={200} height={200}/>*/}
                             <Image
-                                // loader={myLoader}
                                 src={image}
                                 alt={title}
                                 width={200}

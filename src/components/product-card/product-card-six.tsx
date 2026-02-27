@@ -1331,7 +1331,6 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
         price,
         sale_price,
         slug,
-        sku,
         availableQty,
         is_available,
         is_retired,
@@ -1634,7 +1633,6 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                                                                 placeholder="blur"
                                                                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAICEgMRkf/aAAwDAQACEQMRAP8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                                                                 loading="lazy"
-                                                                sizes="64px"
                                                             />
                                                         ) : (
                                                             <div style={{
@@ -1769,7 +1767,7 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                             <ActionButton
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    window.location.href = `/product/${sku}`;
+                                    window.location.href = `/product/${slug}`;
                                 }}
                             >
                                 View Product Details
@@ -1812,7 +1810,6 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                                                         layout="fill"
                                                         objectFit="cover"
                                                         loading="lazy"
-                                                        sizes="34px"
                                                     />
                                                 </div>
                                             ) : (
@@ -1844,7 +1841,7 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                 </VariantSelectorOverlay>
             ) : null}
 
-            <Link href="/product/[sku]" as={`/product/${sku}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/product/[slug]" as={`/product/${slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <ImageWrapper>
                     <Image
                         src={displayImage.src}
@@ -1859,7 +1856,6 @@ const ProductCardComponent: React.FC<ProductCardProps> = ({ data }) => {
                             target.src = fallbackImageSrc;
                             target.onerror = null;
                         }}
-                        loader={({ src, width }) => src}
                     />
                     {(!hasVariantsToShow || selectedVariant) && (
                         <Stock>

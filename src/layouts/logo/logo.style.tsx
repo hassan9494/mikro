@@ -24,12 +24,13 @@ export const LogoImage = styled.img({
     maxHeight: 40,
     minWidth: 40,
 
-    // '@media (max-width: 575px)': {
+    // '@media (min-width: 579px) and (max-width: 575px)': {
     //     maxWidth: 140,
     //     height: 32,
     //     maxHeight: 32,
     //     width: 'auto',
-    // }
+    // },
+
     '@media (max-width: 450px)': {
         width: 300,
         maxWidth: 300,
@@ -37,5 +38,4 @@ export const LogoImage = styled.img({
         maxHeight: 'none',
         minWidth: 'unset',
     },
-
 });
